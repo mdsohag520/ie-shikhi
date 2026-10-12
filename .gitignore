@@ -1,4 +1,6 @@
-*.backup
+*.backup4
+*.backup5
+*.sh*.backup
 *.backup2
 *.backup3
 *.bak
