@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IE শিখি — Bag Factory এর Industrial Engineering A to Z</title>
+<meta name="description" content="Industrial Engineering শুরু থেকে এখন পর্যন্ত, Bag Manufacturing এর বাস্তব উদাহরণসহ। Bangla + English.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F5F7;
+    --ink:#14213D;
+    --ink-soft:#4A5670;
+    --oxblood:#7A1F2B;
+    --thread:#E9B824;
+    --line:#D5DAE2;
+    --white:#FFFFFF;
+    --head:'Anek Bangla','Hind Siliguri','Noto Sans Bengali',sans-serif;
+    --body:'Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.7}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--oxblood);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+
+  /* Header */
+  header.top{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--white)}
+  header.top .wrap{display:flex;align-items:center;gap:12px;padding-top:10px;padding-bottom:10px}
+  .logo{font-family:var(--head);font-weight:800;font-size:20px;white-space:nowrap;text-decoration:none}
+  .logo span{color:var(--thread)}
+  .search{flex:1;min-width:0}
+  .search input{width:100%;border:0;border-radius:8px;padding:9px 12px;font:inherit;font-size:15px;background:#22335A;color:var(--white)}
+  .search input::placeholder{color:#A9B6D4}
+
+  /* Hero */
+  .hero{padding:34px 0 26px}
+  .hero .wrap{display:grid;gap:22px}
+  .hero h1{font-family:var(--head);font-weight:800;font-size:clamp(30px,8vw,46px);line-height:1.25}
+  .hero p.lead{color:var(--ink-soft);font-size:18px;max-width:34em}
+  .hero svg{width:100%;max-width:300px;height:auto;justify-self:center}
+  .cta{display:inline-block;background:var(--oxblood);color:var(--white);font-weight:600;text-decoration:none;padding:12px 22px;border-radius:10px;justify-self:start}
+  .cta:hover{background:#5E1721}
+
+  /* Process strip */
+  .process{padding:8px 0 30px}
+  .process h2,.parts h2,.guide h2{font-family:var(--head);font-size:24px;line-height:1.35;margin-bottom:6px}
+  .process p.sub,.parts p.sub{color:var(--ink-soft);font-size:15px;margin-bottom:14px}
+  .strip{list-style:none;display:flex;gap:0;overflow-x:auto;padding:14px 0 10px;scroll-snap-type:x proximity}
+  .strip li{flex:0 0 auto;scroll-snap-align:start;position:relative;padding:0 26px 0 0;font-weight:600;font-size:15px}
+  .strip li span{display:block;background:var(--white);border:1px solid var(--line);border-radius:8px;padding:8px 12px;white-space:nowrap}
+  .strip li small{display:block;color:var(--ink-soft);font-weight:400;font-size:12px;margin-top:2px}
+  .strip li:not(:last-child)::after{content:"";position:absolute;right:2px;top:20px;width:22px;border-top:3px dashed var(--thread)}
+
+  /* Parts list */
+  .parts{padding:10px 0 30px}
+  .partlist{list-style:none;border-top:1px solid var(--line)}
+  .part{border-bottom:1px solid var(--line);padding:16px 0 16px 56px;position:relative}
+  .part .no{position:absolute;left:0;top:16px;width:40px;height:40px;border-radius:50%;background:var(--ink);color:var(--white);display:grid;place-items:center;font-family:var(--head);font-weight:700}
+  .part.bag .no{background:var(--oxblood)}
+  .part h3{font-family:var(--head);font-size:19px;line-height:1.4}
+  .part h3 a{text-decoration:none}
+  .part h3 a:hover{text-decoration:underline}
+  .part p{color:var(--ink-soft);font-size:15px}
+  .tag{display:inline-block;font-size:12px;padding:1px 9px;border-radius:99px;margin-top:4px;border:1px solid var(--line);background:var(--white);color:var(--ink-soft)}
+  .tag.live{background:var(--thread);border-color:var(--thread);color:var(--ink);font-weight:600}
+  .empty{display:none;padding:18px 0;color:var(--oxblood);font-weight:500}
+
+  /* Guide */
+  .guide{padding:10px 0 40px}
+  .note{border-left:5px solid var(--thread);background:var(--white);padding:10px 14px;border-radius:0 8px 8px 0;margin:10px 0;font-size:15px}
+  .note.warn{border-left-color:var(--oxblood)}
+  .note.ok{border-left-color:#2E7D5B}
+  footer{background:var(--ink);color:#B8C3DC;padding:22px 0;font-size:14px}
+
+  @media (min-width:640px){
+    .hero .wrap{grid-template-columns:1.3fr 1fr;align-items:center}
+    .hero svg{max-width:none}
+  }
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="#top">IE <span>শিখি</span></a>
+    <div class="search">
+      <input id="q" type="search" placeholder="খুঁজুন: SMV, Takt Time, 5S…" aria-label="Topic খুঁজুন">
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+  <section class="hero">
+    <div class="wrap">
+      <div>
+        <h1>Industrial Engineering, শুরু থেকে এখন পর্যন্ত</h1>
+        <p class="lead">Bag Factory এর বাস্তব উদাহরণ দিয়ে সহজ Bangla + English এ। কোনো Point মিস হবে না, প্রতিটা Topic এ একই ধাঁচে: কী, কেন, কীভাবে, Example।</p>
+        <p style="margin-top:16px"><a class="cta" href="#parts">Part 1 থেকে শুরু করুন</a></p>
+      </div>
+      <svg viewBox="0 0 240 240" role="img" aria-label="সেলাইয়ের ফোঁড়ায় আঁকা একটি Bag এর ছবি">
+        <path d="M82 84 C82 28 158 28 158 84" fill="none" stroke="#14213D" stroke-width="10" stroke-linecap="round"/>
+        <rect x="36" y="80" width="168" height="134" rx="16" fill="#7A1F2B"/>
+        <rect x="48" y="92" width="144" height="110" rx="9" fill="none" stroke="#E9B824" stroke-width="3.5" stroke-dasharray="9 7" stroke-linecap="round"/>
+        <rect x="88" y="118" width="64" height="40" rx="6" fill="none" stroke="#E9B824" stroke-width="3" stroke-dasharray="7 6" stroke-linecap="round"/>
+        <circle cx="120" cy="138" r="5" fill="#E9B824"/>
+      </svg>
+    </div>
+  </section>
+
+  <section class="process">
+    <div class="wrap">
+      <h2>একটা Bag যেভাবে তৈরি হয়</h2>
+      <p class="sub">প্রতিটা ধাপেই IE এর কাজ আছে। পাশে স্ক্রল করে দেখুন।</p>
+      <ol class="strip">
+        <li><span>Material Inspection<small>Leather, Lining, Zipper</small></span></li>
+        <li><span>Cutting<small>Die Cut, Nesting</small></span></li>
+        <li><span>Skiving<small>Edge পাতলা</small></span></li>
+        <li><span>Printing / Logo<small>Emboss, Print</small></span></li>
+        <li><span>Pre-assembly<small>Pocket, Lining</small></span></li>
+        <li><span>Stitching<small>Body, Handle, Zipper</small></span></li>
+        <li><span>Finishing<small>Trim, Clean, Shape</small></span></li>
+        <li><span>Final QC<small>AQL, DHU</small></span></li>
+        <li><span>Packing<small>Shipment</small></span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="parts" id="parts">
+    <div class="wrap">
+      <h2>সব Part এর তালিকা (Master Checklist)</h2>
+      <p class="sub">উপর থেকে নিচে ক্রমানুসারে পড়লে একদম শুরু থেকে শেষ। যেকোনো Topic খুঁজতে উপরের Search ব্যবহার করুন।</p>
+      <ol class="partlist" id="list"></ol>
+      <p class="empty" id="empty">কিছু পাওয়া যায়নি। অন্য শব্দ দিয়ে চেষ্টা করুন, যেমন "SMV" বা "Lean"।</p>
+    </div>
+  </section>
+
+  <section class="guide">
+    <div class="wrap">
+      <h2>এই সাইট কীভাবে পড়বেন</h2>
+      <div class="note"><strong>💡 Tip:</strong> সহজ কৌশল বা শর্টকাট এই রঙের বক্সে থাকবে।</div>
+      <div class="note warn"><strong>⚠️ সতর্কতা:</strong> সাধারণ ভুল ও ঝুঁকির কথা এই বক্সে থাকবে।</div>
+      <div class="note ok"><strong>✅ মনে রাখো:</strong> পরীক্ষা বা কাজের জন্য জরুরি পয়েন্ট এই বক্সে থাকবে।</div>
+      <p style="font-size:15px;color:var(--ink-soft);margin-top:12px">প্রতিটা Term এ Bangla অর্থ ব্র্যাকেটে দেওয়া থাকবে, যেমন Bottleneck (বাধা দেওয়া ধাপ)।</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">IE শিখি · Bag Manufacturing এর জন্য Industrial Engineering গাইড · নতুন Part যোগ হচ্ছে</div>
+</footer>
+
+<script>
+  // প্রতিটা Part এর তথ্য। নতুন Part এর পেজ বানালে ready: true করে দিন।
+  const parts = [
+    {n:1,  t:"IE পরিচিতি",                 d:"IE কী, ইতিহাস (Taylor, Gilbreth), Factory তে IE Dept এর কাজ", k:"industrial engineering history taylor gilbreth role department",           ready:true, file:"part-1.html"},
+    {n:2,  t:"Method Study",               d:"Process Chart, Flow Diagram, Motion Study, Therblig",             k:"method study process chart flow diagram motion therblig",                  ready:true, file:"part-2.html"},
+    {n:3,  t:"Time Study ও Work Measurement", d:"Stopwatch Study, Rating, Allowance, SMV/SAM, Standard Time",    k:"time study stopwatch rating allowance smv sam standard time",              ready:true, file:"part-3.html"},
+    {n:4,  t:"Operation Breakdown (OB)",   d:"Operation ভাগ করা, Machine ও Manpower নির্ধারণ",                  k:"operation breakdown ob machine manpower",                                  ready:true, file:"part-4.html"},
+    {n:5,  t:"Line Balancing ও Layout",    d:"Takt Time, Bottleneck, Efficiency, Line Layout",                  k:"line balancing layout takt time bottleneck efficiency",                    ready:true, file:"part-5.html"},
+    {n:6,  t:"Production Planning",        d:"Capacity, Target Setting, Efficiency হিসাব, Learning Curve",      k:"production planning capacity target efficiency learning curve",            ready:true, file:"part-6.html"},
+    {n:7,  t:"Lean Manufacturing",         d:"৭ Waste, 5S, Kaizen, VSM, Kanban",                                k:"lean waste 5s kaizen vsm kanban",                                          ready:true, file:"part-7.html"},
+    {n:8,  t:"Quality ও Productivity",     d:"QC Tools, AQL, DHU, Productivity বাড়ানোর উপায়",                  k:"quality productivity qc tools aql dhu",                                    ready:true, file:"part-8.html"},
+    {n:9,  t:"Costing ও Incentive",        d:"CM, Cost হিসাব, Wage ও Incentive",                                k:"costing cost cm wage incentive",                                           ready:true, file:"part-9.html"},
+    {n:10, t:"Ergonomics, Safety ও Compliance", d:"কাজের ভঙ্গি, নিরাপত্তা, Buyer Compliance",                   k:"ergonomics safety compliance",                                             ready:true, file:"part-10.html"},
+    {n:11, t:"Bag Process A to Z",         d:"Cutting থেকে Packing পর্যন্ত প্রতিটা ধাপে IE এর কাজ",             k:"bag process cutting skiving stitching finishing packing leather",         ready:true, file:"part-11.html", bag:true},
+    {n:12, t:"Digital IE",                 d:"Excel, Software, Data Analysis, Industry 4.0",                    k:"digital excel software data analysis industry 4.0",                        ready:true, file:"part-12.html"},
+    {n:13, t:"Extra: Glossary, Formula, Quiz", d:"সব Term এর অর্থ, Formula Sheet, Quiz, Interview Q&A",         k:"glossary formula quiz interview",                                          ready:true, file:"part-13.html"},
+    {n:14, t:"Industry Jargons ও Basic Knowledge", d:"RSD, EX-FTY, Lead Time, Quick Changeover, Bottleneck",     k:"rsd ex-fty lead time quick changeover bottleneck jargon",                 ready:true, file:"part-14.html"},
+    {n:15, t:"IE-এর Daily Routine",        d:"Daily, Weekly, Monthly কাজ, Hourly Monitoring, Report",          k:"daily routine weekly monthly hourly monitoring report",                   ready:true, file:"part-15.html"},
+    {n:16, t:"Interview Preparation ও Career Path", d:"Case Study প্রশ্ন, রেজুমে, Career Path",                 k:"interview preparation career path resume cv case study",                  ready:true, file:"part-16.html"},
+    {n:17, t:"IE-এর Ethics, Leadership ও Politics", d:"মানুষের সাথে কাজ, বিশ্বাস অর্জন, Ethics",                k:"ethics leadership politics factory people management",                     ready:true, file:"part-17.html"}
+  ];
+
+  const list = document.getElementById('list');
+  const empty = document.getElementById('empty');
+  const q = document.getElementById('q');
+
+  function render(filter){
+    const f = (filter || '').trim().toLowerCase();
+    list.innerHTML = '';
+    let count = 0;
+    parts.forEach(p => {
+      const hay = (p.t + ' ' + p.d + ' ' + p.k).toLowerCase();
+      if (f && !hay.includes(f)) return;
+      count++;
+      const li = document.createElement('li');
+      li.className = 'part' + (p.bag ? ' bag' : '');
+      const title = p.ready ? `<a href="${p.file}">${p.t}</a>` : p.t;
+      const tag = p.ready ? '<span class="tag live">পড়া শুরু করুন</span>' : '<span class="tag">শীঘ্রই আসছে</span>';
+      li.innerHTML = `<span class="no" aria-hidden="true">${p.n}</span><h3>${title}</h3><p>${p.d}</p>${tag}`;
+      list.appendChild(li);
+    });
+    empty.style.display = count ? 'none' : 'block';
+  }
+
+  q.addEventListener('input', e => {
+    render(e.target.value);
+    if (e.target.value) document.getElementById('parts').scrollIntoView();
+  });
+  render('');
+</script>
+</body>
+</html>

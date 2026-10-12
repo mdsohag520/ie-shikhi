@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 11: Bag Process A to Z — IE শিখি</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F5F7;--ink:#14213D;--ink-soft:#4A5670;--oxblood:#7A1F2B;--thread:#E9B824;
+    --line:#D5DAE2;--white:#FFFFFF;--green:#2E7D5B;
+    --head:'Anek Bangla','Hind Siliguri','Noto Sans Bengali',sans-serif;
+    --body:'Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.75}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--oxblood);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+
+  header.top{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--white)}
+  header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
+  .logo{font-family:var(--head);font-weight:800;font-size:20px;text-decoration:none}
+  .logo span{color:var(--thread)}
+  .back{font-size:14px;color:#C9D3EA;text-decoration:none}
+  .back:hover{text-decoration:underline}
+
+  .title{padding:30px 0 10px}
+  .title .crumb{font-size:14px;color:var(--ink-soft)}
+  .title h1{font-family:var(--head);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:1.3;margin:4px 0 8px}
+  .title p{color:var(--ink-soft)}
+
+  nav.toc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0 8px}
+  nav.toc strong{font-family:var(--head);display:block;margin-bottom:4px}
+  nav.toc ol{padding-left:22px;font-size:16px}
+  nav.toc a{text-decoration:none;color:var(--oxblood)}
+  nav.toc a:hover{text-decoration:underline}
+
+  section.topic{padding:26px 0 8px;border-top:1px solid var(--line);margin-top:20px}
+  section.topic h2{font-family:var(--head);font-size:25px;line-height:1.4;margin-bottom:10px}
+  section.topic h3{font-family:var(--head);font-size:18px;margin:18px 0 4px;color:var(--oxblood)}
+  p{margin-bottom:10px}
+  ul.plain,ol.plain{padding-left:22px;margin-bottom:10px}
+  ul.plain li,ol.plain li{margin-bottom:4px}
+  b.term{font-weight:600}
+
+  .note{border-left:5px solid var(--thread);background:var(--white);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-size:16px}
+  .note.warn{border-left-color:var(--oxblood)}
+  .note.ok{border-left-color:var(--green)}
+  .example{background:var(--ink);color:var(--white);border-radius:10px;padding:14px 18px;margin:14px 0}
+  .example strong{color:var(--thread);font-family:var(--head)}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;background:var(--white)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#E6EAF0;font-family:var(--head)}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  tr.total td{background:#F6E9B8;font-weight:600}
+  tr.big td{background:#F6DADD}
+  .scroll{overflow-x:auto}
+
+  /* Flow */
+  .flow{list-style:none;margin:12px 0;padding-left:0;border-left:3px dashed var(--thread);margin-left:8px}
+  .flow li{position:relative;padding:0 0 10px 22px}
+  .flow li::before{content:"";position:absolute;left:-10px;top:8px;width:16px;height:16px;border-radius:50%;background:var(--oxblood);border:3px solid var(--paper)}
+  .flow li a{text-decoration:none;font-weight:600}
+  .flow li a:hover{text-decoration:underline}
+  .flow li span{display:block;font-size:14px;color:var(--ink-soft)}
+
+  /* Stage details */
+  .ctrl{display:flex;gap:8px;margin:8px 0 12px;flex-wrap:wrap}
+  .ctrl button{font:inherit;font-size:14px;font-weight:600;background:var(--white);border:1px solid var(--ink);color:var(--ink);border-radius:8px;padding:6px 14px;cursor:pointer}
+  .ctrl button:hover{background:var(--ink);color:var(--white)}
+  details.stage{background:var(--white);border:1px solid var(--line);border-radius:10px;margin:10px 0;scroll-margin-top:70px}
+  details.stage summary{cursor:pointer;list-style:none;padding:12px 16px;font-family:var(--head);font-weight:700;font-size:18px;display:flex;gap:10px;align-items:center}
+  details.stage summary::-webkit-details-marker{display:none}
+  details.stage summary .no{flex:0 0 auto;width:32px;height:32px;border-radius:50%;background:var(--oxblood);color:var(--white);display:grid;place-items:center;font-size:15px}
+  details.stage summary::after{content:"＋";margin-left:auto;color:var(--ink-soft)}
+  details.stage[open] summary::after{content:"－"}
+  details.stage .body{padding:0 16px 14px}
+  .kv{margin:8px 0}
+  .kv .k{font-family:var(--head);font-weight:700;color:var(--oxblood);font-size:15px}
+  .kv ul{padding-left:20px}
+  .kv li{margin-bottom:2px;font-size:16px}
+  .kv.ie{background:#FBF4D6;border-radius:8px;padding:8px 12px}
+  .kv.ie .k{color:var(--ink)}
+  .kv.df .k{color:var(--oxblood)}
+
+  .calc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:16px;margin:14px 0}
+  .calc label{display:block;font-weight:600;font-size:15px;margin:10px 0 4px}
+  .calc textarea,.calc input{width:100%;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--paper);color:var(--ink)}
+  .calc textarea{font-size:15px;line-height:1.5}
+  .calc .row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .calc button{margin-top:14px;font:inherit;font-weight:600;background:var(--oxblood);color:var(--white);border:0;border-radius:10px;padding:11px 22px;cursor:pointer}
+  .calc button:hover{background:#5E1721}
+  .calc .out{margin-top:14px;display:none}
+  .calc .err{color:var(--oxblood);font-weight:600;margin-top:10px;display:none}
+
+  .q{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+  .q p.qt{font-weight:600;margin-bottom:8px}
+  .q button{display:block;width:100%;text-align:left;font:inherit;font-size:16px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;color:var(--ink)}
+  .q button:hover{border-color:var(--ink)}
+  .q button.right{background:#DDF1E8;border-color:var(--green)}
+  .q button.wrong{background:#F6DADD;border-color:var(--oxblood)}
+  .q .why{display:none;font-size:15px;color:var(--ink-soft);margin-top:6px}
+  .score{font-family:var(--head);font-size:20px;margin-top:10px}
+
+  .pager{display:flex;justify-content:space-between;gap:10px;padding:26px 0 40px;border-top:1px solid var(--line);margin-top:26px;flex-wrap:wrap}
+  .pager a{display:inline-block;text-decoration:none;font-weight:600;padding:11px 18px;border-radius:10px}
+  .pager .prev{border:1px solid var(--ink)}
+  .pager .next{background:var(--oxblood);color:var(--white)}
+  footer{background:var(--ink);color:#B8C3DC;padding:20px 0;font-size:14px}
+  @media (max-width:520px){.calc .row{grid-template-columns:1fr}}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="index.html">IE <span>শিখি</span></a>
+    <a class="back" href="index.html#parts">← সব Part</a>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="title">
+    <div class="crumb">Part 11 / 13</div>
+    <h1>Bag Process A to Z</h1>
+    <p>Development থেকে Shipment পর্যন্ত একটা Bag এর পুরো যাত্রা। প্রতিটা ধাপে কী হয়, কোন Machine লাগে, কী Defect হয় ও IE এর কী করার আছে, সবকিছু আগের ১০টা Part এর সাথে মিলিয়ে।</p>
+  </div>
+
+  <nav class="toc" aria-label="এই Part এর সূচি">
+    <strong>এই Part এ যা আছে</strong>
+    <ol>
+      <li><a href="#t1">পুরো Flow এক নজরে</a></li>
+      <li><a href="#t2">ধাপে ধাপে বিস্তারিত (১৩টি ধাপ)</a></li>
+      <li><a href="#t3">Bag এর ধরন ভেদে পার্থক্য</a></li>
+      <li><a href="#t4">Department অনুযায়ী সারসংক্ষেপ</a></li>
+      <li><a href="#t5">সময় ও অপেক্ষার বিষয়গুলো</a></li>
+      <li><a href="#t6">নিজে হিসাব করুন (Department Manpower Planner)</a></li>
+      <li><a href="#t7">সাধারণ ভুল</a></li>
+      <li><a href="#t8">Practice Quiz</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="topic" id="t1">
+    <h2>1. পুরো Flow এক নজরে</h2>
+    <p>প্রতিটা ধাপের নামে ট্যাপ করলে ওই ধাপের বিস্তারিত খুলবে।</p>
+    <ol class="flow" id="flow"></ol>
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> সব Bag এ সব ধাপ লাগে না। Style, Material ও Buyer এর শর্ত অনুযায়ী ধাপ কম-বেশি হয়, তবে এই ক্রমটা সব জায়গায় প্রায় একই।</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="topic" id="t2">
+    <h2>2. ধাপে ধাপে বিস্তারিত</h2>
+    <p>প্রতিটা ধাপে পাঁচটা বিষয় আছে: <b>কী হয়</b>, <b>Machine ও Tool</b>, <b>সাধারণ Defect</b>, <b>Quality Check</b> ও <b>IE এর কাজ</b> (হলুদ বক্সে)।</p>
+    <div class="ctrl">
+      <button type="button" id="openall">সব খোলো</button>
+      <button type="button" id="closeall">সব বন্ধ করো</button>
+    </div>
+    <div id="stages"></div>
+
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> Machine, Tool ও পদ্ধতি Factory ও Style ভেদে আলাদা হতে পারে। এখানে সাধারণ ধারণা দেওয়া হয়েছে। নিজের Factory র আসল নিয়ম ও Buyer এর Specification দেখে নাও।</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="topic" id="t3">
+    <h2>3. Bag এর ধরন ভেদে পার্থক্য</h2>
+    <div class="scroll">
+    <table>
+      <tr><th>ধরন</th><th>বিশেষ ধাপ ও চ্যালেঞ্জ</th><th>IE এর নজর</th></tr>
+      <tr><td>Tote Bag</td><td>সরল গঠন, Handle জোড়া ও Top Edge গুরুত্বপূর্ণ</td><td>Handle ও Top Edge এর Method ও Jig</td></tr>
+      <tr><td>Structured Handbag (Lining সহ)</td><td>Reinforcement, Lining জোড়া, আকৃতি ধরে রাখা, সূক্ষ্ম Finishing</td><td>Lining Join এর SMV, Shape ধরে রাখার Method</td></tr>
+      <tr><td>Backpack</td><td>Padded Strap, বেশি Zipper ও Pocket, ফোম বা Padding, বেশি Operation</td><td>Operation সংখ্যা ও Line Balance, Sub-assembly লাইন</td></tr>
+      <tr><td>Wallet ও ছোট Leather পণ্য</td><td>Card Slot, ছোট মাপে বেশি Edge Painting ও Folding, নির্ভুলতা</td><td>Edge Painting এর Drying ও Batch, ছোট Part এর Handling</td></tr>
+      <tr><td>Duffel / Travel Bag</td><td>বড় আকার, মোটা Material, শক্ত Stitch, লম্বা Strap ও ভারী Hardware</td><td>Heavy-duty Machine, Handling এর Ergonomics</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="topic" id="t4">
+    <h2>4. Department অনুযায়ী সারসংক্ষেপ</h2>
+    <div class="scroll">
+    <table>
+      <tr><th>Department</th><th>কোন ধাপগুলো</th><th>IE এর মূল কাজ</th></tr>
+      <tr><td>Merchandising / Development</td><td>১</td><td>SMV অনুমান, Costing সহায়তা, Pre-production আলোচনা</td></tr>
+      <tr><td>Store / Incoming QC</td><td>২</td><td>Material Readiness (Part 6 এর TNA)</td></tr>
+      <tr><td>Cutting</td><td>৩, ৪</td><td>Yield, Nesting, Cutter এর Productivity</td></tr>
+      <tr><td>Pre-assembly / Skiving</td><td>৫, ৬</td><td>Drying সময়, Batch ও Jig, Dust নিয়ন্ত্রণ</td></tr>
+      <tr><td>Sewing / Assembly</td><td>৭, ৮, ৯</td><td>OB, Line Balancing, Efficiency, Layout</td></tr>
+      <tr><td>Finishing</td><td>১০</td><td>Method উন্নতি, Rework কমানো</td></tr>
+      <tr><td>Quality</td><td>২, ৩ থেকে ১২ সব ধাপে</td><td>Inspection Point ঠিক করা, DHU ও RFT (Part 8)</td></tr>
+      <tr><td>Packing / Shipping</td><td>১২, ১৩</td><td>Packing Method, Carton ঠিক করা, Shipment প্রস্তুতি</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="topic" id="t5">
+    <h2>5. সময় ও অপেক্ষার বিষয়গুলো</h2>
+    <p>Bag এর পুরো সময়ের অনেকটা অংশ যায় <b class="term">অপেক্ষায়</b> (Part 7 এর VSM এ আমরা দেখেছি VA Ratio কত কম)। Bag তৈরিতে কিছু অপেক্ষা প্রযুক্তিগত কারণে অনিবার্য:</p>
+    <ul class="plain">
+      <li><b class="term">আঠা শুকানো / Curing:</b> আঠা লাগিয়ে নির্দিষ্ট সময় অপেক্ষা না করলে জোড়া দুর্বল হয়। আঠার ধরন অনুযায়ী সময় আলাদা।</li>
+      <li><b class="term">Edge Paint শুকানো:</b> একাধিক কোট দিলে প্রতি কোটের মাঝে শুকানোর সময় লাগে।</li>
+      <li><b class="term">Material এর অপেক্ষা:</b> Leather, Hardware ও Accessories সময়মতো না এলে Line বসে থাকে।</li>
+      <li><b class="term">Approval এর অপেক্ষা:</b> Sample বা Pre-production Approval আসতে দেরি।</li>
+      <li><b class="term">Inspection ও Testing:</b> Buyer ও Lab এর পরীক্ষার সময়।</li>
+    </ul>
+
+    <div class="note"><strong>💡 Tip:</strong> Planning এ এই অপেক্ষাগুলো আলাদা করে ধরো। শুকানোর সময় অন্য কাজ চালিয়ে রাখলে (যেমন এক Batch শুকাচ্ছে, আরেক Batch এ Paint) Line থামে না। Lead Time ও Order এর তারিখ সংক্রান্ত বিষয়গুলো আমরা পরে আলাদা Part এ বিস্তারিত দেখবো।</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="topic" id="t6">
+    <h2>6. নিজে হিসাব করুন (Department Manpower Planner)</h2>
+    <p>প্রতি লাইনে লেখো: <b>Department এর নাম, প্রতি Bag এ মোট SMV (মিনিট)</b>। নিচের সংখ্যাগুলো শুধু বোঝার জন্য কাল্পনিক। নিজের Factory র সংখ্যা বসাও।</p>
+
+    <div class="calc">
+      <label for="deps">Department তালিকা (নাম, SMV)</label>
+      <textarea id="deps" rows="6">Cutting, 3
+Pre-assembly, 2
+Sewing / Assembly, 11.34
+Finishing, 3
+Packing, 1.5</textarea>
+      <div class="row">
+        <div><label for="tgt">Target (Bag/দিন)</label><input id="tgt" type="number" inputmode="decimal" value="480"></div>
+        <div><label for="mins">মিনিট/দিন</label><input id="mins" type="number" inputmode="decimal" value="480"></div>
+        <div><label for="eff">Efficiency (%)</label><input id="eff" type="number" inputmode="decimal" value="70"></div>
+      </div>
+      <button type="button" id="go">হিসাব করো</button>
+      <p class="err" id="err"></p>
+      <div class="out" id="out">
+        <div class="scroll"><table id="restable"></table></div>
+        <div class="note" id="summary"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="topic" id="t7">
+    <h2>7. সাধারণ ভুল</h2>
+    <div class="note warn"><strong>⚠️ ভুল ১:</strong> Material Receiving এ ভালো করে না দেখে সরাসরি Cutting এ দেওয়া।<br><b>সঠিক:</b> আগেই Leather এর Defect, মাপ ও Shade দেখলে পরে Rework ও Reject কমে।</div>
+    <div class="note warn"><strong>⚠️ ভুল ২:</strong> Cutting এ শুধু গতির দিকে নজর, Yield ভুলে যাওয়া।<br><b>সঠিক:</b> Leather সবচেয়ে দামি Material, তাই Yield ও Defect এড়ানো গতির সমান গুরুত্বপূর্ণ।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৩:</strong> আঠা বা Edge Paint শুকানোর আগেই পরের ধাপে পাঠানো।<br><b>সঠিক:</b> নির্দিষ্ট সময় মানো, অপেক্ষার সময় অন্য Batch চালাও।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৪:</strong> একই লটের নয় এমন Part একসাথে সেলাই করা।<br><b>সঠিক:</b> Shade মিলিয়ে Bundle করো, নইলে রঙের পার্থক্য ধরা পড়বে।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৫:</strong> Final Inspection এর আগে Finishing এ Defect না সারানো।<br><b>সঠিক:</b> In-line ও End-line এ ধরে ঠিক করো (Part 8)।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৬:</strong> Packing কে "শেষের সহজ কাজ" ভাবা।<br><b>সঠিক:</b> ভুল Carton Mark, ভুল Packing বা গুনতিতে ভুল হলে Shipment আটকে যায়।</div>
+  </section>
+
+  <!-- 8 Quiz -->
+  <section class="topic" id="t8">
+    <h2>8. Practice Quiz</h2>
+    <p>প্রতিটা প্রশ্নের একটা উত্তর বেছে নাও। সঙ্গে সঙ্গে সঠিক উত্তর ও কারণ দেখতে পাবে।</p>
+    <div id="quiz"></div>
+    <div class="score" id="score"></div>
+    <p style="margin-top:14px"><b>Home Task:</b> নিজের Factory র একটা Bag Style এর পুরো Flow এ ঘুরে প্রতিটা ধাপের একটা সাধারণ Defect ও একটা অপেক্ষা (Waiting) খুঁজে লেখো। এরপর Calculator এ Department অনুযায়ী Manpower বের করো।</p>
+  </section>
+
+  <div class="pager">
+    <a class="prev" href="part-10.html">← Part 10: Ergonomics, Safety ও Compliance</a>
+    <a class="next" href="part-12.html">Part 12: Digital IE →</a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">IE শিখি · Part 11: Bag Process A to Z</div>
+</footer>
+
+<script>
+  const stages = [
+    {
+      name:'Development ও Pre-production',
+      sub:'Tech Pack, Pattern, Sample, Costing, Approval',
+      what:[
+        'Buyer এর Tech Pack ও Sample দেখে Style বোঝা: মাপ, Material, Stitch, Hardware, Packing',
+        'Pattern ও Die তৈরি, Sample (Development, Approval) বানানো',
+        'Material তালিকা (BOM) ও Costing (Part 9) ঠিক করা',
+        'Pre-production Meeting: সবার সাথে Style, Quality ও সময় নিয়ে আলোচনা'
+      ],
+      tools:['CAD বা হাতে Pattern তৈরি','Sample Room এর Machine','Die (Cutting এর ছাঁচ)'],
+      defects:['Pattern এ মাপের ভুল','Sample ও Production এর পার্থক্য','Tech Pack এর তথ্য বাদ পড়া'],
+      check:['Sample এর মাপ ও Spec মিলিয়ে দেখা','Approved Sample সংরক্ষণ'],
+      ie:'Sample দেখে Operation তালিকা ও SMV অনুমান (Part 3, 4)। Machine ও Attachment আগেই ঠিক করা। দাম নির্ধারণে CM হিসাবে সাহায্য (Part 9)।'
+    },
+    {
+      name:'Material Receiving ও Inspection',
+      sub:'Leather, Lining, Zipper, Hardware, Thread',
+      what:[
+        'Leather/PU, Lining, Interlining, Zipper, Hardware (Rivet, Buckle, D-ring), Thread ও Packaging গ্রহণ',
+        'পরিমাণ, মাপ ও Spec মিলিয়ে দেখা, Leather এর ক্ষেত্র (Area) ও গ্রেড মাপা',
+        'Leather এর Defect (দাগ, আঁচড়, Scar, ছিদ্র, কুঁচকানো), পুরুত্ব ও রঙের Shade দেখা',
+        'Buyer এর শর্ত অনুযায়ী Lab Test (প্রযোজ্য হলে)'
+      ],
+      tools:['মাপার Tape/Area Meter','Thickness Gauge','আলোর নিচে পরীক্ষার টেবিল','Zipper/Hardware Test Tool'],
+      defects:['Leather এ দাগ বা Scar','Shade এর পার্থক্য','ভুল মাপের Zipper বা Hardware','Hardware এর রঙ বা Plating ত্রুটি'],
+      check:['Incoming Inspection রিপোর্ট','Lot অনুযায়ী আলাদা করে রাখা ও লেবেল দেওয়া'],
+      ie:'Material Readiness নিশ্চিত করা (Part 6 এর TNA)। দেরিতে Material এলে Line এর Efficiency কমে, তাই Planning এ আগে থেকে সতর্ক করা।'
+    },
+    {
+      name:'Cutting',
+      sub:'Die Cutting, Nesting, Yield',
+      what:[
+        'Leather ও Lining কাটা Pattern/Die অনুযায়ী',
+        'Leather এর Defect এড়িয়ে ও দানার দিক (Grain) ঠিক রেখে Part সাজানো (Nesting)',
+        'বড় পরিমাণ হলে Clicker/Hydraulic Press এ Die দিয়ে, দামি বা ভিন্ন আকৃতির Leather এ হাতে Template দিয়ে, অথবা CNC/Laser কাটার Machine',
+        'প্রতিটা Part এ Mark বা নম্বর দেওয়া'
+      ],
+      tools:['Clicker / Hydraulic Beam Press ও Steel Rule Die','কাটার Table, Knife ও Template','CNC/Laser Cutter (থাকলে)'],
+      defects:['Leather এর Defect Part এ চলে যাওয়া','Grain এর দিক ভুল','মাপে ভুল, কাটা Part এ ধার বা কিনারা এবড়োখেবড়ো','Die বা Knife ভোঁতা হওয়া'],
+      check:['কাটা Part এর মাপ ও Defect পরীক্ষা','Shade ও Lot মিলিয়ে রাখা'],
+      ie:'<b>Yield</b> (কত % Leather কাজে লাগলো) মাপা ও বাড়ানো (Part 9: Yield এ সামান্য উন্নতিই বড় সাশ্রয়)। Die Layout, Cutter এর Productivity (Pieces/ঘণ্টা) ও Die Maintenance।',
+      safety:'Press এ হাত চাপা পড়ার ঝুঁকি, Two-hand Control ও Guard অপরিহার্য (Part 10)।'
+    },
+    {
+      name:'Part Marking, Numbering ও Bundling',
+      sub:'Shade মিলিয়ে বান্ডিল বানানো',
+      what:[
+        'কাটা Part গুলোতে Ticket বা Marking, যাতে একই Bag এর Part একসাথে থাকে',
+        'একই Lot ও Shade এর Part এক Bundle এ রাখা',
+        'Bundle এ Style, Size/Colour, পরিমাণ ও নম্বর লেখা',
+        'পরের ধাপে পাঠানো'
+      ],
+      tools:['Ticket/Marking Tool','Bundle Tray বা ট্রলি'],
+      defects:['ভুল Bundle বা Shade মিশে যাওয়া','Part কম বা বেশি','Ticket এ ভুল তথ্য'],
+      check:['Bundle এ Part এর গুনতি ও Shade যাচাই'],
+      ie:'Bundle এর আকার ঠিক করা (খুব বড় হলে WIP ও অপেক্ষা বাড়ে, Part 7)। Bundle এর পথ ছোট রাখা (Part 2 এর Flow Diagram)।'
+    },
+    {
+      name:'Skiving ও Splitting',
+      sub:'Edge ও ভাঁজের অংশ পাতলা করা',
+      what:[
+        'যেসব জায়গায় ভাঁজ বা সেলাই হবে (Edge, Handle, Fold) সেখানে Leather এর পুরুত্ব কমানো',
+        'Splitting: পুরো Leather বা Part এর পুরুত্ব নির্দিষ্ট মাপে আনা',
+        'এতে ভাঁজ মসৃণ হয়, সেলাই সহজ হয়, জোড়ায় বাড়তি মোটা ভাব থাকে না'
+      ],
+      tools:['Skiving Machine (Edge এর জন্য)','Splitting Machine (পুরুত্বের জন্য)','হাতের Skiving Knife'],
+      defects:['বেশি পাতলা করে ফেলা ও ফুটো','অসমান Skive','Edge এ কাটা বা ছেঁড়া'],
+      check:['পুরুত্ব ও Skive Width মাপা (Gauge দিয়ে)','Sample এর সাথে তুলনা'],
+      ie:'Operation এর SMV মাপা, Skiving এর জায়গা আলাদা রাখা ও ধুলো নিয়ন্ত্রণ। Blade ধার ঠিক রাখার সময়সূচি।',
+      safety:'ধারালো Blade এ হাত কাটার ঝুঁকি। Guard, প্রশিক্ষণ ও Machine বন্ধ করে পরিষ্কার (Part 10)।'
+    },
+    {
+      name:'Pre-assembly: Reinforcement, Edge ও Logo',
+      sub:'Reinforcement, Edge Painting/Folding, Logo, Punching',
+      what:[
+        'Reinforcement/Interlining (শক্ত বা আকৃতি দেওয়া স্তর) আঠা বা তাপ দিয়ে লাগানো',
+        'Edge Painting বা Edge Folding: Part এর কিনারা রঙ করে বা ভাঁজ করে সুন্দর ও মজবুত করা (একাধিক কোট ও শুকানো)',
+        'Logo বা Branding: Hot Stamping, Embossing, Print বা Laser',
+        'Hardware এর জন্য ছিদ্র করা (Punching), Stitch Line Marking'
+      ],
+      tools:['Edge Paint Machine ও Edge Folding Machine','Heat Press / আঠা লাগানোর Tool','Hot Stamping/Embossing Press','Punching Machine'],
+      defects:['Edge Paint এ দাগ, ফোঁটা বা অসমান কোট','আঠার দাগ বা ভাঁজ সরে যাওয়া','Logo ভুল জায়গায় বা অস্পষ্ট','ছিদ্র ভুল জায়গায়'],
+      check:['Edge এর সমান রঙ ও মসৃণতা','Logo এর Position ও স্পষ্টতা (Template দিয়ে)','শুকানোর সময় মানা হয়েছে কি না'],
+      ie:'এখানে <b>শুকানোর সময়</b> সবচেয়ে বড় অপেক্ষা। Batch সাজিয়ে এক Batch শুকানোর সময় আরেক Batch এ কাজ। Jig/Template দিয়ে Logo ও ছিদ্রের জায়গা নির্ভুল রাখা (Poka-Yoke, Part 7)।',
+      safety:'আঠা ও Edge Paint এর ধোঁয়া ও আগুনের ঝুঁকি। Ventilation, ঢাকনা বন্ধ রাখা, SDS (Part 10)।'
+    },
+    {
+      name:'Sub-assembly: Handle, Pocket, Zipper, Lining',
+      sub:'ছোট ছোট অংশ আগে তৈরি',
+      what:[
+        'Handle/Strap তৈরি: কাটা, Skive, Core (ভেতরের শক্ত অংশ) বসানো, ভাঁজ ও Stitch',
+        'Pocket তৈরি ও Zipper লাগানো',
+        'Lining এর Pocket ও অন্য অংশ সেলাই',
+        'Main Body তে জোড়ার আগে এই অংশগুলো আলাদা লাইনে তৈরি (Part 4 এর Precedence এর সমান্তরাল লাইন)'
+      ],
+      tools:['Flatbed Lockstitch Machine','Folder, Guide ও Roller/Teflon Foot (Leather আটকে না যেতে)','Leather/Wedge Point Needle ও Bonded Thread'],
+      defects:['Skipped/Broken Stitch','Stitch অসমান বা SPI ভুল','Zipper Misalign','Handle এর দৈর্ঘ্যে অমিল'],
+      check:['Stitch পরীক্ষা (SPI ও সোজা কি না)','Zipper চালিয়ে দেখা','Handle এর দৈর্ঘ্য মাপা'],
+      ie:'OB তে সমান্তরাল লাইন আলাদা করা, প্রতিটা Operation এর Attachment/Jig ঠিক করা (Part 2, 4)। Line Balancing (Part 5)।'
+    },
+    {
+      name:'Main Assembly Sewing',
+      sub:'Body, Gusset, Handle, Lining জোড়া',
+      what:[
+        'Body Panel ও Gusset (পাশ) জোড়া',
+        'Handle/Strap Body তে লাগানো',
+        'Lining Body তে জোড়া ও Top Edge Stitch',
+        'প্রয়োজনে Turning বা আকার ঠিক করা'
+      ],
+      tools:['Post-bed Machine','Cylinder-bed Machine','Heavy-duty Compound-feed Machine','Bar-tack Machine (Handle জোড়ায় শক্তি বাড়াতে)'],
+      defects:['Handle এর Stitch দুর্বল বা সরে যাওয়া','Body Symmetry (সমতা) নষ্ট','Puckering বা কুঁচকানো','Lining এ ভাঁজ বা বেরিয়ে আসা'],
+      check:['In-line Inspection: Stitch, Alignment ও Symmetry','Handle জোড়ার শক্তি (Buyer এর শর্ত অনুযায়ী)'],
+      ie:'এটাই বেশিরভাগ SMV ও Operator এর জায়গা। Bottleneck ঠিক করা, Balance Efficiency ও Line Efficiency (Part 5, 6) নজরে রাখা।'
+    },
+    {
+      name:'Hardware Fixing',
+      sub:'Rivet, Snap, Buckle, D-ring, Logo Plate',
+      what:[
+        'Rivet, Snap Button, Eyelet, Buckle, D-ring ও Logo Plate লাগানো',
+        'Magnetic Closure বা Feet (নিচের পায়া) লাগানো (প্রযোজ্য হলে)'
+      ],
+      tools:['Rivet/Snap/Eyelet Press','Setting Tool ও Position Jig'],
+      defects:['Hardware ভুল জায়গায় বা বাঁকা','ঢিলা বা বেশি চাপে নষ্ট Leather','Plating এ আঁচড়','Hardware এর রঙ ভুল'],
+      check:['Position ও শক্তি যাচাই (Pull Test, Buyer এর শর্ত অনুযায়ী)','আঁচড় বা দাগ পরীক্ষা'],
+      ie:'Position Jig বানিয়ে Poka-Yoke করা, Press এর Setting Standard করা, Hardware আগে থেকে Station এ প্রস্তুত রাখা (Kanban, Part 7)।',
+      safety:'Press এ হাত চাপা পড়ার ঝুঁকি, Guard ও Two-hand Control (Part 10)।'
+    },
+    {
+      name:'Finishing',
+      sub:'পরিষ্কার, Trimming, আকার ঠিক করা',
+      what:[
+        'ঝুলে থাকা সুতো ছাঁটা (Trimming)',
+        'দাগ, আঠার চিহ্ন ও ধুলো পরিষ্কার',
+        'Edge এর ছোটখাটো ত্রুটি ঠিক করা (Touch-up)',
+        'নিয়ন্ত্রিত তাপ বা অন্য উপায়ে আকার ঠিক করা, Leather Polish/Conditioning (প্রযোজ্য হলে)',
+        'আকার ধরে রাখতে ভেতরে Paper বা Filler ভরা'
+      ],
+      tools:['Trimming Scissor/Snips','পরিষ্কারের কাপড় ও অনুমোদিত Cleaner','Heat Gun/Steam (সতর্কতায়)','Brush ও Polish'],
+      defects:['Loose Thread রয়ে যাওয়া','দাগ বা আঠার চিহ্ন','আকৃতি বিকৃত','তাপে Leather বা Hardware এর ক্ষতি'],
+      check:['পুরো Bag এর চেহারা, Symmetry, Zipper ও Hardware এর কাজ পরীক্ষা'],
+      ie:'Finishing এ বেশি Rework মানে আগের ধাপে সমস্যা। Defect এর Pareto (Part 8) করে মূল উৎস বের করা। Trimming এর Method ও Workstation উন্নত করা।'
+    },
+    {
+      name:'Quality Inspection ও Testing',
+      sub:'In-line, End-line, Final (AQL)',
+      what:[
+        'In-line ও End-line Inspection: DHU, RFT মাপা',
+        'Final Inspection: Buyer এর AQL অনুযায়ী নমুনা পরীক্ষা (Part 8)',
+        'Buyer এর শর্তে Test: Handle/Hardware Pull, Zipper চালানোর পরীক্ষা, রঙ ওঠা (Rub/Crocking) ইত্যাদি'
+      ],
+      tools:['Inspection Table ও আলো','Pull Test ও অন্যান্য Test Equipment','Check Sheet ও Defect Chart'],
+      defects:['Major বা Minor Defect','Test এ ব্যর্থতা','Specification এর বাইরে মাপ'],
+      check:['AQL অনুযায়ী Lot পাস/ফেল সিদ্ধান্ত','Defect এর ছবিসহ রেকর্ড'],
+      ie:'কোথায় কোথায় Inspection Point বসবে ঠিক করা, Defect তথ্য থেকে Pareto ও Root Cause (Part 8)। Inspector এর Workstation ও Layout।'
+    },
+    {
+      name:'Packing',
+      sub:'Tag, Polybag, Carton',
+      what:[
+        'Hang Tag, Barcode/SKU Label ও অন্য Label Buyer এর নির্দেশ মতো লাগানো',
+        'Tissue বা Dust Bag (প্রযোজ্য হলে), Polybag এ ভরা (প্রয়োজনীয় Warning Buyer অনুযায়ী)',
+        'Carton এ নির্দিষ্ট সংখ্যায় সাজানো, Carton Mark লাগানো',
+        'Packing List তৈরি'
+      ],
+      tools:['Packing Table','Tag Gun/Sticker','Carton ও টেপ','Weighing Scale'],
+      defects:['ভুল Tag/Barcode','ভুল পরিমাণ বা Size/Colour মিশে যাওয়া','ভাঙা বা নোংরা Carton','Carton Mark ভুল'],
+      check:['Packing Spec ও Carton Mark মিলিয়ে দেখা','Carton এ গুনতি ও ওজন যাচাই'],
+      ie:'Packing এর Standard Method ও SMV ঠিক করা। Carton এর আকার ঠিক করা, যাতে জায়গা বাঁচে (CBM)। Packing Table এর Layout ও Material এর নাগাল (Part 2)।'
+    },
+    {
+      name:'Shipment',
+      sub:'Pre-shipment Inspection, কাগজপত্র, Ex-factory',
+      what:[
+        'Buyer বা তাদের প্রতিনিধির Pre-shipment (Final) Inspection',
+        'Shipping কাগজপত্র তৈরি',
+        'Container/গাড়িতে Loading ও Factory থেকে পাঠানো',
+        'Buyer কে জানানো ও শিপমেন্টের ফলো-আপ'
+      ],
+      tools:['Packing List ও Shipping Documents','Loading এর জন্য ট্রলি/Pallet'],
+      defects:['কাগজে ভুল তথ্য','পরিমাণে গরমিল','দেরিতে পৌঁছানো'],
+      check:['Packing List এর সাথে আসল Carton ও পরিমাণ মেলানো','Delivery এর সময়সূচি মেলানো'],
+      ie:'সময়মতো Shipment নিশ্চিত করতে Planning ও Capacity ঠিক রাখা (Part 6)। Order, তারিখ ও Shipment সংক্রান্ত কোম্পানির নির্দিষ্ট শব্দ ও নিয়ম আমরা পরে আলাদা Part এ বিস্তারিত দেখবো।'
+    }
+  ];
+
+  // Build flow list and stage details
+  const flow = document.getElementById('flow');
+  const box = document.getElementById('stages');
+  function li(arr){ return arr.map(x => '<li>' + x + '</li>').join(''); }
+
+  stages.forEach((s, i) => {
+    const id = 'stage-' + i;
+    const f = document.createElement('li');
+    f.innerHTML = '<a href="#' + id + '" data-open="' + id + '">' + i + '. ' + s.name + '</a><span>' + s.sub + '</span>';
+    flow.appendChild(f);
+
+    const d = document.createElement('details');
+    d.className = 'stage'; d.id = id;
+    let html = '<summary><span class="no">' + i + '</span><span>' + s.name + '</span></summary><div class="body">';
+    html += '<div class="kv"><div class="k">কী হয়</div><ul>' + li(s.what) + '</ul></div>';
+    html += '<div class="kv"><div class="k">Machine ও Tool</div><ul>' + li(s.tools) + '</ul></div>';
+    html += '<div class="kv df"><div class="k">সাধারণ Defect</div><ul>' + li(s.defects) + '</ul></div>';
+    html += '<div class="kv"><div class="k">Quality Check</div><ul>' + li(s.check) + '</ul></div>';
+    html += '<div class="kv ie"><div class="k">IE এর কাজ</div><p style="margin:2px 0 0">' + s.ie + '</p></div>';
+    if (s.safety) html += '<div class="note warn" style="margin:10px 0 0"><strong>⚠️ Safety:</strong> ' + s.safety + '</div>';
+    html += '</div>';
+    d.innerHTML = html;
+    box.appendChild(d);
+  });
+  document.getElementById('stage-2').open = true;
+
+  // Open a stage when flow link is tapped
+  flow.addEventListener('click', e => {
+    const a = e.target.closest('a[data-open]');
+    if (!a) return;
+    const el = document.getElementById(a.getAttribute('data-open'));
+    if (el) el.open = true;
+  });
+  document.getElementById('openall').addEventListener('click', () => box.querySelectorAll('details').forEach(d => d.open = true));
+  document.getElementById('closeall').addEventListener('click', () => box.querySelectorAll('details').forEach(d => d.open = false));
+
+  // ---- Department Manpower Planner ----
+  document.getElementById('go').addEventListener('click', function(){
+    const err = document.getElementById('err');
+    const out = document.getElementById('out');
+    err.style.display = 'none'; out.style.display = 'none';
+    const tgt = parseFloat(document.getElementById('tgt').value);
+    const mins = parseFloat(document.getElementById('mins').value);
+    const eff = parseFloat(document.getElementById('eff').value);
+    if ([tgt,mins].some(n => isNaN(n) || n <= 0)) { err.textContent = 'Target ও মিনিট ০ এর চেয়ে বড় সংখ্যায় লিখুন।'; err.style.display = 'block'; return; }
+    if (isNaN(eff) || eff <= 0 || eff > 100) { err.textContent = 'Efficiency ১ থেকে ১০০ এর মধ্যে লিখুন।'; err.style.display = 'block'; return; }
+
+    const deps = [];
+    for (const raw of document.getElementById('deps').value.split('\n')) {
+      const line = raw.trim(); if (!line) continue;
+      const idx = line.lastIndexOf(',');
+      if (idx < 0) { err.textContent = 'প্রতি লাইনে "নাম, SMV" লিখুন। সমস্যা: ' + line; err.style.display = 'block'; return; }
+      const name = line.slice(0, idx).trim(), smv = parseFloat(line.slice(idx + 1));
+      if (!name || isNaN(smv) || smv <= 0) { err.textContent = 'এই লাইনে নাম বা SMV ঠিক নেই: ' + line; err.style.display = 'block'; return; }
+      deps.push({name, smv});
+    }
+    if (!deps.length) { err.textContent = 'অন্তত একটা Department লিখুন।'; err.style.display = 'block'; return; }
+
+    let totSmv = 0, totExact = 0, totCeil = 0, maxEx = 0;
+    deps.forEach(d => {
+      d.exact = tgt * d.smv / (mins * eff / 100);
+      d.ceil = Math.ceil(d.exact - 1e-9);
+      totSmv += d.smv; totExact += d.exact; totCeil += d.ceil;
+      if (d.exact > maxEx) maxEx = d.exact;
+    });
+
+    const tbl = document.getElementById('restable');
+    tbl.innerHTML = '';
+    const head = document.createElement('tr');
+    ['Department','SMV','Operator (হিসাব)','Operator (পূর্ণসংখ্যা)'].forEach((h,i) => { const th = document.createElement('th'); th.textContent = h; if (i) th.className = 'num'; head.appendChild(th); });
+    tbl.appendChild(head);
+    deps.forEach(d => {
+      const tr = document.createElement('tr');
+      if (d.exact === maxEx) tr.className = 'big';
+      [d.name, d.smv.toFixed(2), d.exact.toFixed(2), String(d.ceil)].forEach((t,i) => { const td = document.createElement('td'); td.textContent = t; if (i) td.className = 'num'; tr.appendChild(td); });
+      tbl.appendChild(tr);
+    });
+    const tt = document.createElement('tr'); tt.className = 'total';
+    ['মোট', totSmv.toFixed(2), totExact.toFixed(2), String(totCeil)].forEach((t,i) => { const td = document.createElement('td'); td.textContent = t; if (i) td.className = 'num'; tt.appendChild(td); });
+    tbl.appendChild(tt);
+
+    const big = deps.filter(d => d.exact === maxEx).map(d => d.name).join(', ');
+    document.getElementById('summary').textContent =
+      'Target ' + tgt + ' Bag/দিন, Efficiency ' + eff + '% এ হিসাবে মোট ' + totExact.toFixed(1) + ' জন, প্রতি Department পূর্ণসংখ্যায় ধরলে ' + totCeil +
+      ' জন লাগছে। সবচেয়ে বেশি লোক লাগে: ' + big + '। এরপর Absenteeism (Part 6) ধরে বাড়তি লোক রাখো।';
+    out.style.display = 'block';
+  });
+
+  // ---- Quiz ----
+  const quiz = [
+    {q:"Cutting ধাপে সবচেয়ে গুরুত্বপূর্ণ সূচক কোনটি, বিশেষ করে Leather এ?",
+     o:["Yield (কত % Leather কাজে লাগলো)","শুধু গতি","Machine এর রঙ"],
+     a:0, w:"Leather সবচেয়ে দামি Material। Yield বাড়ালে সরাসরি খরচ কমে, তাই Cutting এ Yield ও Defect এড়ানো খুব গুরুত্বপূর্ণ।"},
+    {q:"Skiving এর উদ্দেশ্য কী?",
+     o:["Leather এর রঙ বদলানো","ভাঁজ ও সেলাইয়ের জায়গায় Leather পাতলা করা","Bag এ Logo বসানো"],
+     a:1, w:"Skiving এ Edge বা ভাঁজের জায়গায় পুরুত্ব কমানো হয়, যাতে ভাঁজ মসৃণ হয় ও সেলাই সহজ হয়।"},
+    {q:"Edge Painting এ কোন বিষয়টা Planning এ আলাদা করে ধরা দরকার?",
+     o:["শুকানোর (Drying) সময়","Operator এর জামার রঙ","Packing এর Carton"],
+     a:0, w:"প্রতি কোটের পর শুকাতে সময় লাগে। এই অপেক্ষা Planning এ ধরে Batch সাজালে Line থামে না।"},
+    {q:"Bag এর Final Inspection সাধারণত কীসের ভিত্তিতে হয়?",
+     o:["Operator এর অনুমান","AQL অনুযায়ী নমুনা পরীক্ষা","শুধু Packing এর গুনতি"],
+     a:1, w:"Final Inspection সাধারণত Buyer এর AQL অনুযায়ী নমুনা নিয়ে করা হয় (Part 8)।"},
+    {q:"Target 300 Bag/দিন, SMV 2, 480 মিনিট/দিন, 100% Efficiency হলে ন্যূনতম কতজন Operator লাগবে?",
+     o:["1 জন","2 জন","3 জন"],
+     a:1, w:"Operator = 300 × 2 ÷ 480 = 1.25। পূর্ণসংখ্যায় ন্যূনতম 2 জন লাগবে।"}
+  ];
+
+  const qbox = document.getElementById('quiz');
+  const scoreEl = document.getElementById('score');
+  let answered = 0, correct = 0;
+  quiz.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'q';
+    d.innerHTML = `<p class="qt">${i+1}. ${item.q}</p>`;
+    const why = document.createElement('p');
+    why.className = 'why';
+    const btns = item.o.map((txt, j) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = txt;
+      b.addEventListener('click', () => {
+        if (d.dataset.done) return;
+        d.dataset.done = '1';
+        answered++;
+        if (j === item.a) { b.classList.add('right'); correct++; why.textContent = '✅ সঠিক! ' + item.w; }
+        else { b.classList.add('wrong'); btns[item.a].classList.add('right'); why.textContent = '⚠️ ভুল। ' + item.w; }
+        why.style.display = 'block';
+        if (answered === quiz.length) {
+          scoreEl.textContent = `তোমার স্কোর: ${correct} / ${quiz.length}` + (correct === quiz.length ? ' 🎉 দারুণ!' : ' — আবার পড়ে চেষ্টা করো।');
+        }
+      });
+      d.appendChild(b);
+      return b;
+    });
+    d.appendChild(why);
+    qbox.appendChild(d);
+  });
+</script>
+</body>
+</html>

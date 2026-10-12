@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 4: Operation Breakdown (OB) — IE শিখি</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F5F7;--ink:#14213D;--ink-soft:#4A5670;--oxblood:#7A1F2B;--thread:#E9B824;
+    --line:#D5DAE2;--white:#FFFFFF;--green:#2E7D5B;
+    --head:'Anek Bangla','Hind Siliguri','Noto Sans Bengali',sans-serif;
+    --body:'Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.75}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--oxblood);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+
+  header.top{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--white)}
+  header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
+  .logo{font-family:var(--head);font-weight:800;font-size:20px;text-decoration:none}
+  .logo span{color:var(--thread)}
+  .back{font-size:14px;color:#C9D3EA;text-decoration:none}
+  .back:hover{text-decoration:underline}
+
+  .title{padding:30px 0 10px}
+  .title .crumb{font-size:14px;color:var(--ink-soft)}
+  .title h1{font-family:var(--head);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:1.3;margin:4px 0 8px}
+  .title p{color:var(--ink-soft)}
+
+  nav.toc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0 8px}
+  nav.toc strong{font-family:var(--head);display:block;margin-bottom:4px}
+  nav.toc ol{padding-left:22px;font-size:16px}
+  nav.toc a{text-decoration:none;color:var(--oxblood)}
+  nav.toc a:hover{text-decoration:underline}
+
+  section.topic{padding:26px 0 8px;border-top:1px solid var(--line);margin-top:20px}
+  section.topic h2{font-family:var(--head);font-size:25px;line-height:1.4;margin-bottom:10px}
+  section.topic h3{font-family:var(--head);font-size:18px;margin:18px 0 4px;color:var(--oxblood)}
+  p{margin-bottom:10px}
+  ul.plain,ol.plain{padding-left:22px;margin-bottom:10px}
+  ul.plain li,ol.plain li{margin-bottom:4px}
+  b.term{font-weight:600}
+
+  .note{border-left:5px solid var(--thread);background:var(--white);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-size:16px}
+  .note.warn{border-left-color:var(--oxblood)}
+  .note.ok{border-left-color:var(--green)}
+  .example{background:var(--ink);color:var(--white);border-radius:10px;padding:14px 18px;margin:14px 0}
+  .example strong{color:var(--thread);font-family:var(--head)}
+  .formula{background:var(--white);border:2px solid var(--ink);border-radius:10px;padding:12px 16px;margin:12px 0;font-family:var(--head);font-size:18px;line-height:1.8}
+  .formula small{display:block;font-family:var(--body);font-size:14px;color:var(--ink-soft)}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;background:var(--white)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#E6EAF0;font-family:var(--head)}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  tr.total td{background:#F6E9B8;font-weight:600}
+  tr.big td{background:#F6DADD}
+  .scroll{overflow-x:auto}
+
+  .steps{list-style:none;margin:12px 0;padding-left:0;border-left:3px dashed var(--thread);margin-left:8px}
+  .steps li{position:relative;padding:0 0 12px 20px}
+  .steps li::before{content:"";position:absolute;left:-9px;top:9px;width:15px;height:15px;border-radius:50%;background:var(--oxblood);border:3px solid var(--paper)}
+
+  .calc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:16px;margin:14px 0}
+  .calc label{display:block;font-weight:600;font-size:15px;margin:10px 0 4px}
+  .calc textarea,.calc input{width:100%;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--paper);color:var(--ink)}
+  .calc textarea{font-size:15px;line-height:1.5}
+  .calc .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .calc button{margin-top:14px;font:inherit;font-weight:600;background:var(--oxblood);color:var(--white);border:0;border-radius:10px;padding:11px 22px;cursor:pointer}
+  .calc button:hover{background:#5E1721}
+  .calc .out{margin-top:14px;display:none}
+  .calc .err{color:var(--oxblood);font-weight:600;margin-top:10px;display:none}
+
+  .q{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+  .q p.qt{font-weight:600;margin-bottom:8px}
+  .q button{display:block;width:100%;text-align:left;font:inherit;font-size:16px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;color:var(--ink)}
+  .q button:hover{border-color:var(--ink)}
+  .q button.right{background:#DDF1E8;border-color:var(--green)}
+  .q button.wrong{background:#F6DADD;border-color:var(--oxblood)}
+  .q .why{display:none;font-size:15px;color:var(--ink-soft);margin-top:6px}
+  .score{font-family:var(--head);font-size:20px;margin-top:10px}
+
+  .pager{display:flex;justify-content:space-between;gap:10px;padding:26px 0 40px;border-top:1px solid var(--line);margin-top:26px;flex-wrap:wrap}
+  .pager a{display:inline-block;text-decoration:none;font-weight:600;padding:11px 18px;border-radius:10px}
+  .pager .prev{border:1px solid var(--ink)}
+  .pager .next{background:var(--oxblood);color:var(--white)}
+  footer{background:var(--ink);color:#B8C3DC;padding:20px 0;font-size:14px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="index.html">IE <span>শিখি</span></a>
+    <a class="back" href="index.html#parts">← সব Part</a>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="title">
+    <div class="crumb">Part 4 / 13</div>
+    <h1>Operation Breakdown (OB)</h1>
+    <p>একটা Bag কে ছোট ছোট Operation এ ভাগ করে, প্রতিটার Machine, SMV ও Operator সংখ্যা ঠিক করার পুরো পদ্ধতি। এটাই Line Setup এর প্রথম ও সবচেয়ে জরুরি দলিল।</p>
+  </div>
+
+  <nav class="toc" aria-label="এই Part এর সূচি">
+    <strong>এই Part এ যা আছে</strong>
+    <ol>
+      <li><a href="#t1">OB কী ও কেন</a></li>
+      <li><a href="#t2">OB Sheet এ কী কী থাকে</a></li>
+      <li><a href="#t3">OB বানানোর ধাপ</a></li>
+      <li><a href="#t4">Bag এর Machine ও Tool</a></li>
+      <li><a href="#t5">পুরো Example: Tote Bag এর OB</a></li>
+      <li><a href="#t6">Precedence (কোনটার পর কোনটা)</a></li>
+      <li><a href="#t7">Manpower হিসাব</a></li>
+      <li><a href="#t8">নিজে হিসাব করুন (OB Calculator)</a></li>
+      <li><a href="#t9">সাধারণ ভুল</a></li>
+      <li><a href="#t10">Practice Quiz</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="topic" id="t1">
+    <h2>1. OB কী ও কেন</h2>
+
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Operation Breakdown (OB)</b> বা <b class="term">Operation Bulletin</b> হলো একটা Style (যেমন একটা Tote Bag) তৈরির সব Operation এর <b class="term">ক্রমানুসারে তালিকা</b>, যেখানে প্রতিটার নাম, Machine, SMV ও দরকারি Operator লেখা থাকে।</p>
+
+    <h3>কেন</h3>
+    <ul class="plain">
+      <li>কয়জন Operator ও কোন কোন Machine লাগবে তা আগেই জানতে।</li>
+      <li>Line Balancing (Part 5) এর ভিত্তি তৈরি করতে।</li>
+      <li>মোট SMV থেকে <b class="term">Cost ও Target</b> বের করতে।</li>
+      <li>Operator কে Training দিতে এবং Line এ সবাইকে একই নিয়মে কাজ করাতে।</li>
+      <li>Production শুরুর আগেই Machine, Attachment ও Jig এর দরকার বুঝতে।</li>
+    </ul>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> OB হলো Line এর <b>নকশা</b>। নকশা ভুল হলে পুরো Line এ জট, বসে থাকা ও Defect তৈরি হয়।</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="topic" id="t2">
+    <h2>2. OB Sheet এ কী কী থাকে</h2>
+
+    <div class="scroll">
+    <table>
+      <tr><th>Column</th><th>কী লেখা হয়</th></tr>
+      <tr><td>Op No.</td><td>Operation এর ক্রমিক নম্বর</td></tr>
+      <tr><td>Operation Name</td><td>কাজের নাম, সহজ ও পরিষ্কার</td></tr>
+      <tr><td>Section / Line</td><td>কোন অংশের কাজ (Handle, Pocket, Body, Final)</td></tr>
+      <tr><td>Machine / Tool</td><td>কোন Machine বা হাতের Tool</td></tr>
+      <tr><td>Attachment / Jig</td><td>Folder, Guide, Template ইত্যাদি</td></tr>
+      <tr><td>SMV</td><td>Part 3 এ মাপা Standard Minute Value</td></tr>
+      <tr><td>Operator সংখ্যা</td><td>Target অনুযায়ী হিসাব করা</td></tr>
+      <tr><td>Remarks</td><td>Stitch Per Inch (SPI), Thread, Quality Point</td></tr>
+    </table>
+    </div>
+
+    <div class="note"><strong>💡 Tip:</strong> Operation এর নাম লেখার সহজ নিয়ম: <b>কাজ + কী + কোথায়</b>। যেমন "Zipper Attach to Pocket", "Handle Attach to Body"। এতে নতুন লোকও বোঝে।</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="topic" id="t3">
+    <h2>3. OB বানানোর ধাপ</h2>
+
+    <h3>কীভাবে</h3>
+    <ol class="steps">
+      <li><b>Sample ও Tech Pack ভালো করে দেখো।</b> Bag এর ছবি, মাপ, Material, Stitch এর বিবরণ বুঝে নাও।</li>
+      <li><b>Bag কে Component এ ভাগ করো।</b> যেমন Body, Gusset (পাশ), Handle, Pocket, Lining, Zipper, Logo।</li>
+      <li><b>প্রতিটা Component এর Operation লেখো।</b> Pre-assembly (Skiving, Edge Painting) ও Assembly (Stitching) আলাদা করো।</li>
+      <li><b>ক্রম ঠিক করো।</b> কোন Operation এর আগে কোনটা লাগবে (Precedence)।</li>
+      <li><b>Machine বাছো।</b> প্রতিটা Operation এর জন্য সবচেয়ে উপযুক্ত Machine ও Attachment।</li>
+      <li><b>SMV বসাও।</b> Time Study (Part 3), Standard Data বা PTS থেকে।</li>
+      <li><b>Manpower হিসাব করো।</b> Target অনুযায়ী প্রতিটা Operation এ কয়জন লাগবে।</li>
+      <li><b>Sample Line এ যাচাই করো।</b> কাগজের হিসাব বাস্তবে মেলে কি না দেখো, মিলিয়ে OB চূড়ান্ত করো।</li>
+    </ol>
+  </section>
+
+  <!-- 4 -->
+  <section class="topic" id="t4">
+    <h2>4. Bag এর Machine ও Tool</h2>
+
+    <p>Bag এ সাধারণত এই ধরনের Machine ব্যবহার হয়:</p>
+    <div class="scroll">
+    <table>
+      <tr><th>Machine</th><th>কাজ</th></tr>
+      <tr><td>Flatbed Single Needle Lockstitch</td><td>সমতল অংশ জোড়া, Pocket, Lining, Zipper</td></tr>
+      <tr><td>Post-bed Machine</td><td>উঁচু বা গোল অংশ, Bag এর Body ও Handle জোড়া</td></tr>
+      <tr><td>Cylinder-bed Machine</td><td>নলাকার অংশ, ছোট বা বাঁকা জায়গায় Stitch</td></tr>
+      <tr><td>Skiving Machine</td><td>Leather এর Edge পাতলা করা</td></tr>
+      <tr><td>Edge Painting / Folding Machine</td><td>Edge এ রঙ লাগানো ও ভাঁজ করা</td></tr>
+      <tr><td>Rivet / Snap / Eyelet Press</td><td>Rivet, Button, Eyelet লাগানো</td></tr>
+      <tr><td>Gluing / Cementing (হাতে বা Machine এ)</td><td>Stitch এর আগে Part গুলো আঠা দিয়ে লাগানো</td></tr>
+    </table>
+    </div>
+
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> Machine এর নাম ও ধরন Factory ভেদে আলাদা হতে পারে। নিজের Factory এর Machine তালিকা দেখে OB তে সঠিক নাম লেখো।</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="topic" id="t5">
+    <h2>5. পুরো Example: Tote Bag এর OB</h2>
+    <p>একটা কাল্পনিক Tote Bag এর সরলীকৃত OB (১২টা Operation):</p>
+
+    <div class="scroll">
+    <table>
+      <tr><th>Op</th><th>Operation</th><th>Section</th><th>Machine</th><th class="num">SMV</th></tr>
+      <tr><td>1</td><td>Skive Body Panel Edge</td><td>Body</td><td>Skiving M/C</td><td class="num">0.45</td></tr>
+      <tr><td>2</td><td>Paint Handle Edge</td><td>Handle</td><td>Edge Paint M/C</td><td class="num">0.60</td></tr>
+      <tr><td>3</td><td>Fold &amp; Stitch Handle</td><td>Handle</td><td>Flatbed 1N</td><td class="num">0.74</td></tr>
+      <tr><td>4</td><td>Stitch Pocket Lining</td><td>Pocket</td><td>Flatbed 1N</td><td class="num">0.90</td></tr>
+      <tr><td>5</td><td>Attach Zipper to Pocket</td><td>Pocket</td><td>Flatbed 1N</td><td class="num">1.20</td></tr>
+      <tr><td>6</td><td>Attach Pocket to Lining</td><td>Pocket</td><td>Flatbed 1N</td><td class="num">0.85</td></tr>
+      <tr><td>7</td><td>Stitch Lining Side Seam</td><td>Pocket</td><td>Flatbed 1N</td><td class="num">0.80</td></tr>
+      <tr><td>8</td><td>Stitch Body Side Seam</td><td>Body</td><td>Post-bed</td><td class="num">1.10</td></tr>
+      <tr><td>9</td><td>Attach Handle to Body</td><td>Final</td><td>Post-bed</td><td class="num">1.30</td></tr>
+      <tr><td>10</td><td>Fold &amp; Stitch Top Edge</td><td>Final</td><td>Flatbed 1N</td><td class="num">1.40</td></tr>
+      <tr><td>11</td><td>Join Lining to Body</td><td>Final</td><td>Post-bed</td><td class="num">1.50</td></tr>
+      <tr><td>12</td><td>Fix Logo Plate (Rivet)</td><td>Final</td><td>Rivet Press</td><td class="num">0.50</td></tr>
+      <tr class="total"><td colspan="4">মোট SMV</td><td class="num">11.34</td></tr>
+    </table>
+    </div>
+
+    <div class="example">
+      <strong>এখান থেকে কী জানা গেল?</strong><br>
+      • একটা Bag বানাতে মোট শ্রম লাগে <strong>১১.৩৪ মিনিট</strong>।<br>
+      • সবচেয়ে বেশি সময় লাগে Operation 11 (Lining Join, 1.50)।<br>
+      • সবচেয়ে কম লাগে Operation 1 (Skiving, 0.45)।<br>
+      এই অসমতাই Line Balancing এ সমস্যা তৈরি করে, যা Part 5 এ ঠিক করবো।
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="topic" id="t6">
+    <h2>6. Precedence (কোনটার পর কোনটা)</h2>
+
+    <h3>কী ও কেন</h3>
+    <p><b class="term">Precedence</b> মানে কোন Operation শুরুর আগে কোন Operation শেষ হতে হবে। যেমন Handle Body তে লাগানোর আগে Handle বানানো শেষ হতে হবে।</p>
+
+    <div class="scroll">
+    <table>
+      <tr><th>Op</th><th>Operation</th><th>এর আগে কোনটা লাগবে</th></tr>
+      <tr><td>1</td><td>Skive Body Panel Edge</td><td>কিছু না (শুরু)</td></tr>
+      <tr><td>2</td><td>Paint Handle Edge</td><td>কিছু না (শুরু)</td></tr>
+      <tr><td>3</td><td>Fold &amp; Stitch Handle</td><td>2</td></tr>
+      <tr><td>4</td><td>Stitch Pocket Lining</td><td>কিছু না (শুরু)</td></tr>
+      <tr><td>5</td><td>Attach Zipper to Pocket</td><td>4</td></tr>
+      <tr><td>6</td><td>Attach Pocket to Lining</td><td>5</td></tr>
+      <tr><td>7</td><td>Stitch Lining Side Seam</td><td>6</td></tr>
+      <tr><td>8</td><td>Stitch Body Side Seam</td><td>1</td></tr>
+      <tr><td>9</td><td>Attach Handle to Body</td><td>3 ও 8</td></tr>
+      <tr><td>10</td><td>Fold &amp; Stitch Top Edge</td><td>9</td></tr>
+      <tr><td>11</td><td>Join Lining to Body</td><td>7 ও 10</td></tr>
+      <tr><td>12</td><td>Fix Logo Plate (Rivet)</td><td>11</td></tr>
+    </table>
+    </div>
+
+    <p>এখানে তিনটা আলাদা লাইন চলছে (Handle: 2→3, Pocket/Lining: 4→5→6→7, Body: 1→8), যেগুলো পরে Final Assembly তে এসে মেলে।</p>
+
+    <div class="note"><strong>💡 Tip:</strong> Precedence আঁকলে বোঝা যায় কোন Operation গুলো <b>একসাথে (Parallel)</b> করা যায়। এতে Line ছোট ও দ্রুত হয়।</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="topic" id="t7">
+    <h2>7. Manpower হিসাব</h2>
+
+    <h3>কীভাবে</h3>
+    <div class="formula">
+      প্রতিটা Operation এ Operator (১০০% Efficiency তে) = Target প্রতি ঘণ্টায় × SMV ÷ 60<br>
+      বাস্তবে Operator = উপরেরটা ÷ প্রত্যাশিত Efficiency
+      <small>Efficiency 70% হলে ০.৭০ দিয়ে ভাগ।</small>
+    </div>
+
+    <div class="example">
+      <strong>Example:</strong> Target = 60 Bag/ঘণ্টা, মোট SMV = 11.34<br>
+      ১০০% এ Operator = 60 × 11.34 ÷ 60 = <strong>11.34 জন</strong><br>
+      Efficiency 70% ধরলে = 11.34 ÷ 0.70 = 16.2 ≈ <strong>17 জন</strong>
+    </div>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Target ঘণ্টায় 60 হলে, ১০০% এ Operator সংখ্যা হুবহু SMV এর সমান। এটা মনে রাখলে দ্রুত আন্দাজ করা যায়।</div>
+
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> প্রতিটা Operation এ Operator ভগ্নাংশ (যেমন 0.45 জন) হয় না। তখন পাশাপাশি দুটো Operation একজনকে দিতে হয়, বা Target বদলাতে হয়। এই সমস্যাই <b>Line Balancing</b> (Part 5)।</div>
+  </section>
+
+  <!-- 8 Calculator -->
+  <section class="topic" id="t8">
+    <h2>8. নিজে হিসাব করুন (OB Calculator)</h2>
+    <p>নিচের বক্সে প্রতি লাইনে <b>Operation এর নাম, SMV</b> লেখো (কমা দিয়ে)। নিজের Style এর Operation বসিয়ে দেখো।</p>
+
+    <div class="calc">
+      <label for="ops">Operation তালিকা (নাম, SMV)</label>
+      <textarea id="ops" rows="9">Skive Body Panel Edge, 0.45
+Paint Handle Edge, 0.60
+Fold & Stitch Handle, 0.74
+Stitch Pocket Lining, 0.90
+Attach Zipper to Pocket, 1.20
+Attach Pocket to Lining, 0.85
+Stitch Lining Side Seam, 0.80
+Stitch Body Side Seam, 1.10
+Attach Handle to Body, 1.30
+Fold & Stitch Top Edge, 1.40
+Join Lining to Body, 1.50
+Fix Logo Plate (Rivet), 0.50</textarea>
+      <div class="row">
+        <div>
+          <label for="target">Target (Bag প্রতি ঘণ্টায়)</label>
+          <input id="target" type="number" inputmode="decimal" value="60">
+        </div>
+        <div>
+          <label for="eff">প্রত্যাশিত Efficiency (%)</label>
+          <input id="eff" type="number" inputmode="decimal" value="70">
+        </div>
+      </div>
+      <button type="button" id="go">হিসাব করো</button>
+      <p class="err" id="err"></p>
+      <div class="out" id="out">
+        <div class="scroll">
+        <table id="restable"></table>
+        </div>
+        <div class="note" id="summary"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="topic" id="t9">
+    <h2>9. সাধারণ ভুল</h2>
+    <div class="note warn"><strong>⚠️ ভুল ১:</strong> কিছু ছোট Operation বাদ পড়া (যেমন Thread Trimming, Marking, Gluing)।<br><b>সঠিক:</b> Floor এ একটা Sample বানিয়ে প্রতিটা হাতের কাজ লিখে নাও।</div>
+    <div class="note warn"><strong>⚠️ ভুল ২:</strong> Precedence না দেখেই Operator বসানো।<br><b>সঠিক:</b> কোন কাজ আগে ও কোনটা পরে তা মিলিয়ে ক্রম ঠিক করো।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৩:</strong> ভুল বা পুরোনো SMV ব্যবহার।<br><b>সঠিক:</b> Style বা Method বদলালে SMV আবার যাচাই করো।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৪:</strong> Machine ও Attachment এর কথা না লেখা।<br><b>সঠিক:</b> Production শুরুর আগে সব Machine, Jig, Folder তালিকায় রাখো, নইলে শেষ মুহূর্তে সমস্যা।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৫:</strong> OB একবার বানিয়ে ফেলে রাখা।<br><b>সঠিক:</b> Trial Run এর পর বাস্তব ফলাফল দেখে OB সংশোধন করো।</div>
+  </section>
+
+  <!-- 10 Quiz -->
+  <section class="topic" id="t10">
+    <h2>10. Practice Quiz</h2>
+    <p>প্রতিটা প্রশ্নের একটা উত্তর বেছে নাও। সঙ্গে সঙ্গে সঠিক উত্তর ও কারণ দেখতে পাবে।</p>
+    <div id="quiz"></div>
+    <div class="score" id="score"></div>
+    <p style="margin-top:14px"><b>Home Task:</b> নিজের Factory র একটা Bag Style নাও। Component এ ভাগ করে অন্তত ১০টা Operation এর OB (নাম, Machine, SMV) বানাও। তারপর উপরের Calculator এ বসিয়ে Operator সংখ্যা বের করো।</p>
+  </section>
+
+  <div class="pager">
+    <a class="prev" href="part-3.html">← Part 3: Time Study</a>
+    <a class="next" href="part-5.html">Part 5: Line Balancing →</a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">IE শিখি · Part 4: Operation Breakdown (OB)</div>
+</footer>
+
+<script>
+  // ---- OB Calculator ----
+  document.getElementById('go').addEventListener('click', function(){
+    const err = document.getElementById('err');
+    const out = document.getElementById('out');
+    const table = document.getElementById('restable');
+    const summary = document.getElementById('summary');
+    err.style.display = 'none';
+    out.style.display = 'none';
+
+    const target = parseFloat(document.getElementById('target').value);
+    const eff = parseFloat(document.getElementById('eff').value);
+    if (isNaN(target) || target <= 0) { err.textContent = 'Target সঠিকভাবে লিখুন, যেমন 60।'; err.style.display = 'block'; return; }
+    if (isNaN(eff) || eff <= 0 || eff > 100) { err.textContent = 'Efficiency ১ থেকে ১০০ এর মধ্যে লিখুন, যেমন 70।'; err.style.display = 'block'; return; }
+
+    const lines = document.getElementById('ops').value.split('\n');
+    const ops = [];
+    for (const raw of lines) {
+      const line = raw.trim();
+      if (!line) continue;
+      const idx = line.lastIndexOf(',');
+      if (idx < 0) { err.textContent = 'প্রতি লাইনে "নাম, SMV" ফরম্যাটে লিখুন। সমস্যা: ' + line; err.style.display = 'block'; return; }
+      const name = line.slice(0, idx).trim();
+      const smv = parseFloat(line.slice(idx + 1));
+      if (!name || isNaN(smv) || smv <= 0) { err.textContent = 'এই লাইনে নাম বা SMV ঠিক নেই: ' + line; err.style.display = 'block'; return; }
+      ops.push({name, smv});
+    }
+    if (ops.length < 1) { err.textContent = 'অন্তত একটা Operation লিখুন।'; err.style.display = 'block'; return; }
+
+    table.innerHTML = '';
+    const head = document.createElement('tr');
+    ['Op','Operation','SMV','Operator (১০০%)','Operator (বাস্তব)'].forEach((h,i) => {
+      const th = document.createElement('th');
+      th.textContent = h;
+      if (i >= 2) th.className = 'num';
+      head.appendChild(th);
+    });
+    table.appendChild(head);
+
+    let totalSmv = 0, maxSmv = 0;
+    ops.forEach(o => { totalSmv += o.smv; if (o.smv > maxSmv) maxSmv = o.smv; });
+
+    ops.forEach((o, i) => {
+      const full = target * o.smv / 60;
+      const real = full / (eff / 100);
+      const tr = document.createElement('tr');
+      if (o.smv === maxSmv) tr.className = 'big';
+      [String(i+1), o.name, o.smv.toFixed(2), full.toFixed(2), real.toFixed(2)].forEach((v,k) => {
+        const td = document.createElement('td');
+        td.textContent = v;
+        if (k >= 2) td.className = 'num';
+        tr.appendChild(td);
+      });
+      table.appendChild(tr);
+    });
+
+    const fullTotal = target * totalSmv / 60;
+    const realTotal = fullTotal / (eff / 100);
+    const tt = document.createElement('tr');
+    tt.className = 'total';
+    ['', 'মোট', totalSmv.toFixed(2), fullTotal.toFixed(2), realTotal.toFixed(2)].forEach((v,k) => {
+      const td = document.createElement('td');
+      td.textContent = v;
+      if (k >= 2) td.className = 'num';
+      tt.appendChild(td);
+    });
+    table.appendChild(tt);
+
+    const heavy = ops.filter(o => o.smv === maxSmv).map(o => o.name).join(', ');
+    summary.textContent = 'মোট SMV ' + totalSmv.toFixed(2) + ' মিনিট। ' + eff + '% Efficiency তে Target ' + target +
+      '/ঘণ্টা পেতে প্রায় ' + Math.ceil(realTotal) + ' জন Operator লাগবে। সবচেয়ে বেশি SMV (লাল দাগ): ' + heavy +
+      '। এটাই সম্ভাব্য Bottleneck।';
+    out.style.display = 'block';
+  });
+
+  // ---- Quiz ----
+  const quiz = [
+    {q:"OB (Operation Breakdown) কী?",
+     o:["Style এর সব Operation এর ক্রমানুসারে তালিকা, Machine ও SMV সহ","শুধু Operator দের বেতনের তালিকা","Buyer এর Order এর দাম"],
+     a:0, w:"OB হলো একটা Style বানানোর সব Operation, তাদের ক্রম, Machine, SMV ও Operator এর তালিকা।"},
+    {q:"\"Precedence\" মানে কী?",
+     o:["Operation এর দাম","কোন Operation এর আগে কোনটা শেষ হতে হবে","Machine এর রঙ"],
+     a:1, w:"Precedence হলো কাজের ক্রমের নিয়ম, যেমন Handle আগে বানিয়ে তারপর Body তে লাগানো।"},
+    {q:"Target 120 Bag/ঘণ্টা ও Operation এর SMV 0.5 হলে, ১০০% Efficiency তে ওই Operation এ কয়জন Operator লাগে?",
+     o:["0.5 জন","1 জন","2 জন"],
+     a:1, w:"Operator = Target × SMV ÷ 60 = 120 × 0.5 ÷ 60 = 1 জন।"},
+    {q:"মোট SMV 12, Target 60/ঘণ্টা, Efficiency 80% হলে কয়জন Operator লাগবে?",
+     o:["12 জন","15 জন","20 জন"],
+     a:1, w:"১০০% এ = 60 × 12 ÷ 60 = 12 জন। 80% এ = 12 ÷ 0.80 = 15 জন।"},
+    {q:"Operator এর হিসাবে ভগ্নাংশ (যেমন 0.45 জন) এলে কী করতে হয়?",
+     o:["ভুল ধরে হিসাব বাদ","Operation মিলিয়ে বা Target বদলে Line Balance করা","Operator কে বেশি দ্রুত চালানো"],
+     a:1, w:"ভগ্নাংশ এলে পাশাপাশি Operation একজনকে দিয়ে বা Target বদলে Line Balance করতে হয়। এটাই Part 5 এর বিষয়।"}
+  ];
+
+  const box = document.getElementById('quiz');
+  const scoreEl = document.getElementById('score');
+  let answered = 0, correct = 0;
+
+  quiz.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'q';
+    d.innerHTML = `<p class="qt">${i+1}. ${item.q}</p>`;
+    const why = document.createElement('p');
+    why.className = 'why';
+    const btns = item.o.map((txt, j) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = txt;
+      b.addEventListener('click', () => {
+        if (d.dataset.done) return;
+        d.dataset.done = '1';
+        answered++;
+        if (j === item.a) { b.classList.add('right'); correct++; why.textContent = '✅ সঠিক! ' + item.w; }
+        else { b.classList.add('wrong'); btns[item.a].classList.add('right'); why.textContent = '⚠️ ভুল। ' + item.w; }
+        why.style.display = 'block';
+        if (answered === quiz.length) {
+          scoreEl.textContent = `তোমার স্কোর: ${correct} / ${quiz.length}` + (correct === quiz.length ? ' 🎉 দারুণ!' : ' — আবার পড়ে চেষ্টা করো।');
+        }
+      });
+      d.appendChild(b);
+      return b;
+    });
+    d.appendChild(why);
+    box.appendChild(d);
+  });
+</script>
+</body>
+</html>
