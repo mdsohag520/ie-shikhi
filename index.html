@@ -193,7 +193,7 @@
       const li = document.createElement('li');
       li.className = 'part' + (p.bag ? ' bag' : '');
       const title = p.ready ? `<a href="${p.file}">${p.t}</a>` : p.t;
-      const tag = p.ready ? '<span class="tag live">পড়া শুরু করুন</span>' : '<span class="tag">শীঘ্রই আসছে</span>';
+      const tag = p.ready ? `<a class="tag live" href="${p.file}">পড়া শুরু করুন</a>` : '<span class="tag">শীঘ্রই আসছে</span>';
       li.innerHTML = `<span class="no" aria-hidden="true">${p.n}</span><h3>${title}</h3><p>${p.d}</p>${tag}`;
       list.appendChild(li);
     });
