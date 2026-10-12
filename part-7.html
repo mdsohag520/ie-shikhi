@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 7: Lean Manufacturing — IE শিখি</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F5F7;--ink:#14213D;--ink-soft:#4A5670;--oxblood:#7A1F2B;--thread:#E9B824;
+    --line:#D5DAE2;--white:#FFFFFF;--green:#2E7D5B;
+    --head:'Anek Bangla','Hind Siliguri','Noto Sans Bengali',sans-serif;
+    --body:'Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.75}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--oxblood);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+
+  header.top{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--white)}
+  header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
+  .logo{font-family:var(--head);font-weight:800;font-size:20px;text-decoration:none}
+  .logo span{color:var(--thread)}
+  .back{font-size:14px;color:#C9D3EA;text-decoration:none}
+  .back:hover{text-decoration:underline}
+
+  .title{padding:30px 0 10px}
+  .title .crumb{font-size:14px;color:var(--ink-soft)}
+  .title h1{font-family:var(--head);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:1.3;margin:4px 0 8px}
+  .title p{color:var(--ink-soft)}
+
+  nav.toc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0 8px}
+  nav.toc strong{font-family:var(--head);display:block;margin-bottom:4px}
+  nav.toc ol{padding-left:22px;font-size:16px}
+  nav.toc a{text-decoration:none;color:var(--oxblood)}
+  nav.toc a:hover{text-decoration:underline}
+
+  section.topic{padding:26px 0 8px;border-top:1px solid var(--line);margin-top:20px}
+  section.topic h2{font-family:var(--head);font-size:25px;line-height:1.4;margin-bottom:10px}
+  section.topic h3{font-family:var(--head);font-size:18px;margin:18px 0 4px;color:var(--oxblood)}
+  p{margin-bottom:10px}
+  ul.plain,ol.plain{padding-left:22px;margin-bottom:10px}
+  ul.plain li,ol.plain li{margin-bottom:4px}
+  b.term{font-weight:600}
+
+  .note{border-left:5px solid var(--thread);background:var(--white);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-size:16px}
+  .note.warn{border-left-color:var(--oxblood)}
+  .note.ok{border-left-color:var(--green)}
+  .example{background:var(--ink);color:var(--white);border-radius:10px;padding:14px 18px;margin:14px 0}
+  .example strong{color:var(--thread);font-family:var(--head)}
+  .formula{background:var(--white);border:2px solid var(--ink);border-radius:10px;padding:12px 16px;margin:12px 0;font-family:var(--head);font-size:18px;line-height:1.8}
+  .formula small{display:block;font-family:var(--body);font-size:14px;color:var(--ink-soft)}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;background:var(--white)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#E6EAF0;font-family:var(--head)}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  tr.total td{background:#F6E9B8;font-weight:600}
+  tr.big td{background:#F6DADD}
+  .scroll{overflow-x:auto}
+
+  .steps{list-style:none;margin:12px 0;padding-left:0;border-left:3px dashed var(--thread);margin-left:8px}
+  .steps li{position:relative;padding:0 0 12px 20px}
+  .steps li::before{content:"";position:absolute;left:-9px;top:9px;width:15px;height:15px;border-radius:50%;background:var(--oxblood);border:3px solid var(--paper)}
+
+  .seg{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:12px 0}
+  .seg .lab{font-size:14px;margin:8px 0 3px}
+  .seg .track{display:flex;height:20px;border-radius:4px;overflow:hidden;background:#E6EAF0}
+  .seg .va{background:var(--green);min-width:4px}
+  .seg .wait{background:var(--oxblood)}
+  .seg .cap{font-size:13px;color:var(--ink-soft);margin-top:8px}
+
+  .calc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:16px;margin:14px 0}
+  .calc label.h{display:block;font-weight:600;font-size:15px;margin:10px 0 4px}
+  .calc textarea,.calc input[type=number]{width:100%;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--paper);color:var(--ink)}
+  .calc textarea{font-size:15px;line-height:1.5}
+  .calc button{margin-top:14px;font:inherit;font-weight:600;background:var(--oxblood);color:var(--white);border:0;border-radius:10px;padding:11px 22px;cursor:pointer}
+  .calc button:hover{background:#5E1721}
+  .calc .out{margin-top:14px;display:none}
+  .calc .err{color:var(--oxblood);font-weight:600;margin-top:10px;display:none}
+
+  .audit label{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--line);font-size:15px;cursor:pointer}
+  .audit input{margin-top:6px;width:18px;height:18px;flex:0 0 auto}
+  .audit .grp{font-family:var(--head);font-weight:700;color:var(--oxblood);margin-top:12px}
+  .auditscore{font-family:var(--head);font-size:20px;margin-top:12px}
+
+  .q{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+  .q p.qt{font-weight:600;margin-bottom:8px}
+  .q button{display:block;width:100%;text-align:left;font:inherit;font-size:16px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;color:var(--ink)}
+  .q button:hover{border-color:var(--ink)}
+  .q button.right{background:#DDF1E8;border-color:var(--green)}
+  .q button.wrong{background:#F6DADD;border-color:var(--oxblood)}
+  .q .why{display:none;font-size:15px;color:var(--ink-soft);margin-top:6px}
+  .score{font-family:var(--head);font-size:20px;margin-top:10px}
+
+  .pager{display:flex;justify-content:space-between;gap:10px;padding:26px 0 40px;border-top:1px solid var(--line);margin-top:26px;flex-wrap:wrap}
+  .pager a{display:inline-block;text-decoration:none;font-weight:600;padding:11px 18px;border-radius:10px}
+  .pager .prev{border:1px solid var(--ink)}
+  .pager .next{background:var(--oxblood);color:var(--white)}
+  footer{background:var(--ink);color:#B8C3DC;padding:20px 0;font-size:14px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="index.html">IE <span>শিখি</span></a>
+    <a class="back" href="index.html#parts">← সব Part</a>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="title">
+    <div class="crumb">Part 7 / 13</div>
+    <h1>Lean Manufacturing</h1>
+    <p>Customer যা চায় শুধু সেটাতে মন দিয়ে, বাকি সব অপচয় (Waste) বাদ দেওয়ার পদ্ধতি। ৭ Waste, 5S, Kaizen, VSM, Kanban ও Poka-Yoke, সব Bag Factory এর Example দিয়ে।</p>
+  </div>
+
+  <nav class="toc" aria-label="এই Part এর সূচি">
+    <strong>এই Part এ যা আছে</strong>
+    <ol>
+      <li><a href="#t1">Lean কী ও কেন</a></li>
+      <li><a href="#t2">Value Added ও Non-Value Added</a></li>
+      <li><a href="#t3">৭ Waste (সাথে ৮ম)</a></li>
+      <li><a href="#t4">5S</a></li>
+      <li><a href="#t5">Kaizen ও PDCA</a></li>
+      <li><a href="#t6">VSM (Value Stream Mapping)</a></li>
+      <li><a href="#t7">Kanban ও Pull System</a></li>
+      <li><a href="#t8">Poka-Yoke, Visual Management, Standard Work</a></li>
+      <li><a href="#t9">নিজে করুন: Lead Time Calculator ও 5S Audit</a></li>
+      <li><a href="#t10">সাধারণ ভুল</a></li>
+      <li><a href="#t11">Practice Quiz</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="topic" id="t1">
+    <h2>1. Lean কী ও কেন</h2>
+
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Lean Manufacturing</b> হলো এমন একটা চিন্তা ও পদ্ধতি, যেখানে <b class="term">Customer এর কাছে যার মূল্য আছে</b> সেটা সবচেয়ে কম অপচয়ে, কম সময়ে ও ভালো মানে তৈরি করা হয়। Part 1 এ দেখেছি, এর শিকড় Toyota Production System এ।</p>
+
+    <h3>কেন</h3>
+    <ul class="plain">
+      <li>Factory র অনেক সময় ও খরচ চলে যায় এমন কাজে, যার জন্য Buyer কোনো টাকা দেয় না।</li>
+      <li>Waste কমালে Lead Time, Cost ও Defect কমে, Delivery ও Quality ভালো হয়।</li>
+      <li>বড় Machine বা বড় বিনিয়োগ ছাড়াই উন্নতি সম্ভব।</li>
+    </ul>
+
+    <h3>৫টি মূল নীতি</h3>
+    <ol class="plain">
+      <li><b class="term">Value (মূল্য):</b> Customer কী চায় তা ঠিক করা।</li>
+      <li><b class="term">Value Stream:</b> সেটা তৈরির পুরো ধাপের ছবি দেখা, অপচয় চিহ্নিত করা।</li>
+      <li><b class="term">Flow (প্রবাহ):</b> কাজ যেন থেমে না থেকে মসৃণভাবে এগোয়।</li>
+      <li><b class="term">Pull (টান):</b> Customer এর চাহিদা অনুযায়ী তৈরি করা, আন্দাজে বেশি নয়।</li>
+      <li><b class="term">Perfection (নিখুঁত হওয়ার চেষ্টা):</b> উন্নতি কখনো থামে না।</li>
+    </ol>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Lean মানে লোক কমানো নয়। Lean মানে <b>অপচয় কমানো</b>। লোক ছাঁটাই করলে উন্নতির জন্য কেউ এগিয়ে আসবে না।</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="topic" id="t2">
+    <h2>2. Value Added ও Non-Value Added</h2>
+
+    <div class="scroll">
+    <table>
+      <tr><th>ধরন</th><th>অর্থ</th><th>Bag Factory Example</th></tr>
+      <tr><td><b>VA</b> (Value Added)</td><td>Customer যার জন্য টাকা দেয়</td><td>Leather কাটা, Stitching, Rivet লাগানো</td></tr>
+      <tr><td><b>NNVA</b> (Necessary NVA)</td><td>মূল্য যোগ করে না, কিন্তু এখনকার ব্যবস্থায় দরকার</td><td>QC Inspection, Buyer এর শর্তে Testing</td></tr>
+      <tr><td><b>NVA</b> (Non-Value Added)</td><td>অপচয়, বাদ দেওয়া উচিত</td><td>অপেক্ষা, Part খোঁজা, বারবার নেওয়া-আনা, Rework</td></tr>
+    </table>
+    </div>
+
+    <div class="note"><strong>💡 Tip:</strong> Floor এ গিয়ে প্রতিটা কাজ দেখে নিজেকে প্রশ্ন করো: "Buyer কি এই কাজের জন্য টাকা দেবে?" উত্তর "না" হলে সেটা NVA হওয়ার সম্ভাবনা বেশি।</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="topic" id="t3">
+    <h2>3. ৭ Waste (সাথে ৮ম)</h2>
+
+    <h3>কী ও কেন</h3>
+    <p>Toyota ৭ ধরনের মূল অপচয় চিহ্নিত করেছে। মনে রাখার সহজ নাম: <b class="term">TIMWOOD</b>। এগুলো চিনতে পারলেই অর্ধেক সমস্যা ধরা পড়ে।</p>
+
+    <div class="scroll">
+    <table>
+      <tr><th>Waste</th><th>অর্থ</th><th>Bag Factory Example</th></tr>
+      <tr><td><b>T</b>ransportation</td><td>অপ্রয়োজনীয় নেওয়া-আনা</td><td>Cut Part ট্রলিতে 15 মিটার দূরের Skiving Table এ নেওয়া</td></tr>
+      <tr><td><b>I</b>nventory</td><td>প্রয়োজনের চেয়ে বেশি মজুদ ও WIP</td><td>Sewing Line এ বান্ডিলের পর বান্ডিল জমা</td></tr>
+      <tr><td><b>M</b>otion</td><td>Operator এর অপ্রয়োজনীয় নড়াচড়া</td><td>Zipper খুঁজতে হাতড়ানো, দূরের Tool আনতে ওঠা</td></tr>
+      <tr><td><b>W</b>aiting</td><td>অপেক্ষা</td><td>Accessories আসার অপেক্ষা, পাশের Station এর কাজ শেষের অপেক্ষা</td></tr>
+      <tr><td><b>O</b>verproduction</td><td>দরকারের আগে বা বেশি তৈরি</td><td>একটা Part আগেই হাজারটা কেটে ফেলা, যার পরের ধাপ প্রস্তুত নেই</td></tr>
+      <tr><td><b>O</b>ver-processing</td><td>প্রয়োজনের চেয়ে বেশি কাজ</td><td>Buyer না চাইলেও বাড়তি Stitch বা বাড়তি Polishing</td></tr>
+      <tr><td><b>D</b>efects</td><td>ত্রুটি ও Rework</td><td>Stitch ছুটে যাওয়া, Edge Paint এর দাগ, Reject Bag</td></tr>
+    </table>
+    </div>
+
+    <h3>৮ম Waste: Unused Talent (অব্যবহৃত দক্ষতা)</h3>
+    <p>Operator ও কর্মীদের মেধা, অভিজ্ঞতা ও পরামর্শ কাজে না লাগানো। যারা প্রতিদিন কাজটা করে, তারাই সবচেয়ে ভালো উন্নতির উপায় জানে।</p>
+
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> সবচেয়ে বিপজ্জনক Waste হলো <b>Overproduction</b>, কারণ সে বাকি সব Waste (Inventory, Waiting, Transport) জন্ম দেয়।</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="topic" id="t4">
+    <h2>4. 5S</h2>
+
+    <h3>কী ও কেন</h3>
+    <p><b class="term">5S</b> হলো কর্মক্ষেত্র পরিচ্ছন্ন, সাজানো ও নিরাপদ রাখার জাপানি পদ্ধতি। জিনিস খুঁজতে সময় নষ্ট, দুর্ঘটনা ও Defect কমানোর সবচেয়ে সহজ শুরু।</p>
+
+    <div class="scroll">
+    <table>
+      <tr><th>S</th><th>অর্থ</th><th>কাজ</th><th>Bag Factory Example</th></tr>
+      <tr><td>1. Seiri</td><td>Sort (বাছাই)</td><td>দরকারি ও অদরকারি আলাদা করে অদরকারি সরানো</td><td>Leather এর বাতিল টুকরো, ভাঙা Needle, পুরোনো Sample সরানো</td></tr>
+      <tr><td>2. Seiton</td><td>Set in order (সাজানো)</td><td>প্রতিটা জিনিসের নির্দিষ্ট জায়গা</td><td>Shadow Board এ Scissor, Thread ও Tool এর ছবি আঁকা</td></tr>
+      <tr><td>3. Seiso</td><td>Shine (পরিষ্কার)</td><td>পরিষ্কার করা ও সমস্যা খুঁজে পাওয়া</td><td>Skiving এর ধুলো, Machine এর তেল-ময়লা পরিষ্কার</td></tr>
+      <tr><td>4. Seiketsu</td><td>Standardize (নিয়ম)</td><td>প্রথম ৩টা S কে নিয়মে বাঁধা</td><td>পরিচ্ছন্নতার Checklist ও রঙ-কোড, লেবেল</td></tr>
+      <tr><td>5. Shitsuke</td><td>Sustain (ধরে রাখা)</td><td>অভ্যাসে পরিণত করা</td><td>নিয়মিত Audit, ভালো Line কে স্বীকৃতি</td></tr>
+    </table>
+    </div>
+
+    <div class="note"><strong>💡 Tip:</strong> শুরু করো একটা ছোট জায়গা দিয়ে (যেমন একটা Operator এর টেবিল)। Before/After ছবি তুলে রাখো, সবাইকে দেখালে বাকিরাও উৎসাহী হবে।</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="topic" id="t5">
+    <h2>5. Kaizen ও PDCA</h2>
+
+    <h3>কী</h3>
+    <p><b class="term">Kaizen</b> মানে "ভালোর জন্য পরিবর্তন", অর্থাৎ <b class="term">প্রতিদিনের ছোট ছোট উন্নতি</b>, যেখানে সবাই অংশ নেয়। বড় একটা পরিবর্তনের চেয়ে হাজারটা ছোট উন্নতি বেশি টেকসই।</p>
+
+    <h3>PDCA চক্র</h3>
+    <ol class="steps">
+      <li><b>Plan (পরিকল্পনা):</b> সমস্যা ও লক্ষ্য ঠিক করো, কারণ খুঁজে সমাধান ভাবো।</li>
+      <li><b>Do (করো):</b> ছোট পরিসরে (এক Line বা এক Station এ) পরীক্ষা করো।</li>
+      <li><b>Check (যাচাই):</b> ফল মেপে দেখো উন্নতি হলো কি না।</li>
+      <li><b>Act (প্রয়োগ):</b> কাজ হলে Standard করো ও ছড়িয়ে দাও, না হলে আবার Plan করো।</li>
+    </ol>
+
+    <div class="example">
+      <strong>Example (কাল্পনিক):</strong><br>
+      Plan: Zipper খুঁজতে প্রতি Bag এ ৫ সেকেন্ড যায়। নির্দিষ্ট Tray বানালে কমবে।<br>
+      Do: এক Operator এর টেবিলে Tray বসানো হলো।<br>
+      Check: Zipper খোঁজার সময় 5 সেকেন্ড থেকে ১ সেকেন্ডে নামলো (৪ সেকেন্ড সাশ্রয়)।<br>
+      Act: সব Zipper Operator এর টেবিলে Tray Standard করা হলো।
+    </div>
+
+    <div class="note"><strong>💡 Tip:</strong> <b>Gemba</b> (জাপানি শব্দ, মানে "আসল কাজের জায়গা") এ গিয়ে নিজের চোখে দেখো। অফিসে বসে হিসাব করে বদলানোর চেয়ে Floor এ দেখে বদলানো অনেক নির্ভরযোগ্য।</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="topic" id="t6">
+    <h2>6. VSM (Value Stream Mapping)</h2>
+
+    <h3>কী ও কেন</h3>
+    <p><b class="term">VSM</b> হলো Raw Material থেকে Customer পর্যন্ত পুরো প্রবাহের একটা ছবি। এতে প্রতিটা ধাপের কাজের সময় (Process Time) ও অপেক্ষার সময় (Waiting) লেখা হয়। এতে চোখে পড়ে সময় আসলে কোথায় হারাচ্ছে। দুটো Map বানাতে হয়: <b class="term">Current State</b> (এখন) ও <b class="term">Future State</b> (উন্নতির পর)।</p>
+
+    <h3>মূল হিসাব</h3>
+    <div class="formula">
+      Lead Time = সব Process Time + সব অপেক্ষার সময়<br>
+      VA Ratio = Value Added Time ÷ Lead Time × 100
+      <small>Lead Time মানে Material ঢোকা থেকে Bag বের হওয়া পর্যন্ত মোট সময়।</small>
+    </div>
+
+    <div class="example">
+      <strong>Example: Tote Bag (কাল্পনিক ডেটা, ১ দিন = 480 মিনিট)</strong>
+    </div>
+    <div class="scroll">
+    <table>
+      <tr><th>ধাপ</th><th class="num">কাজের সময় (মিনিট/Bag)</th><th class="num">অপেক্ষা (দিন)</th></tr>
+      <tr><td>Material Store</td><td class="num">0</td><td class="num">2.0</td></tr>
+      <tr><td>Cutting</td><td class="num">3</td><td class="num">0.5</td></tr>
+      <tr><td>Pre-assembly (Skive, Paint)</td><td class="num">2</td><td class="num">0.5</td></tr>
+      <tr><td>Sewing / Assembly</td><td class="num">11.34</td><td class="num">0.5</td></tr>
+      <tr><td>Finishing ও QC</td><td class="num">3</td><td class="num">0.5</td></tr>
+      <tr><td>Packing</td><td class="num">1.5</td><td class="num">0.5</td></tr>
+      <tr class="total"><td>মোট</td><td class="num">20.84</td><td class="num">4.5</td></tr>
+    </table>
+    </div>
+
+    <div class="example">
+      অপেক্ষা = 4.5 × 480 = 2,160 মিনিট<br>
+      Lead Time = 20.84 + 2,160 = <strong>2,180.84 মিনিট ≈ 4.5 দিন</strong><br>
+      VA Ratio = 20.84 ÷ 2,180.84 × 100 ≈ <strong>1%</strong><br><br>
+      মানে ৯৯% সময় Bag শুধু অপেক্ষা করছে!
+    </div>
+
+    <p>এখন Kanban, ছোট Batch ও ভালো Flow দিয়ে অপেক্ষা 4.5 দিন থেকে 1.5 দিনে নামানো গেলে:</p>
+    <div class="example">
+      অপেক্ষা = 1.5 × 480 = 720 মিনিট, Lead Time = 20.84 + 720 = <strong>740.84 মিনিট ≈ 1.5 দিন</strong><br>
+      VA Ratio = 20.84 ÷ 740.84 × 100 ≈ <strong>2.8%</strong>
+    </div>
+
+    <div class="seg" aria-label="Lead Time এ Value Added ও অপেক্ষার ভাগ">
+      <div class="lab">বর্তমান (Current State), 4.5 দিন</div>
+      <div class="track"><div class="va" style="width:1%"></div><div class="wait" style="flex:1"></div></div>
+      <div class="lab">উন্নতির পর (Future State), 1.5 দিন</div>
+      <div class="track"><div class="va" style="width:2.8%"></div><div class="wait" style="flex:1"></div></div>
+      <div class="cap">সবুজ = Value Added সময়, লাল = অপেক্ষা। Value Added অংশ খুব ছোট, তাই অপেক্ষা কমানোই আসল উন্নতি।</div>
+    </div>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Lead Time কমাতে Process Time কমানোর চেয়ে <b>অপেক্ষা ও WIP কমানো</b> অনেক বেশি কার্যকর।</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="topic" id="t7">
+    <h2>7. Kanban ও Pull System</h2>
+
+    <h3>কী</h3>
+    <p><b class="term">Push System:</b> আগের ধাপ আন্দাজে তৈরি করে পরের ধাপে ঠেলে দেয়, তাই জমে যায়।<br>
+    <b class="term">Pull System:</b> পরের ধাপ যখন দরকার জানায়, তখনই আগের ধাপ তৈরি করে।<br>
+    <b class="term">Kanban</b> হলো সেই জানানোর সংকেত, যেমন কার্ড, খালি বাক্স বা রঙিন চিহ্ন।</p>
+
+    <h3>কেন</h3>
+    <p>WIP সীমিত থাকে, Overproduction হয় না এবং কোথায় সমস্যা তা তাড়াতাড়ি ধরা পড়ে।</p>
+
+    <div class="example">
+      <strong>Example: Zipper সরবরাহ (Two-Bin System)</strong><br>
+      Operator এর কাছে দুটো বাক্স। একটা খালি হলে সেটা Store এ পাঠানো হয়, মানে নতুন Zipper দরকার। তখন দ্বিতীয় বাক্স থেকে কাজ চলে। কখনো Zipper শেষ হয়ে Line থামে না, আবার বেশি Stock ও জমে না।
+    </div>
+
+    <div class="note"><strong>💡 Tip:</strong> Sewing Line এ প্রতি Station এর মাঝে WIP এর সর্বোচ্চ সীমা ঠিক করে দাও (যেমন ২ বান্ডিল)। সীমা পার হলে আগের Station থামবে, এতে Overproduction বন্ধ হবে।</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="topic" id="t8">
+    <h2>8. Poka-Yoke, Visual Management, Standard Work</h2>
+
+    <div class="scroll">
+    <table>
+      <tr><th>Tool</th><th>কী</th><th>Bag Factory Example</th></tr>
+      <tr><td><b>Poka-Yoke</b></td><td>ভুল হওয়াই অসম্ভব করে দেওয়ার ব্যবস্থা (Mistake Proofing)</td><td>Jig যাতে Zipper ভুল দিকে বসানো যায় না, Template দিয়ে Logo সঠিক জায়গায়</td></tr>
+      <tr><td><b>Visual Management</b></td><td>এক নজরে অবস্থা বোঝার চিহ্ন</td><td>রঙিন Bin, Floor এ রেখা, Target বনাম Actual Board</td></tr>
+      <tr><td><b>Standard Work</b></td><td>সেরা Method লিখে সবার জন্য এক নিয়ম</td><td>প্রতিটা Operation এর ছবিসহ Work Instruction, Station এ টাঙানো</td></tr>
+    </table>
+    </div>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Poka-Yoke এর নীতি: <b>Operator কে "সাবধান" বলার চেয়ে কাজটাকে এমন বানাও যাতে ভুল হওয়া কঠিন হয়।</b> ভুলের দায় Operator এর নয়, Process এর।</div>
+  </section>
+
+  <!-- 9 Calculator + Audit -->
+  <section class="topic" id="t9">
+    <h2>9. নিজে করুন: Lead Time Calculator ও 5S Audit</h2>
+
+    <h3>Lead Time ও VA Ratio বের করো</h3>
+    <p>প্রতি লাইনে লেখো: <b>ধাপের নাম, কাজের সময় (মিনিট), অপেক্ষা (দিন)</b>। নিজের Factory এর আসল সংখ্যা বসাও।</p>
+
+    <div class="calc">
+      <label class="h" for="stages">ধাপ তালিকা</label>
+      <textarea id="stages" rows="7">Material Store, 0, 2
+Cutting, 3, 0.5
+Pre-assembly, 2, 0.5
+Sewing / Assembly, 11.34, 0.5
+Finishing & QC, 3, 0.5
+Packing, 1.5, 0.5</textarea>
+      <label class="h" for="dmin">১ কাজের দিনে মিনিট</label>
+      <input id="dmin" type="number" inputmode="decimal" value="480">
+      <button type="button" id="go">হিসাব করো</button>
+      <p class="err" id="err"></p>
+      <div class="out" id="out">
+        <div class="scroll"><table id="restable"></table></div>
+        <div class="note" id="summary"></div>
+      </div>
+    </div>
+
+    <h3>৫S Self Audit</h3>
+    <p>নিজের Line বা টেবিলের জন্য যেগুলো সত্যি সেগুলোতে টিক দাও।</p>
+    <div class="calc audit" id="audit"></div>
+    <div class="auditscore" id="auditscore"></div>
+  </section>
+
+  <!-- 10 -->
+  <section class="topic" id="t10">
+    <h2>10. সাধারণ ভুল</h2>
+    <div class="note warn"><strong>⚠️ ভুল ১:</strong> Lean কে লোক ছাঁটাইয়ের উপায় ভাবা।<br><b>সঠিক:</b> লক্ষ্য অপচয় কমানো। সাশ্রয়ী সময় দিয়ে বেশি Order বা ভালো Quality তে কাজ লাগাও।</div>
+    <div class="note warn"><strong>⚠️ ভুল ২:</strong> 5S কে শুধু ঝাড়ু দেওয়া ভাবা।<br><b>সঠিক:</b> 5S হলো জায়গা সাজানো, নিয়ম ও অভ্যাস। পরিচ্ছন্নতা তার একটা অংশ।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৩:</strong> উপর থেকে চাপিয়ে দেওয়া।<br><b>সঠিক:</b> Operator কে যুক্ত করো, তাদের পরামর্শ নাও ও স্বীকৃতি দাও।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৪:</strong> একসাথে সব Tool চালু করতে যাওয়া।<br><b>সঠিক:</b> ছোট করে একটা Line বা Area তে শুরু করো, সফল হলে ছড়াও।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৫:</strong> উন্নতি করে Standard না বানানো।<br><b>সঠিক:</b> কাজ হলে লিখে ও ছবি দিয়ে Standard করো, নইলে কিছুদিন পর আগের অবস্থায় ফিরে যায়।</div>
+  </section>
+
+  <!-- 11 Quiz -->
+  <section class="topic" id="t11">
+    <h2>11. Practice Quiz</h2>
+    <p>প্রতিটা প্রশ্নের একটা উত্তর বেছে নাও। সঙ্গে সঙ্গে সঠিক উত্তর ও কারণ দেখতে পাবে।</p>
+    <div id="quiz"></div>
+    <div class="score" id="score"></div>
+    <p style="margin-top:14px"><b>Home Task:</b> নিজের Line এ ঘুরে ৭ Waste এর অন্তত একটা করে Example খুঁজে লেখো। এরপর একটা Waste বেছে PDCA চক্রে ছোট একটা উন্নতি করে দেখো।</p>
+  </section>
+
+  <div class="pager">
+    <a class="prev" href="part-6.html">← Part 6: Production Planning</a>
+    <a class="next" href="part-8.html">Part 8: Quality ও Productivity →</a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">IE শিখি · Part 7: Lean Manufacturing</div>
+</footer>
+
+<script>
+  // ---- Lead Time Calculator ----
+  document.getElementById('go').addEventListener('click', function(){
+    const err = document.getElementById('err');
+    const out = document.getElementById('out');
+    const table = document.getElementById('restable');
+    const summary = document.getElementById('summary');
+    err.style.display = 'none';
+    out.style.display = 'none';
+
+    const dmin = parseFloat(document.getElementById('dmin').value);
+    if (isNaN(dmin) || dmin <= 0) { err.textContent = 'দিনের মিনিট সঠিকভাবে লিখুন, যেমন 480।'; err.style.display = 'block'; return; }
+
+    const stages = [];
+    for (const raw of document.getElementById('stages').value.split('\n')) {
+      const line = raw.trim();
+      if (!line) continue;
+      const parts = line.split(',');
+      if (parts.length < 3) { err.textContent = 'প্রতি লাইনে "নাম, কাজের মিনিট, অপেক্ষার দিন" লিখুন। সমস্যা: ' + line; err.style.display = 'block'; return; }
+      const wait = parseFloat(parts[parts.length - 1]);
+      const va = parseFloat(parts[parts.length - 2]);
+      const name = parts.slice(0, parts.length - 2).join(',').trim();
+      if (!name || isNaN(va) || isNaN(wait) || va < 0 || wait < 0) { err.textContent = 'এই লাইনের সংখ্যা ঠিক নেই: ' + line; err.style.display = 'block'; return; }
+      stages.push({name, va, wait});
+    }
+    if (!stages.length) { err.textContent = 'অন্তত একটা ধাপ লিখুন।'; err.style.display = 'block'; return; }
+
+    let totVA = 0, totWait = 0, maxWait = 0;
+    stages.forEach(s => { totVA += s.va; totWait += s.wait; if (s.wait > maxWait) maxWait = s.wait; });
+    const waitMin = totWait * dmin;
+    const lead = totVA + waitMin;
+    const ratio = lead > 0 ? totVA / lead * 100 : 0;
+
+    table.innerHTML = '';
+    const head = document.createElement('tr');
+    ['ধাপ','কাজ (মিনিট)','অপেক্ষা (দিন)'].forEach((h,i) => { const th = document.createElement('th'); th.textContent = h; if (i) th.className = 'num'; head.appendChild(th); });
+    table.appendChild(head);
+    stages.forEach(s => {
+      const tr = document.createElement('tr');
+      if (s.wait === maxWait && maxWait > 0) tr.className = 'big';
+      [s.name, s.va.toFixed(2), s.wait.toFixed(2)].forEach((t,i) => { const td = document.createElement('td'); td.textContent = t; if (i) td.className = 'num'; tr.appendChild(td); });
+      table.appendChild(tr);
+    });
+    const tt = document.createElement('tr'); tt.className = 'total';
+    ['মোট', totVA.toFixed(2), totWait.toFixed(2)].forEach((t,i) => { const td = document.createElement('td'); td.textContent = t; if (i) td.className = 'num'; tt.appendChild(td); });
+    table.appendChild(tt);
+
+    const worst = stages.filter(s => s.wait === maxWait).map(s => s.name).join(', ');
+    summary.textContent = 'Lead Time = ' + lead.toFixed(1) + ' মিনিট (≈ ' + (lead / dmin).toFixed(2) + ' দিন)। VA Ratio = ' + ratio.toFixed(2) +
+      '%। সবচেয়ে বেশি অপেক্ষা (লাল দাগ): ' + worst + ' (' + maxWait + ' দিন)। এখান থেকেই উন্নতি শুরু করো।';
+    out.style.display = 'block';
+  });
+
+  // ---- 5S Audit ----
+  (function(){
+    const groups = [
+      ['1. Sort (বাছাই)', ['টেবিল ও আশেপাশে অদরকারি জিনিস নেই','ভাঙা Needle, পুরোনো Sample ও বাতিল Leather আলাদা করা আছে']],
+      ['2. Set in order (সাজানো)', ['প্রতিটা Tool ও Material এর নির্দিষ্ট জায়গা ও লেবেল আছে','দরকারি জিনিস ৩০ সেকেন্ডের মধ্যে পাওয়া যায়']],
+      ['3. Shine (পরিষ্কার)', ['Machine ও টেবিল পরিষ্কার, ধুলো ও তেল নেই','মেঝে পরিষ্কার ও হাঁটার পথ ফাঁকা']],
+      ['4. Standardize (নিয়ম)', ['পরিচ্ছন্নতার Checklist ও রঙ-কোড টাঙানো আছে','Work Instruction ও Standard সবার দেখার মতো জায়গায় আছে']],
+      ['5. Sustain (ধরে রাখা)', ['নিয়মিত Audit হয় ও ফল Board এ লেখা হয়','সবাই নিয়ম মানে ও Supervisor নিয়মিত নজর রাখেন']]
+    ];
+    const box = document.getElementById('audit');
+    const scoreEl = document.getElementById('auditscore');
+    const total = groups.reduce((a,g) => a + g[1].length, 0);
+    function update(){
+      const n = box.querySelectorAll('input:checked').length;
+      const pct = Math.round(n / total * 100);
+      let msg = pct >= 80 ? ' 🎉 দারুণ, ধরে রাখো!' : pct >= 50 ? ' — ভালো শুরু, বাকিগুলো ঠিক করো।' : ' — অনেক উন্নতির সুযোগ আছে, এক S দিয়ে শুরু করো।';
+      scoreEl.textContent = 'স্কোর: ' + n + ' / ' + total + ' (' + pct + '%)' + msg;
+    }
+    groups.forEach(g => {
+      const h = document.createElement('div'); h.className = 'grp'; h.textContent = g[0]; box.appendChild(h);
+      g[1].forEach(t => {
+        const l = document.createElement('label');
+        const c = document.createElement('input'); c.type = 'checkbox'; c.addEventListener('change', update);
+        const s = document.createElement('span'); s.textContent = t;
+        l.appendChild(c); l.appendChild(s); box.appendChild(l);
+      });
+    });
+    update();
+  })();
+
+  // ---- Quiz ----
+  const quiz = [
+    {q:"Lean Manufacturing এর মূল লক্ষ্য কী?",
+     o:["Operator এর সংখ্যা কমানো","অপচয় (Waste) কমিয়ে Customer এর জন্য মূল্য বাড়ানো","বেশি Machine কেনা"],
+     a:1, w:"Lean এর লক্ষ্য Waste কমিয়ে Customer এর কাছে যা মূল্যবান তা সবচেয়ে কম খরচ ও সময়ে তৈরি করা। লোক ছাঁটাই এর লক্ষ্য নয়।"},
+    {q:"Overproduction মানে কী?",
+     o:["দরকারের আগে বা বেশি তৈরি করা","Operator কে বেশি বেতন দেওয়া","Machine বেশি চালানো"],
+     a:0, w:"Overproduction হলো প্রয়োজনের আগে বা চাহিদার চেয়ে বেশি তৈরি করা। এটা বাকি অনেক Waste (Inventory, Waiting, Transport) এর জন্ম দেয়।"},
+    {q:"5S এর প্রথম S (Seiri) কী?",
+     o:["Shine (পরিষ্কার)","Sort (বাছাই)","Sustain (ধরে রাখা)"],
+     a:1, w:"Seiri মানে Sort, অর্থাৎ দরকারি ও অদরকারি জিনিস আলাদা করে অদরকারিগুলো সরানো।"},
+    {q:"Cut Part ট্রলিতে ১৫ মিটার দূরের Table এ নিয়ে যাওয়া কোন Waste?",
+     o:["Defects","Transportation","Over-processing"],
+     a:1, w:"এক জায়গা থেকে আরেক জায়গায় অপ্রয়োজনীয়ভাবে Material নেওয়া হলো Transportation Waste।"},
+    {q:"কাজের (VA) সময় 20 মিনিট ও Lead Time 2,000 মিনিট হলে VA Ratio কত?",
+     o:["0.1%","1%","10%"],
+     a:1, w:"VA Ratio = 20 ÷ 2,000 × 100 = 1%। বাকি ৯৯% সময় অপেক্ষা ও অন্য NVA তে যাচ্ছে।"}
+  ];
+
+  const box = document.getElementById('quiz');
+  const scoreEl = document.getElementById('score');
+  let answered = 0, correct = 0;
+
+  quiz.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'q';
+    d.innerHTML = `<p class="qt">${i+1}. ${item.q}</p>`;
+    const why = document.createElement('p');
+    why.className = 'why';
+    const btns = item.o.map((txt, j) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = txt;
+      b.addEventListener('click', () => {
+        if (d.dataset.done) return;
+        d.dataset.done = '1';
+        answered++;
+        if (j === item.a) { b.classList.add('right'); correct++; why.textContent = '✅ সঠিক! ' + item.w; }
+        else { b.classList.add('wrong'); btns[item.a].classList.add('right'); why.textContent = '⚠️ ভুল। ' + item.w; }
+        why.style.display = 'block';
+        if (answered === quiz.length) {
+          scoreEl.textContent = `তোমার স্কোর: ${correct} / ${quiz.length}` + (correct === quiz.length ? ' 🎉 দারুণ!' : ' — আবার পড়ে চেষ্টা করো।');
+        }
+      });
+      d.appendChild(b);
+      return b;
+    });
+    d.appendChild(why);
+    box.appendChild(d);
+  });
+</script>
+</body>
+</html>
