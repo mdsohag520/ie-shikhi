@@ -1,6 +1,10 @@
-*.backup4
-*.backup5
-*.sh*.backup
+*.backup
 *.backup2
 *.backup3
+*.backup4
+*.backup5
+*.backup_im
 *.bak
+*.v19bak
+*.part19bak
+*.sh
