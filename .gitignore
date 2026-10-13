@@ -8,3 +8,5 @@
 *.v19bak
 *.part19bak
 *.sh
+*_replace
+*.before_*
