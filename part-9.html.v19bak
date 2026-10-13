@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 9: Costing ও Incentive — IE শিখি</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F5F7;--ink:#14213D;--ink-soft:#4A5670;--oxblood:#7A1F2B;--thread:#E9B824;
+    --line:#D5DAE2;--white:#FFFFFF;--green:#2E7D5B;
+    --head:'Anek Bangla','Hind Siliguri','Noto Sans Bengali',sans-serif;
+    --body:'Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.75}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--oxblood);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+
+  header.top{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--white)}
+  header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
+  .logo{font-family:var(--head);font-weight:800;font-size:20px;text-decoration:none}
+  .logo span{color:var(--thread)}
+  .back{font-size:14px;color:#C9D3EA;text-decoration:none}
+  .back:hover{text-decoration:underline}
+
+  .title{padding:30px 0 10px}
+  .title .crumb{font-size:14px;color:var(--ink-soft)}
+  .title h1{font-family:var(--head);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:1.3;margin:4px 0 8px}
+  .title p{color:var(--ink-soft)}
+
+  nav.toc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0 8px}
+  nav.toc strong{font-family:var(--head);display:block;margin-bottom:4px}
+  nav.toc ol{padding-left:22px;font-size:16px}
+  nav.toc a{text-decoration:none;color:var(--oxblood)}
+  nav.toc a:hover{text-decoration:underline}
+
+  section.topic{padding:26px 0 8px;border-top:1px solid var(--line);margin-top:20px}
+  section.topic h2{font-family:var(--head);font-size:25px;line-height:1.4;margin-bottom:10px}
+  section.topic h3{font-family:var(--head);font-size:18px;margin:18px 0 4px;color:var(--oxblood)}
+  p{margin-bottom:10px}
+  ul.plain,ol.plain{padding-left:22px;margin-bottom:10px}
+  ul.plain li,ol.plain li{margin-bottom:4px}
+  b.term{font-weight:600}
+
+  .note{border-left:5px solid var(--thread);background:var(--white);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-size:16px}
+  .note.warn{border-left-color:var(--oxblood)}
+  .note.ok{border-left-color:var(--green)}
+  .example{background:var(--ink);color:var(--white);border-radius:10px;padding:14px 18px;margin:14px 0}
+  .example strong{color:var(--thread);font-family:var(--head)}
+  .formula{background:var(--white);border:2px solid var(--ink);border-radius:10px;padding:12px 16px;margin:12px 0;font-family:var(--head);font-size:18px;line-height:1.8}
+  .formula small{display:block;font-family:var(--body);font-size:14px;color:var(--ink-soft)}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;background:var(--white)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#E6EAF0;font-family:var(--head)}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  tr.total td{background:#F6E9B8;font-weight:600}
+  tr.sub td{background:#EEF1F5;font-weight:600}
+  .scroll{overflow-x:auto}
+
+  .steps{list-style:none;margin:12px 0;padding-left:0;border-left:3px dashed var(--thread);margin-left:8px}
+  .steps li{position:relative;padding:0 0 12px 20px}
+  .steps li::before{content:"";position:absolute;left:-9px;top:9px;width:15px;height:15px;border-radius:50%;background:var(--oxblood);border:3px solid var(--paper)}
+
+  .calc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:16px;margin:14px 0}
+  .calc label{display:block;font-weight:600;font-size:15px;margin:10px 0 4px}
+  .calc input{width:100%;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--paper);color:var(--ink)}
+  .calc .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .calc button{margin-top:14px;font:inherit;font-weight:600;background:var(--oxblood);color:var(--white);border:0;border-radius:10px;padding:11px 22px;cursor:pointer}
+  .calc button:hover{background:#5E1721}
+  .calc .out{margin-top:14px;display:none}
+  .calc .err{color:var(--oxblood);font-weight:600;margin-top:10px;display:none}
+
+  .q{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+  .q p.qt{font-weight:600;margin-bottom:8px}
+  .q button{display:block;width:100%;text-align:left;font:inherit;font-size:16px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;color:var(--ink)}
+  .q button:hover{border-color:var(--ink)}
+  .q button.right{background:#DDF1E8;border-color:var(--green)}
+  .q button.wrong{background:#F6DADD;border-color:var(--oxblood)}
+  .q .why{display:none;font-size:15px;color:var(--ink-soft);margin-top:6px}
+  .score{font-family:var(--head);font-size:20px;margin-top:10px}
+
+  .pager{display:flex;justify-content:space-between;gap:10px;padding:26px 0 40px;border-top:1px solid var(--line);margin-top:26px;flex-wrap:wrap}
+  .pager a{display:inline-block;text-decoration:none;font-weight:600;padding:11px 18px;border-radius:10px}
+  .pager .prev{border:1px solid var(--ink)}
+  .pager .next{background:var(--oxblood);color:var(--white)}
+  footer{background:var(--ink);color:#B8C3DC;padding:20px 0;font-size:14px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="index.html">IE <span>শিখি</span></a>
+    <a class="back" href="index.html#parts">← সব Part</a>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="title">
+    <div class="crumb">Part 9 / 18</div>
+    <h1>Costing ও Incentive</h1>
+    <p>একটা Bag বানাতে কত খরচ, দাম কত ধরলে লাভ থাকে, আর Operator কে ন্যায্য Incentive কীভাবে দেওয়া যায়। IE এর SMV থেকেই এই সব হিসাবের শুরু।</p>
+  </div>
+
+  <nav class="toc" aria-label="এই Part এর সূচি">
+    <strong>এই Part এ যা আছে</strong>
+    <ol>
+      <li><a href="#t1">Costing কী ও IE এর ভূমিকা</a></li>
+      <li><a href="#t2">Cost এর ধরন</a></li>
+      <li><a href="#t3">CPM ও CM (Cost of Making)</a></li>
+      <li><a href="#t4">পুরো Bag এর Cost Sheet</a></li>
+      <li><a href="#t5">Material Yield ও খরচ কমানো</a></li>
+      <li><a href="#t6">Wage ও Incentive</a></li>
+      <li><a href="#t7">Break-even বিশ্লেষণ</a></li>
+      <li><a href="#t8">নিজে হিসাব করুন (৩টি Calculator)</a></li>
+      <li><a href="#t9">সাধারণ ভুল</a></li>
+      <li><a href="#t10">Practice Quiz</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="topic" id="t1">
+    <h2>1. Costing কী ও IE এর ভূমিকা</h2>
+
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Costing</b> হলো একটা পণ্য তৈরিতে মোট কত খরচ হচ্ছে তা হিসাব করা, যাতে Buyer কে সঠিক দাম বলা যায় ও লাভ নিশ্চিত থাকে।</p>
+
+    <h3>কেন IE জড়িত</h3>
+    <ul class="plain">
+      <li>পণ্য বানানোর শ্রমের খরচ নির্ভর করে <b class="term">SMV</b> এর উপর, আর SMV দেয় IE।</li>
+      <li>SMV ভুল হলে দাম ভুল হয়: কম ধরলে লোকসান, বেশি ধরলে Order হাতছাড়া।</li>
+      <li>Efficiency বাড়ালে প্রতি Piece এর খরচ কমে। এই উন্নতির হিসাবও IE দেখায়।</li>
+    </ul>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Costing এর মূল সূত্র: <b>দাম = খরচ + লাভ</b>। বাজারে Buyer দাম ঠিক করে দেয়, তাই আমাদের কাজ খরচ কমিয়ে লাভ ধরে রাখা।</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="topic" id="t2">
+    <h2>2. Cost এর ধরন</h2>
+
+    <div class="scroll">
+    <table>
+      <tr><th>ধরন</th><th>অর্থ</th><th>Bag Factory Example</th></tr>
+      <tr><td><b>Direct Material</b></td><td>পণ্যে সরাসরি লাগা কাঁচামাল</td><td>Leather, Lining, Zipper, Rivet, Thread, Packaging</td></tr>
+      <tr><td><b>Direct Labour</b></td><td>পণ্য বানানোর সরাসরি শ্রম</td><td>Cutter, Sewing Operator, Finishing এর বেতন</td></tr>
+      <tr><td><b>Factory Overhead</b></td><td>Factory চালাতে পরোক্ষ খরচ</td><td>ভাড়া, বিদ্যুৎ, Machine ক্ষয় (Depreciation), Supervisor, Maintenance</td></tr>
+      <tr><td><b>Admin ও Selling</b></td><td>অফিস ও বিক্রির খরচ</td><td>অফিস স্টাফ, Merchandising, Shipping এর খরচ</td></tr>
+      <tr><td><b>Profit</b></td><td>লাভ</td><td>মোট খরচের উপর শতকরা হার</td></tr>
+    </table>
+    </div>
+
+    <h3>আরেকভাবে ভাগ: Fixed ও Variable</h3>
+    <ul class="plain">
+      <li><b class="term">Fixed Cost:</b> Output যাই হোক, মাসে প্রায় একই থাকে (ভাড়া, স্থায়ী বেতন)।</li>
+      <li><b class="term">Variable Cost:</b> Output এর সাথে বাড়ে-কমে (Leather, Thread, Packaging)।</li>
+    </ul>
+
+    <div class="note"><strong>💡 Tip:</strong> Bag এ সাধারণত সবচেয়ে বড় অংশ Material (বিশেষ করে Leather)। তাই Material এর অপচয় কমানো প্রায়ই Labour কমানোর চেয়ে বেশি লাভ দেয়।</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="topic" id="t3">
+    <h2>3. CPM ও CM (Cost of Making)</h2>
+
+    <h3>কী</h3>
+    <p><b class="term">CPM (Cost Per Minute)</b> হলো Factory বা Line এর একটা উৎপাদনশীল মিনিটের খরচ। <b class="term">CM (Cost of Making)</b> হলো একটা Piece কে Material থেকে তৈরি পণ্যে রূপ দেওয়ার খরচ, মানে শ্রম ও Factory এর খরচ, Material বাদে।</p>
+
+    <h3>কীভাবে</h3>
+    <div class="formula">
+      Productive Minutes = Operator × কাজের দিন × মিনিট/দিন × Efficiency<br>
+      CPM = মাসের মোট শ্রম ও Overhead খরচ ÷ Productive Minutes<br>
+      CM (প্রতি Piece) = SMV × CPM
+      <small>"CM" শব্দের অর্থ ও হিসাবের পদ্ধতি Factory ও Buyer ভেদে কিছুটা আলাদা হতে পারে। নিজের Factory র নিয়ম জেনে নাও।</small>
+    </div>
+
+    <div class="example">
+      <strong>Example (কাল্পনিক, বোঝার জন্য):</strong> Tote Bag Line, SMV = 11.34<br>
+      Operator = 17 জন, মাসে 26 কাজের দিন, 480 মিনিট/দিন, Efficiency = 70%<br>
+      Line এর মাসিক শ্রম ও Overhead খরচ = Tk 1,000,000<br><br>
+      Productive Minutes = 17 × 26 × 480 × 0.70 = <strong>148,512</strong><br>
+      CPM = 1,000,000 ÷ 148,512 ≈ <strong>Tk 6.73/মিনিট</strong><br>
+      CM = 11.34 × 6.73 ≈ <strong>Tk 76.36 প্রতি Bag</strong>
+    </div>
+
+    <h3>Efficiency বদলালে CM কীভাবে বদলায়</h3>
+    <div class="scroll">
+    <table>
+      <tr><th>Efficiency</th><th class="num">Productive Minutes</th><th class="num">CPM (Tk)</th><th class="num">CM প্রতি Bag (Tk)</th></tr>
+      <tr><td>60%</td><td class="num">127,296</td><td class="num">7.86</td><td class="num">89.08</td></tr>
+      <tr><td>70%</td><td class="num">148,512</td><td class="num">6.73</td><td class="num">76.36</td></tr>
+      <tr><td>80%</td><td class="num">169,728</td><td class="num">5.89</td><td class="num">66.81</td></tr>
+    </table>
+    </div>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> মাসিক খরচ একই থাকলে <b>Efficiency যত বাড়ে, প্রতি Bag এর CM তত কমে</b>। এই কারণেই IE এর Efficiency উন্নতির কাজ সরাসরি টাকায় রূপ নেয়।</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="topic" id="t4">
+    <h2>4. পুরো Bag এর Cost Sheet</h2>
+
+    <h3>কী ও কেন</h3>
+    <p><b class="term">Cost Sheet</b> হলো একটা Bag এর সব খরচের ধাপে ধাপে তালিকা, যেখান থেকে শেষে দাম (FOB) বের হয়। Buyer এর সাথে দাম আলোচনার সময় এটাই ভিত্তি।</p>
+
+    <div class="example">
+      <strong>Example (কাল্পনিক Tk, বোঝার জন্য):</strong> উপরের Tote Bag
+    </div>
+    <div class="scroll">
+    <table>
+      <tr><th>খরচের খাত</th><th class="num">Tk প্রতি Bag</th></tr>
+      <tr><td>Leather (মূল)</td><td class="num">520.00</td></tr>
+      <tr><td>Lining</td><td class="num">60.00</td></tr>
+      <tr><td>Zipper</td><td class="num">45.00</td></tr>
+      <tr><td>Rivet, Logo Plate ও Hardware</td><td class="num">55.00</td></tr>
+      <tr><td>Thread, Glue, Edge Paint</td><td class="num">25.00</td></tr>
+      <tr><td>Packaging (Polybag, Tag, Carton অংশ)</td><td class="num">40.00</td></tr>
+      <tr class="sub"><td>মোট Direct Material</td><td class="num">745.00</td></tr>
+      <tr><td>Material Wastage (3%)</td><td class="num">22.35</td></tr>
+      <tr><td>CM (শ্রম ও Factory Overhead)</td><td class="num">76.36</td></tr>
+      <tr class="sub"><td>Factory Cost</td><td class="num">843.71</td></tr>
+      <tr><td>Admin ও Selling (6%)</td><td class="num">50.62</td></tr>
+      <tr class="sub"><td>মোট খরচ</td><td class="num">894.33</td></tr>
+      <tr><td>লাভ (8%)</td><td class="num">71.55</td></tr>
+      <tr class="total"><td>FOB দাম (প্রতি Bag)</td><td class="num">965.88</td></tr>
+    </table>
+    </div>
+
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> এই সংখ্যাগুলো পুরোপুরি কাল্পনিক। Material এর দাম, Wastage, Overhead ও লাভের হার Factory ও Order ভেদে আলাদা। নিজের Factory র আসল সংখ্যা Calculator ১ এ বসিয়ে দেখো।</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="topic" id="t5">
+    <h2>5. Material Yield ও খরচ কমানো</h2>
+
+    <h3>Yield কী</h3>
+    <p><b class="term">Yield</b> হলো যে পরিমাণ Leather ব্যবহার হয়েছে তার কত শতাংশ আসলে পণ্যে গেছে (বাকিটা Wastage)।</p>
+
+    <div class="formula">
+      Yield (%) = পণ্যে ব্যবহৃত Leather ÷ মোট ব্যবহৃত Leather × 100
+    </div>
+
+    <div class="example">
+      <strong>Example (কাল্পনিক):</strong> Leather বাবদ খরচ Tk 520 প্রতি Bag, Yield 85%।<br>
+      Nesting ও Cutting উন্নত করে Yield 88% করা গেলে:<br>
+      নতুন Leather খরচ = 520 × 85 ÷ 88 ≈ <strong>Tk 502.27</strong><br>
+      প্রতি Bag এ সাশ্রয় ≈ <strong>Tk 17.73</strong>
+    </div>
+
+    <p>তুলনা করো: ৩ নম্বর Topic এ Efficiency 70% থেকে 80% এ গেলে CM কমেছিল প্রায় Tk 9.55 (76.36 থেকে 66.81)। অর্থাৎ শুধু Leather Yield এর ৩% উন্নতিই CM এর উন্নতির চেয়ে প্রায় দ্বিগুণ সাশ্রয় দিয়েছে।</p>
+
+    <h3>খরচ কমানোর উপায়</h3>
+    <ul class="plain">
+      <li><b class="term">Material:</b> ভালো Nesting, ছোট টুকরো কাজে লাগানো, Cutting Defect কমানো।</li>
+      <li><b class="term">Efficiency:</b> Line Balance, Method উন্নতি, Machine Breakdown কমানো।</li>
+      <li><b class="term">Quality:</b> Rework ও Reject কমানো (Part 8)।</li>
+      <li><b class="term">WIP ও Lead Time:</b> Lean এর মাধ্যমে জমে থাকা কাজ কমানো (Part 7)।</li>
+      <li><b class="term">সঠিক SMV:</b> ঠিক হিসাবে Target ও Costing।</li>
+      <li><b class="term">Overtime নিয়ন্ত্রণ:</b> ভালো Planning এ অপ্রয়োজনীয় Overtime কমানো (আইন মেনে)।</li>
+    </ul>
+  </section>
+
+  <!-- 6 -->
+  <section class="topic" id="t6">
+    <h2>6. Wage ও Incentive</h2>
+
+    <h3>কী ও কেন</h3>
+    <p>বেতনের সাথে কাজের পরিমাণের সম্পর্ক রাখলে Operator রা বেশি উৎসাহী হয়, Output ও Efficiency বাড়ে। কিন্তু অন্যায্য বা অস্পষ্ট নিয়মে উল্টো ফল হয়।</p>
+
+    <div class="scroll">
+    <table>
+      <tr><th>পদ্ধতি</th><th>কীভাবে কাজ করে</th><th>সুবিধা / অসুবিধা</th></tr>
+      <tr><td>Time Rate</td><td>সময় (ঘণ্টা/মাস) অনুযায়ী নির্দিষ্ট বেতন</td><td>নিরাপদ ও সহজ। কিন্তু বেশি করার উৎসাহ কম</td></tr>
+      <tr><td>Piece Rate</td><td>প্রতি Piece এর জন্য নির্দিষ্ট টাকা</td><td>উৎসাহ বেশি। কিন্তু Quality কমার ঝুঁকি</td></tr>
+      <tr><td>Basic + Incentive</td><td>নির্দিষ্ট বেতন, সাথে Target ছাড়ালে অতিরিক্ত বোনাস</td><td>নিরাপত্তা ও উৎসাহ দুটোই। সবচেয়ে প্রচলিত</td></tr>
+      <tr><td>Group Incentive</td><td>পুরো Line বা Team এর Output এর উপর বোনাস</td><td>দলগত সহযোগিতা বাড়ে। কিন্তু একজনের দুর্বলতা সবাইকে প্রভাবিত করে</td></tr>
+    </table>
+    </div>
+
+    <h3>SMV ভিত্তিক Incentive (সহজ পদ্ধতি)</h3>
+    <div class="formula">
+      Earned Minutes = উৎপাদিত Piece × SMV<br>
+      Operator Efficiency (%) = Earned Minutes ÷ উপস্থিত মিনিট × 100<br>
+      Incentive = (Efficiency − Threshold%) × প্রতি ১% এর হার
+      <small>Threshold হলো যে Efficiency এর উপরে Incentive শুরু হয়। হার Company নীতি অনুযায়ী।</small>
+    </div>
+
+    <div class="example">
+      <strong>Example (কাল্পনিক):</strong> একজন Operator 480 মিনিটে Handle Stitching (SMV 0.74) এ 560 Piece করলো।<br>
+      Earned Minutes = 560 × 0.74 = <strong>414.4</strong><br>
+      Efficiency = 414.4 ÷ 480 × 100 ≈ <strong>86.3%</strong><br>
+      Threshold 60%, প্রতি ১% এ Tk 2 হলে: (86.3 − 60) × 2 ≈ <strong>Tk 52.7 প্রতিদিন</strong>
+    </div>
+
+    <h3>ন্যায্য Incentive এর শর্ত</h3>
+    <ul class="plain">
+      <li><b class="term">সঠিক SMV:</b> SMV ভুল হলে Incentive অন্যায্য হয়। তাই Time Study (Part 3) ঠিক থাকা জরুরি।</li>
+      <li><b class="term">Quality শর্ত:</b> শুধু পরিমাণ নয়, RFT একটা ন্যূনতম মানের উপরে থাকলেই Incentive।</li>
+      <li><b class="term">স্বচ্ছতা:</b> নিয়ম লিখিত, সবাই বোঝে ও হিসাব দেখতে পারে।</li>
+      <li><b class="term">Bottleneck এর পাশে ন্যায্যতা:</b> যারা সহায়ক বা কম নিয়ন্ত্রণযোগ্য কাজ করে তাদের জন্যও ব্যবস্থা।</li>
+      <li><b class="term">আইন ও নীতি:</b> সরকারি Minimum Wage, Overtime এর আইনি হার (Bangladesh Labour Act) ও Buyer এর Compliance শর্ত মেনে। হার ও নিয়ম HR ও আইনি নির্দেশনা দেখে নাও।</li>
+    </ul>
+
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> Incentive এর লোভে Operator রা Quality বা Safety কমিয়ে ফেলতে পারে। তাই Quality ও Safety শর্ত Incentive এর অংশ রাখো।</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="topic" id="t7">
+    <h2>7. Break-even বিশ্লেষণ</h2>
+
+    <h3>কী ও কেন</h3>
+    <p><b class="term">Break-even Point (BEP)</b> হলো যত Piece বিক্রি করলে মোট আয় = মোট খরচ, অর্থাৎ লাভও নেই লোকসানও নেই। এর উপরে গেলে লাভ।</p>
+
+    <div class="formula">
+      Contribution প্রতি Piece = দাম − Variable Cost প্রতি Piece<br>
+      BEP (Piece) = মোট Fixed Cost ÷ Contribution প্রতি Piece<br>
+      Margin of Safety (%) = (পরিকল্পিত Output − BEP) ÷ পরিকল্পিত Output × 100
+    </div>
+
+    <div class="example">
+      <strong>Example (কাল্পনিক):</strong> মাসিক Fixed Cost = Tk 2,000,000, দাম = Tk 966, Variable Cost = Tk 820 প্রতি Bag<br>
+      Contribution = 966 − 820 = <strong>Tk 146</strong><br>
+      BEP = 2,000,000 ÷ 146 ≈ <strong>13,699 Bag/মাস</strong><br>
+      পরিকল্পিত Output 15,000 হলে Margin of Safety = (15,000 − 13,699) ÷ 15,000 × 100 ≈ <strong>8.7%</strong>
+    </div>
+
+    <div class="note"><strong>💡 Tip:</strong> Margin of Safety কম মানে ঝুঁকি বেশি: Output সামান্য কমলেই লোকসান। Efficiency ও Order নিশ্চিত রাখা তাই জরুরি।</div>
+  </section>
+
+  <!-- 8 Calculators -->
+  <section class="topic" id="t8">
+    <h2>8. নিজে হিসাব করুন (৩টি Calculator)</h2>
+    <p>মুদ্রা Tk বা অন্য যেকোনো একক ব্যবহার করতে পারো, শুধু সব ঘরে একই একক রাখো।</p>
+
+    <h3>Calculator ১: CM ও Bag এর দাম (Cost Sheet)</h3>
+    <div class="calc">
+      <div class="row">
+        <div><label for="mat">Direct Material (প্রতি Bag)</label><input id="mat" type="number" inputmode="decimal" value="745"></div>
+        <div><label for="wast">Material Wastage (%)</label><input id="wast" type="number" inputmode="decimal" value="3"></div>
+      </div>
+      <div class="row">
+        <div><label for="smv">SMV (মিনিট)</label><input id="smv" type="number" inputmode="decimal" value="11.34"></div>
+        <div><label for="mcost">মাসের শ্রম ও Overhead খরচ</label><input id="mcost" type="number" inputmode="decimal" value="1000000"></div>
+      </div>
+      <div class="row">
+        <div><label for="ops">Operator</label><input id="ops" type="number" inputmode="decimal" value="17"></div>
+        <div><label for="days">মাসে কাজের দিন</label><input id="days" type="number" inputmode="decimal" value="26"></div>
+      </div>
+      <div class="row">
+        <div><label for="mins">মিনিট/দিন</label><input id="mins" type="number" inputmode="decimal" value="480"></div>
+        <div><label for="eff">Efficiency (%)</label><input id="eff" type="number" inputmode="decimal" value="70"></div>
+      </div>
+      <div class="row">
+        <div><label for="adm">Admin ও Selling (%)</label><input id="adm" type="number" inputmode="decimal" value="6"></div>
+        <div><label for="prof">লাভ (%)</label><input id="prof" type="number" inputmode="decimal" value="8"></div>
+      </div>
+      <button type="button" id="go1">হিসাব করো</button>
+      <p class="err" id="err1"></p>
+      <div class="out" id="out1"><div class="scroll"><table id="t1res"></table></div></div>
+    </div>
+
+    <h3>Calculator ২: Operator এর Incentive</h3>
+    <div class="calc">
+      <div class="row">
+        <div><label for="pcs">উৎপাদিত Piece</label><input id="pcs" type="number" inputmode="decimal" value="560"></div>
+        <div><label for="osmv">Operation এর SMV</label><input id="osmv" type="number" inputmode="decimal" value="0.74"></div>
+      </div>
+      <div class="row">
+        <div><label for="att">উপস্থিত মিনিট</label><input id="att" type="number" inputmode="decimal" value="480"></div>
+        <div><label for="thr">Threshold Efficiency (%)</label><input id="thr" type="number" inputmode="decimal" value="60"></div>
+      </div>
+      <div class="row">
+        <div><label for="rate">প্রতি ১% এর হার</label><input id="rate" type="number" inputmode="decimal" value="2"></div>
+        <div><label for="rft">Operator এর RFT (%)</label><input id="rft" type="number" inputmode="decimal" value="97"></div>
+      </div>
+      <label for="minrft">Incentive এর জন্য ন্যূনতম RFT (%)</label>
+      <input id="minrft" type="number" inputmode="decimal" value="95">
+      <button type="button" id="go2">হিসাব করো</button>
+      <p class="err" id="err2"></p>
+      <div class="out" id="out2"><div class="scroll"><table id="t2res"></table></div><div class="note" id="t2sum"></div></div>
+    </div>
+
+    <h3>Calculator ৩: Break-even</h3>
+    <div class="calc">
+      <div class="row">
+        <div><label for="fix">মাসিক Fixed Cost</label><input id="fix" type="number" inputmode="decimal" value="2000000"></div>
+        <div><label for="price">দাম প্রতি Piece</label><input id="price" type="number" inputmode="decimal" value="966"></div>
+      </div>
+      <div class="row">
+        <div><label for="var">Variable Cost প্রতি Piece</label><input id="var" type="number" inputmode="decimal" value="820"></div>
+        <div><label for="plan">পরিকল্পিত মাসিক Output</label><input id="plan" type="number" inputmode="decimal" value="15000"></div>
+      </div>
+      <button type="button" id="go3">হিসাব করো</button>
+      <p class="err" id="err3"></p>
+      <div class="out" id="out3"><div class="scroll"><table id="t3res"></table></div><div class="note" id="t3sum"></div></div>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="topic" id="t9">
+    <h2>9. সাধারণ ভুল</h2>
+    <div class="note warn"><strong>⚠️ ভুল ১:</strong> ১০০% Efficiency ধরে CM হিসাব করা।<br><b>সঠিক:</b> বাস্তব গড় Efficiency ধরো, নইলে খরচ কম দেখাবে ও লোকসান হবে।</div>
+    <div class="note warn"><strong>⚠️ ভুল ২:</strong> Material Wastage হিসাবে না ধরা।<br><b>সঠিক:</b> Cutting Wastage ও Defect এর জন্য বাড়তি শতাংশ ধরো।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৩:</strong> পুরোনো SMV দিয়ে নতুন Style এর দাম ঠিক করা।<br><b>সঠিক:</b> নতুন Style এর SMV আলাদা করে মাপো বা যাচাই করো।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৪:</strong> Overhead বাদ দিয়ে শুধু বেতন ধরা।<br><b>সঠিক:</b> ভাড়া, বিদ্যুৎ, Machine ক্ষয় ও সহায়ক কর্মীর খরচও যোগ করো।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৫:</strong> Quality শর্ত ছাড়া Incentive দেওয়া।<br><b>সঠিক:</b> RFT ও Safety শর্ত রাখো, নইলে Defect বেড়ে যাবে।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৬:</strong> Incentive এর নিয়ম গোপন রাখা বা বারবার বদলানো।<br><b>সঠিক:</b> লিখিত ও স্বচ্ছ নিয়ম রাখো, বদলাতে হলে আগে জানাও।</div>
+  </section>
+
+  <!-- 10 Quiz -->
+  <section class="topic" id="t10">
+    <h2>10. Practice Quiz</h2>
+    <p>প্রতিটা প্রশ্নের একটা উত্তর বেছে নাও। সঙ্গে সঙ্গে সঠিক উত্তর ও কারণ দেখতে পাবে।</p>
+    <div id="quiz"></div>
+    <div class="score" id="score"></div>
+    <p style="margin-top:14px"><b>Home Task:</b> নিজের Factory র একটা Style এর Cost Sheet বানাও। Material, SMV, CPM ও Efficiency Calculator ১ এ বসিয়ে দেখো Efficiency ৫% বাড়লে প্রতি Bag এ কত সাশ্রয় হয়।</p>
+  </section>
+
+  <div class="pager">
+    <a class="prev" href="part-8.html">← Part 8: Quality ও Productivity</a>
+    <a class="next" href="part-10.html">Part 10: Ergonomics, Safety ও Compliance →</a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">IE শিখি · Part 9: Costing ও Incentive</div>
+</footer>
+
+<script>
+  const nf = (n, d) => Number(n).toLocaleString('en-US', {minimumFractionDigits: d === undefined ? 2 : d, maximumFractionDigits: d === undefined ? 2 : d});
+  const val = id => parseFloat(document.getElementById(id).value);
+
+  function mkTable(tbl, head, rows, cls){
+    tbl.innerHTML = '';
+    const h = document.createElement('tr');
+    head.forEach((t,i) => { const th = document.createElement('th'); th.textContent = t; if (i) th.className = 'num'; h.appendChild(th); });
+    tbl.appendChild(h);
+    rows.forEach((r, ri) => {
+      const tr = document.createElement('tr');
+      if (cls && cls[ri]) tr.className = cls[ri];
+      r.forEach((t,i) => { const td = document.createElement('td'); td.textContent = t; if (i) td.className = 'num'; tr.appendChild(td); });
+      tbl.appendChild(tr);
+    });
+  }
+  function fail(errId, outId, msg){
+    const e = document.getElementById(errId);
+    e.textContent = msg; e.style.display = 'block';
+    document.getElementById(outId).style.display = 'none';
+  }
+  function reset(errId, outId){
+    document.getElementById(errId).style.display = 'none';
+    document.getElementById(outId).style.display = 'none';
+  }
+
+  // ---- Calculator 1: Cost sheet ----
+  document.getElementById('go1').addEventListener('click', function(){
+    reset('err1','out1');
+    const mat = val('mat'), wast = val('wast'), smv = val('smv'), mcost = val('mcost'),
+          ops = val('ops'), days = val('days'), mins = val('mins'), eff = val('eff'),
+          adm = val('adm'), prof = val('prof');
+    if ([mat,smv,mcost,ops,days,mins].some(n => isNaN(n) || n <= 0)) { fail('err1','out1','Material, SMV, খরচ, Operator, দিন ও মিনিট ০ এর চেয়ে বড় সঠিক সংখ্যা লিখুন।'); return; }
+    if (isNaN(eff) || eff <= 0 || eff > 100) { fail('err1','out1','Efficiency ১ থেকে ১০০ এর মধ্যে লিখুন।'); return; }
+    if ([wast,adm,prof].some(n => isNaN(n) || n < 0)) { fail('err1','out1','Wastage, Admin ও লাভ ০ বা তার বেশি লিখুন।'); return; }
+
+    const prodMin = ops * days * mins * (eff / 100);
+    const cpm = mcost / prodMin;
+    const cm = smv * cpm;
+    const wastage = mat * wast / 100;
+    const factory = mat + wastage + cm;
+    const admin = factory * adm / 100;
+    const total = factory + admin;
+    const profit = total * prof / 100;
+    const fob = total + profit;
+
+    mkTable(document.getElementById('t1res'), ['খাত','পরিমাণ'], [
+      ['Productive Minutes (মাসে)', nf(prodMin, 0)],
+      ['CPM (প্রতি মিনিট)', nf(cpm)],
+      ['CM (প্রতি Bag)', nf(cm)],
+      ['Direct Material', nf(mat)],
+      ['Material Wastage', nf(wastage)],
+      ['Factory Cost', nf(factory)],
+      ['Admin ও Selling', nf(admin)],
+      ['মোট খরচ', nf(total)],
+      ['লাভ', nf(profit)],
+      ['FOB দাম (প্রতি Bag)', nf(fob)]
+    ], ['','sub','sub','','','sub','','sub','','total']);
+    document.getElementById('out1').style.display = 'block';
+  });
+
+  // ---- Calculator 2: Incentive ----
+  document.getElementById('go2').addEventListener('click', function(){
+    reset('err2','out2');
+    const pcs = val('pcs'), osmv = val('osmv'), att = val('att'), thr = val('thr'),
+          rate = val('rate'), rft = val('rft'), minrft = val('minrft');
+    if ([pcs,osmv,att].some(n => isNaN(n) || n <= 0)) { fail('err2','out2','Piece, SMV ও উপস্থিত মিনিট ০ এর চেয়ে বড় সঠিক সংখ্যা লিখুন।'); return; }
+    if ([thr,rate,rft,minrft].some(n => isNaN(n) || n < 0)) { fail('err2','out2','Threshold, হার ও RFT সঠিক সংখ্যা লিখুন।'); return; }
+
+    const earned = pcs * osmv;
+    const effp = earned / att * 100;
+    const above = Math.max(0, effp - thr);
+    const base = above * rate;
+    const qualityOK = rft >= minrft;
+    const incentive = qualityOK ? base : 0;
+
+    mkTable(document.getElementById('t2res'), ['বিষয়','ফল'], [
+      ['Earned Minutes', nf(earned, 1)],
+      ['Operator Efficiency', nf(effp, 1) + '%'],
+      ['Threshold এর উপরে', nf(above, 1) + '%'],
+      ['Quality শর্ত (RFT ' + nf(rft, 1) + '% ≥ ' + nf(minrft, 1) + '%)', qualityOK ? 'পূরণ ✅' : 'পূরণ হয়নি ⚠️'],
+      ['দৈনিক Incentive', nf(incentive)]
+    ], ['','','','','total']);
+    document.getElementById('t2sum').textContent = qualityOK
+      ? (above > 0 ? 'Efficiency ও Quality দুটো শর্তই পূরণ হওয়ায় Incentive প্রযোজ্য।' : 'Efficiency Threshold এর উপরে না যাওয়ায় Incentive নেই।')
+      : 'Quality শর্ত পূরণ হয়নি, তাই Incentive শূন্য। (Quality ছাড়া শুধু পরিমাণে Incentive দিলে Defect বাড়ে।)';
+    document.getElementById('out2').style.display = 'block';
+  });
+
+  // ---- Calculator 3: Break-even ----
+  document.getElementById('go3').addEventListener('click', function(){
+    reset('err3','out3');
+    const fix = val('fix'), price = val('price'), vc = val('var'), plan = val('plan');
+    if ([fix,price,vc,plan].some(n => isNaN(n) || n <= 0)) { fail('err3','out3','সব ঘরে ০ এর চেয়ে বড় সঠিক সংখ্যা লিখুন।'); return; }
+    const contrib = price - vc;
+    if (contrib <= 0) { fail('err3','out3','দাম Variable Cost এর চেয়ে বেশি না হলে Break-even সম্ভব নয়। প্রতি Piece এ লোকসান হচ্ছে।'); return; }
+    const bep = fix / contrib;
+    const mos = (plan - bep) / plan * 100;
+    mkTable(document.getElementById('t3res'), ['বিষয়','ফল'], [
+      ['Contribution প্রতি Piece', nf(contrib)],
+      ['Break-even (Piece/মাস)', nf(Math.ceil(bep - 1e-9), 0)],
+      ['Break-even আয়', nf(Math.ceil(bep - 1e-9) * price, 0)],
+      ['Margin of Safety', nf(mos, 1) + '%']
+    ], ['','sub','','total']);
+    document.getElementById('t3sum').textContent = mos >= 0
+      ? 'পরিকল্পিত Output (' + nf(plan, 0) + ') Break-even এর উপরে, তাই লাভ হবে। Margin of Safety ' + nf(mos, 1) + '%: Output এর এই পরিমাণ কমলেও লোকসান হবে না।'
+      : 'পরিকল্পিত Output Break-even এর নিচে, তাই এই Output এ মাসে লোকসান হবে।';
+    document.getElementById('out3').style.display = 'block';
+  });
+
+  // ---- Quiz ----
+  const quiz = [
+    {q:"মাসিক খরচ Tk 300,000 ও Productive Minutes 50,000 হলে CPM কত?",
+     o:["Tk 5/মিনিট","Tk 6/মিনিট","Tk 15/মিনিট"],
+     a:1, w:"CPM = 300,000 ÷ 50,000 = Tk 6 প্রতি মিনিট।"},
+    {q:"SMV 10 মিনিট ও CPM Tk 5 হলে প্রতি Piece এর CM কত?",
+     o:["Tk 2","Tk 15","Tk 50"],
+     a:2, w:"CM = SMV × CPM = 10 × 5 = Tk 50।"},
+    {q:"300 Piece, SMV 1.2, 480 মিনিট কাজ করলে Operator Efficiency কত?",
+     o:["60%","75%","90%"],
+     a:1, w:"Earned Minutes = 300 × 1.2 = 360। Efficiency = 360 ÷ 480 × 100 = 75%।"},
+    {q:"Fixed Cost Tk 100,000, দাম Tk 50, Variable Cost Tk 30 প্রতি Piece হলে Break-even কত Piece?",
+     o:["2,000","5,000","10,000"],
+     a:1, w:"Contribution = 50 − 30 = Tk 20। BEP = 100,000 ÷ 20 = 5,000 Piece।"},
+    {q:"মাসিক খরচ একই থাকলে Efficiency বাড়লে প্রতি Piece এর CM এর কী হয়?",
+     o:["কমে","বাড়ে","একই থাকে"],
+     a:0, w:"Efficiency বাড়লে Productive Minutes বাড়ে, তাই CPM কমে এবং প্রতি Piece এর CM কমে।"}
+  ];
+
+  const qbox = document.getElementById('quiz');
+  const scoreEl = document.getElementById('score');
+  let answered = 0, correct = 0;
+  quiz.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'q';
+    d.innerHTML = `<p class="qt">${i+1}. ${item.q}</p>`;
+    const why = document.createElement('p');
+    why.className = 'why';
+    const btns = item.o.map((txt, j) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = txt;
+      b.addEventListener('click', () => {
+        if (d.dataset.done) return;
+        d.dataset.done = '1';
+        answered++;
+        if (j === item.a) { b.classList.add('right'); correct++; why.textContent = '✅ সঠিক! ' + item.w; }
+        else { b.classList.add('wrong'); btns[item.a].classList.add('right'); why.textContent = '⚠️ ভুল। ' + item.w; }
+        why.style.display = 'block';
+        if (answered === quiz.length) {
+          scoreEl.textContent = `তোমার স্কোর: ${correct} / ${quiz.length}` + (correct === quiz.length ? ' 🎉 দারুণ!' : ' — আবার পড়ে চেষ্টা করো।');
+        }
+      });
+      d.appendChild(b);
+      return b;
+    });
+    d.appendChild(why);
+    qbox.appendChild(d);
+  });
+</script>
+</body>
+</html>
+
+<style>
+#scrollUpBtn,#scrollDownBtn{position:fixed;right:18px;width:46px;height:46px;border-radius:50%;background:#7A1F2B;color:#FFF;border:none;font-size:22px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.25);display:none;z-index:999;align-items:center;justify-content:center;transition:opacity 0.3s}
+#scrollUpBtn{bottom:80px}
+#scrollDownBtn{bottom:20px}
+#scrollUpBtn:hover,#scrollDownBtn:hover{background:#5E1721}
+#scrollUpBtn.show,#scrollDownBtn.show{display:flex}
+@media(max-width:480px){#scrollUpBtn,#scrollDownBtn{width:42px;height:42px;font-size:20px;right:14px}}
+</style>
+<button id="scrollUpBtn" aria-label="উপরে যাও" title="উপরে যাও">↑</button>
+<button id="scrollDownBtn" aria-label="নিচে যাও" title="নিচে যাও">↓</button>
+<script>
+(function(){
+var upBtn=document.getElementById("scrollUpBtn");
+var downBtn=document.getElementById("scrollDownBtn");
+function updateButtons(){
+var s=window.scrollY;
+var t=document.documentElement.scrollHeight;
+var w=window.innerHeight;
+if(s>300){upBtn.classList.add("show")}else{upBtn.classList.remove("show")}
+if(s+w<t-400){downBtn.classList.add("show")}else{downBtn.classList.remove("show")}
+}
+upBtn.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"})});
+downBtn.addEventListener("click",function(){window.scrollTo({top:document.documentElement.scrollHeight,behavior:"smooth"})});
+window.addEventListener("scroll",updateButtons);
+window.addEventListener("resize",updateButtons);
+updateButtons();
+})();
+</script>
+

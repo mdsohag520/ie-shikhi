@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 8: Quality ও Productivity — IE শিখি</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F5F7;--ink:#14213D;--ink-soft:#4A5670;--oxblood:#7A1F2B;--thread:#E9B824;
+    --line:#D5DAE2;--white:#FFFFFF;--green:#2E7D5B;
+    --head:'Anek Bangla','Hind Siliguri','Noto Sans Bengali',sans-serif;
+    --body:'Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.75}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--oxblood);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+
+  header.top{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--white)}
+  header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
+  .logo{font-family:var(--head);font-weight:800;font-size:20px;text-decoration:none}
+  .logo span{color:var(--thread)}
+  .back{font-size:14px;color:#C9D3EA;text-decoration:none}
+  .back:hover{text-decoration:underline}
+
+  .title{padding:30px 0 10px}
+  .title .crumb{font-size:14px;color:var(--ink-soft)}
+  .title h1{font-family:var(--head);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:1.3;margin:4px 0 8px}
+  .title p{color:var(--ink-soft)}
+
+  nav.toc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0 8px}
+  nav.toc strong{font-family:var(--head);display:block;margin-bottom:4px}
+  nav.toc ol{padding-left:22px;font-size:16px}
+  nav.toc a{text-decoration:none;color:var(--oxblood)}
+  nav.toc a:hover{text-decoration:underline}
+
+  section.topic{padding:26px 0 8px;border-top:1px solid var(--line);margin-top:20px}
+  section.topic h2{font-family:var(--head);font-size:25px;line-height:1.4;margin-bottom:10px}
+  section.topic h3{font-family:var(--head);font-size:18px;margin:18px 0 4px;color:var(--oxblood)}
+  p{margin-bottom:10px}
+  ul.plain,ol.plain{padding-left:22px;margin-bottom:10px}
+  ul.plain li,ol.plain li{margin-bottom:4px}
+  b.term{font-weight:600}
+
+  .note{border-left:5px solid var(--thread);background:var(--white);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-size:16px}
+  .note.warn{border-left-color:var(--oxblood)}
+  .note.ok{border-left-color:var(--green)}
+  .example{background:var(--ink);color:var(--white);border-radius:10px;padding:14px 18px;margin:14px 0}
+  .example strong{color:var(--thread);font-family:var(--head)}
+  .formula{background:var(--white);border:2px solid var(--ink);border-radius:10px;padding:12px 16px;margin:12px 0;font-family:var(--head);font-size:18px;line-height:1.8}
+  .formula small{display:block;font-family:var(--body);font-size:14px;color:var(--ink-soft)}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;background:var(--white)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#E6EAF0;font-family:var(--head)}
+  td.num,th.num{text-align:right;white-space:nowrap}
+  tr.total td{background:#F6E9B8;font-weight:600}
+  tr.big td{background:#F6DADD}
+  .scroll{overflow-x:auto}
+
+  .steps{list-style:none;margin:12px 0;padding-left:0;border-left:3px dashed var(--thread);margin-left:8px}
+  .steps li{position:relative;padding:0 0 12px 20px}
+  .steps li::before{content:"";position:absolute;left:-9px;top:9px;width:15px;height:15px;border-radius:50%;background:var(--oxblood);border:3px solid var(--paper)}
+
+  .bars{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:12px 0}
+  .bar{display:grid;grid-template-columns:96px 1fr 64px;gap:8px;align-items:center;font-size:13px;margin:5px 0}
+  .bar .track{background:#E6EAF0;border-radius:4px;height:16px}
+  .bar .fill{height:100%;border-radius:4px;background:var(--ink)}
+  .bar .fill.hot{background:var(--oxblood)}
+  .bar .val{text-align:right}
+  .bars .cap{font-size:13px;color:var(--ink-soft);margin-top:6px}
+
+  .calc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:16px;margin:14px 0}
+  .calc label{display:block;font-weight:600;font-size:15px;margin:10px 0 4px}
+  .calc textarea,.calc input{width:100%;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--paper);color:var(--ink)}
+  .calc textarea{font-size:15px;line-height:1.5}
+  .calc .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .calc button{margin-top:14px;font:inherit;font-weight:600;background:var(--oxblood);color:var(--white);border:0;border-radius:10px;padding:11px 22px;cursor:pointer}
+  .calc button:hover{background:#5E1721}
+  .calc .out{margin-top:14px;display:none}
+  .calc .err{color:var(--oxblood);font-weight:600;margin-top:10px;display:none}
+
+  .q{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+  .q p.qt{font-weight:600;margin-bottom:8px}
+  .q button{display:block;width:100%;text-align:left;font:inherit;font-size:16px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;color:var(--ink)}
+  .q button:hover{border-color:var(--ink)}
+  .q button.right{background:#DDF1E8;border-color:var(--green)}
+  .q button.wrong{background:#F6DADD;border-color:var(--oxblood)}
+  .q .why{display:none;font-size:15px;color:var(--ink-soft);margin-top:6px}
+  .score{font-family:var(--head);font-size:20px;margin-top:10px}
+
+  .pager{display:flex;justify-content:space-between;gap:10px;padding:26px 0 40px;border-top:1px solid var(--line);margin-top:26px;flex-wrap:wrap}
+  .pager a{display:inline-block;text-decoration:none;font-weight:600;padding:11px 18px;border-radius:10px}
+  .pager .prev{border:1px solid var(--ink)}
+  .pager .next{background:var(--oxblood);color:var(--white)}
+  footer{background:var(--ink);color:#B8C3DC;padding:20px 0;font-size:14px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="index.html">IE <span>শিখি</span></a>
+    <a class="back" href="index.html#parts">← সব Part</a>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="title">
+    <div class="crumb">Part 8 / 18</div>
+    <h1>Quality ও Productivity</h1>
+    <p>Defect মাপা, কারণ খোঁজা ও কমানোর পদ্ধতি, আর Quality ঠিক করলে কীভাবে Productivity বাড়ে। DHU, RFT, AQL, QC Tools সব Bag এর Example দিয়ে।</p>
+  </div>
+
+  <nav class="toc" aria-label="এই Part এর সূচি">
+    <strong>এই Part এ যা আছে</strong>
+    <ol>
+      <li><a href="#t1">Quality কী ও কেন</a></li>
+      <li><a href="#t2">Defect মাপার সূচক: DHU, Defect%, RFT</a></li>
+      <li><a href="#t3">Bag এর সাধারণ Defect</a></li>
+      <li><a href="#t4">Inspection এর ধাপ ও AQL</a></li>
+      <li><a href="#t5">QC এর ৭টি Tool</a></li>
+      <li><a href="#t6">Pareto: আগে কোন Defect ধরবো</a></li>
+      <li><a href="#t7">Root Cause: 5 Why ও Fishbone</a></li>
+      <li><a href="#t8">Productivity কী ও কীভাবে মাপা হয়</a></li>
+      <li><a href="#t9">Quality ও Productivity এর সম্পর্ক</a></li>
+      <li><a href="#t10">Productivity বাড়ানোর উপায়</a></li>
+      <li><a href="#t11">নিজে হিসাব করুন (৩টি Calculator)</a></li>
+      <li><a href="#t12">সাধারণ ভুল</a></li>
+      <li><a href="#t13">Practice Quiz</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="topic" id="t1">
+    <h2>1. Quality কী ও কেন</h2>
+
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Quality</b> হলো পণ্য Buyer এর চাহিদা ও Specification অনুযায়ী ঠিকঠাক হওয়া। Bag এর ক্ষেত্রে: সঠিক মাপ, ঠিকমতো Stitch, পরিষ্কার Finish, সঠিক রঙ, মসৃণ Zipper ও মজবুত Handle।</p>
+
+    <h3>তিনটি শব্দের পার্থক্য</h3>
+    <div class="scroll">
+    <table>
+      <tr><th>শব্দ</th><th>অর্থ</th></tr>
+      <tr><td>QC (Quality Control)</td><td>তৈরি পণ্য পরীক্ষা করে ত্রুটি ধরা</td></tr>
+      <tr><td>QA (Quality Assurance)</td><td>প্রক্রিয়া এমনভাবে সাজানো যাতে ত্রুটি আগেই আটকানো যায়</td></tr>
+      <tr><td>TQM (Total Quality Management)</td><td>সবাই মিলে প্রতিদিন Quality উন্নত করা</td></tr>
+    </table>
+    </div>
+
+    <h3>কেন</h3>
+    <ul class="plain">
+      <li>Defect মানে Rework, Reject ও নষ্ট Material। অর্থাৎ সময় ও টাকার অপচয়।</li>
+      <li>Buyer এর কাছে খারাপ Quality গেলে Claim, Return ও Order হারানোর ঝুঁকি।</li>
+      <li>প্রথমবারেই ঠিক করলে সবচেয়ে কম খরচ হয়।</li>
+    </ul>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Quality <b>পরীক্ষা করে</b> আসে না, <b>তৈরির সময় ঠিকভাবে করলে</b> আসে। Inspection শুধু সমস্যা ধরে, বানায় না।</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="topic" id="t2">
+    <h2>2. Defect মাপার সূচক: DHU, Defect%, RFT</h2>
+
+    <h3>কী ও কেন</h3>
+    <p>Quality ভালো না খারাপ তা বোঝার জন্য সংখ্যা দরকার। একজন Bag এ ২টা Defect পেলে সেটা ১টা Defective Piece, কিন্তু ২টা Defect। তাই আলাদা সূচক আছে।</p>
+
+    <div class="scroll">
+    <table>
+      <tr><th>সূচক</th><th>সূত্র</th><th>অর্থ</th></tr>
+      <tr><td><b>DHU</b> (Defects per Hundred Units)</td><td>মোট Defect ÷ পরীক্ষিত Piece × 100</td><td>প্রতি ১০০ Piece এ গড়ে কয়টা Defect</td></tr>
+      <tr><td><b>Defect %</b></td><td>Defective Piece ÷ পরীক্ষিত Piece × 100</td><td>কত শতাংশ Piece এ ত্রুটি আছে</td></tr>
+      <tr><td><b>RFT</b> (Right First Time)</td><td>প্রথমবারেই পাস Piece ÷ পরীক্ষিত Piece × 100</td><td>কত শতাংশ Piece Rework ছাড়াই ঠিক</td></tr>
+    </table>
+    </div>
+
+    <div class="example">
+      <strong>Example:</strong> আজ Line এর End-line এ 500 Bag পরীক্ষা হলো। মোট 40টা Defect পাওয়া গেল, তা 32টা Bag এ (কিছু Bag এ একাধিক Defect)।<br><br>
+      DHU = 40 ÷ 500 × 100 = <strong>8%</strong><br>
+      Defect % = 32 ÷ 500 × 100 = <strong>6.4%</strong><br>
+      RFT = (500 − 32) ÷ 500 × 100 = 468 ÷ 500 × 100 = <strong>93.6%</strong>
+    </div>
+
+    <div class="note"><strong>💡 Tip:</strong> DHU সবসময় Defect Piece এর চেয়ে একই বা বেশি হয়, কারণ একটা Piece এ একাধিক Defect থাকতে পারে। DHU কম রাখাই লক্ষ্য।</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="topic" id="t3">
+    <h2>3. Bag এর সাধারণ Defect</h2>
+
+    <div class="scroll">
+    <table>
+      <tr><th>Defect</th><th>সম্ভাব্য কারণ</th><th>প্রতিরোধ</th></tr>
+      <tr><td>Skipped / Broken Stitch</td><td>ভোঁতা বা ভুল Needle, Tension সমস্যা, Thread মান</td><td>Needle বদলের নিয়ম, Tension Check, ভালো Thread</td></tr>
+      <tr><td>Uneven Stitch / SPI ভুল</td><td>Machine Setting, Operator এর গতি</td><td>SPI Standard লিখে রাখা, Setting Check</td></tr>
+      <tr><td>Edge Paint অসমান / দাগ</td><td>বেশি রঙ, ভুল Temperature, ময়লা Edge</td><td>Standard রঙ পরিমাণ, পরিষ্কার Edge, Trial Run</td></tr>
+      <tr><td>Zipper Misalign / আটকে যাওয়া</td><td>ভুল Position, Zipper মান</td><td>Jig/Template, Incoming Zipper Check</td></tr>
+      <tr><td>Leather এর দাগ, আঁচড়, Scar</td><td>কাঁচামালের ত্রুটি, Cutting এ বাছাই না করা</td><td>Incoming Inspection, Cutter কে Defect চেনানো</td></tr>
+      <tr><td>Shade / Colour পার্থক্য</td><td>ভিন্ন Lot এর Leather মেশানো</td><td>একই Lot এর Part একসাথে রাখা</td></tr>
+      <tr><td>Handle Misalign / দৈর্ঘ্য অমিল</td><td>Marking ভুল, Position Guide নেই</td><td>Marking Template, Poka-Yoke Jig</td></tr>
+      <tr><td>Logo ভুল জায়গায়</td><td>Template ছাড়া চোখে আন্দাজ</td><td>Logo Placement Template</td></tr>
+      <tr><td>Glue Mark / Stain</td><td>বেশি আঠা, অসাবধান হাত</td><td>আঠার পরিমাণ নিয়ন্ত্রণ, পরিষ্কার কাপড় হাতের কাছে</td></tr>
+      <tr><td>Loose Thread, Puckering</td><td>Trimming না করা, Tension বেশি</td><td>Finishing এ Trimming, Tension ঠিক রাখা</td></tr>
+    </table>
+    </div>
+
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> এই কারণগুলো সাধারণ ধারণা। আসল কারণ জানতে সবসময় Floor এ গিয়ে সমস্যা দেখো, অনুমানে সিদ্ধান্ত নিও না।</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="topic" id="t4">
+    <h2>4. Inspection এর ধাপ ও AQL</h2>
+
+    <h3>কোথায় কোথায় Inspection হয়</h3>
+    <ol class="steps">
+      <li><b>Incoming Inspection:</b> Leather, Lining, Zipper, Accessories আসার সময় পরীক্ষা।</li>
+      <li><b>Cutting Inspection:</b> কাটা Part এর মাপ ও Defect।</li>
+      <li><b>In-line Inspection:</b> Sewing চলাকালীন Line এ ঘুরে ঘুরে পরীক্ষা, যাতে ভুল আগেই ধরা পড়ে।</li>
+      <li><b>End-line Inspection:</b> Line শেষে প্রতিটা বা নমুনা Bag পরীক্ষা।</li>
+      <li><b>Final Inspection:</b> Packing এর আগে বা পরে Buyer এর AQL অনুযায়ী পরীক্ষা।</li>
+    </ol>
+
+    <h3>AQL কী</h3>
+    <p><b class="term">AQL (Acceptable Quality Limit)</b> হলো পুরো Lot থেকে নমুনা (Sample) নিয়ে পরীক্ষা করে Lot পাস না ফেল সিদ্ধান্ত নেওয়ার নিয়ম। সবগুলো না দেখে নির্দিষ্ট সংখ্যক Piece দেখা হয়। এতে সময় বাঁচে, আর পরিসংখ্যানের উপর ভিত্তি করে সিদ্ধান্ত হয়।</p>
+
+    <h3>Defect এর শ্রেণি</h3>
+    <div class="scroll">
+    <table>
+      <tr><th>শ্রেণি</th><th>অর্থ</th><th>Bag Example</th></tr>
+      <tr><td><b>Critical</b></td><td>ব্যবহারকারীর ক্ষতি বা নিরাপত্তা ঝুঁকি। সাধারণত AQL 0</td><td>ধারালো Metal/Needle অংশ থেকে ঝুঁকি</td></tr>
+      <tr><td><b>Major</b></td><td>পণ্যের ব্যবহার বা চেহারায় বড় ক্ষতি। সাধারণত AQL 2.5</td><td>Handle খুলে যাওয়ার মতো Stitch, ফাটা Leather</td></tr>
+      <tr><td><b>Minor</b></td><td>ছোট ত্রুটি, ব্যবহারে বড় প্রভাব নেই। সাধারণত AQL 4.0</td><td>সামান্য Loose Thread</td></tr>
+    </table>
+    </div>
+
+    <div class="example">
+      <strong>Example (General Inspection Level II, Single Sampling, Normal):</strong><br>
+      Lot = 5,000 Bag, তাহলে Code Letter <strong>L</strong>, Sample = <strong>200 Bag</strong><br>
+      Major (AQL 2.5): Accept সর্বোচ্চ <strong>10</strong>, 11 বা বেশি হলে Reject<br>
+      Minor (AQL 4.0): Accept সর্বোচ্চ <strong>14</strong>, 15 বা বেশি হলে Reject<br>
+      Critical: একটাও পেলে Reject
+    </div>
+
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> AQL এর Level, মান ও নিয়ম Buyer ভেদে আলাদা হতে পারে। সবসময় Buyer এর নির্দেশনা ও আসল AQL Table (ISO 2859-1 বা ANSI/ASQ Z1.4) দেখে নিশ্চিত হও।</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="topic" id="t5">
+    <h2>5. QC এর ৭টি Tool</h2>
+
+    <h3>কী ও কেন</h3>
+    <p>সমস্যা সমাধানে অনুমান নয়, <b class="term">তথ্য ও ছবি</b> দিয়ে সিদ্ধান্ত নিতে এই ৭টা সহজ Tool ব্যবহার হয়।</p>
+
+    <div class="scroll">
+    <table>
+      <tr><th>Tool</th><th>কাজ</th><th>Bag Factory Example</th></tr>
+      <tr><td>1. Check Sheet</td><td>তথ্য সহজে গুনে লেখার ছক</td><td>প্রতিটা Defect এর পাশে Tally চিহ্ন দেওয়া</td></tr>
+      <tr><td>2. Pareto Chart</td><td>কোন কারণ সবচেয়ে বেশি তা দেখানো</td><td>কোন ৩-৪টা Defect এ বেশিরভাগ Rework</td></tr>
+      <tr><td>3. Histogram</td><td>মাপের বিন্যাস দেখানো</td><td>Handle দৈর্ঘ্য Spec এর মধ্যে আছে কি না</td></tr>
+      <tr><td>4. Cause &amp; Effect (Fishbone)</td><td>সমস্যার সম্ভাব্য সব কারণ সাজানো</td><td>Skipped Stitch এর কারণ: লোক, Machine, Material, Method</td></tr>
+      <tr><td>5. Scatter Diagram</td><td>দুটো বিষয়ের সম্পর্ক দেখা</td><td>Machine Speed বাড়লে Defect বাড়ে কি না</td></tr>
+      <tr><td>6. Control Chart</td><td>প্রক্রিয়া স্থির আছে কি না নজর রাখা</td><td>প্রতিদিনের DHU এর উঠানামা</td></tr>
+      <tr><td>7. Flow Chart / Stratification</td><td>প্রক্রিয়ার ধাপ দেখা বা তথ্য ভাগ করে দেখা</td><td>Line বা Operator ভেদে Defect আলাদা করে দেখা</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- 6 -->
+  <section class="topic" id="t6">
+    <h2>6. Pareto: আগে কোন Defect ধরবো</h2>
+
+    <h3>কী ও কেন</h3>
+    <p><b class="term">Pareto নীতি (৮০/২০):</b> সাধারণত অল্প কয়েকটা কারণ থেকেই বেশিরভাগ (প্রায় ৮০%) সমস্যা আসে। তাই সব Defect নিয়ে না ছুটে <b class="term">সবচেয়ে বড় কয়েকটাকে</b> আগে ধরলে দ্রুত ফল মেলে।</p>
+
+    <div class="example">
+      <strong>Example (কাল্পনিক ডেটা): এক সপ্তাহের Defect</strong>
+    </div>
+    <div class="scroll">
+    <table>
+      <tr><th>Defect</th><th class="num">সংখ্যা</th><th class="num">ক্রমযোজিত %</th></tr>
+      <tr class="big"><td>Skipped Stitch</td><td class="num">45</td><td class="num">33.3%</td></tr>
+      <tr class="big"><td>Edge Paint অসমান</td><td class="num">30</td><td class="num">55.6%</td></tr>
+      <tr class="big"><td>Zipper Misalign</td><td class="num">20</td><td class="num">70.4%</td></tr>
+      <tr class="big"><td>Leather Scar</td><td class="num">15</td><td class="num">81.5%</td></tr>
+      <tr><td>Handle Misalign</td><td class="num">12</td><td class="num">90.4%</td></tr>
+      <tr><td>Loose Thread</td><td class="num">8</td><td class="num">96.3%</td></tr>
+      <tr><td>অন্যান্য</td><td class="num">5</td><td class="num">100%</td></tr>
+      <tr class="total"><td>মোট</td><td class="num">135</td><td class="num"></td></tr>
+    </table>
+    </div>
+
+    <div class="bars" id="pareto" aria-label="Defect এর Pareto Bar Chart"></div>
+
+    <div class="example">
+      <strong>সিদ্ধান্ত:</strong> প্রথম ৪টা Defect (লাল) মিলে মোট Defect এর প্রায় <strong>৮১.৫%</strong>। তাই আগে এই চারটার কারণ খুঁজে ঠিক করলেই Defect এর বড় অংশ কমে যাবে। বাকিগুলো পরে।
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="topic" id="t7">
+    <h2>7. Root Cause: 5 Why ও Fishbone</h2>
+
+    <h3>5 Why</h3>
+    <p>"কেন?" প্রশ্ন বারবার করে সমস্যার <b class="term">আসল কারণে</b> পৌঁছানো। উপরে উপরে সমাধান করলে সমস্যা ফিরে আসে।</p>
+
+    <div class="example">
+      <strong>Example (কাল্পনিক): Skipped Stitch</strong><br>
+      ১. কেন Stitch Skip হচ্ছে? কারণ Needle ভোঁতা।<br>
+      ২. কেন Needle ভোঁতা? কারণ অনেকদিন বদলানো হয়নি।<br>
+      ৩. কেন বদলানো হয়নি? কারণ কখন বদলাতে হবে কোনো নিয়ম নেই।<br>
+      ৪. কেন নিয়ম নেই? কারণ Needle Change এর Standard তৈরি হয়নি।<br>
+      ৫. কেন তৈরি হয়নি? কারণ কেউ দায়িত্ব নেয়নি।<br><br>
+      <strong>আসল সমাধান:</strong> শুধু Needle বদলালে হবে না। Needle Change এর নিয়ম (যেমন নির্দিষ্ট সংখ্যক Bag বা ঘণ্টা পর) লিখে দায়িত্ব ঠিক করতে হবে।
+    </div>
+
+    <h3>Fishbone (4M)</h3>
+    <p>সমস্যার কারণ ৪টা মূল শাখায় সাজানো হয়:</p>
+    <ul class="plain">
+      <li><b class="term">Man (লোক):</b> দক্ষতা, Training, অবহেলা</li>
+      <li><b class="term">Machine:</b> Setting, Maintenance, Needle</li>
+      <li><b class="term">Material:</b> Leather, Thread, Accessories এর মান</li>
+      <li><b class="term">Method:</b> কাজের পদ্ধতি, Standard নেই</li>
+    </ul>
+    <p>অনেক সময় আরও দুটো যোগ করা হয়: <b>Measurement</b> (মাপার ভুল) ও <b>Environment</b> (আলো, ধুলো, তাপ)।</p>
+
+    <div class="note"><strong>💡 Tip:</strong> Fishbone দলের সবাই মিলে আঁকলে সবচেয়ে ভালো ফল দেয়। Operator রা প্রায়ই এমন কারণ জানে যা Office এ বসে ধরা যায় না।</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="topic" id="t8">
+    <h2>8. Productivity কী ও কীভাবে মাপা হয়</h2>
+
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Productivity</b> হলো Input এর তুলনায় Output কতটা পাওয়া গেল। Part 1 এর সেই সূত্রটা মনে করো:</p>
+
+    <div class="formula">
+      Productivity = Output ÷ Input
+    </div>
+
+    <h3>Factory তে কীভাবে মাপা হয়</h3>
+    <div class="scroll">
+    <table>
+      <tr><th>সূচক</th><th>সূত্র</th></tr>
+      <tr><td>শ্রম Productivity</td><td>Output ÷ Man-hour (Operator × ঘণ্টা)</td></tr>
+      <tr><td>Efficiency</td><td>Output × SMV ÷ (Operator × কাজের মিনিট) × 100 (Part 6)</td></tr>
+      <tr><td>Productivity বৃদ্ধি %</td><td>(নতুন − পুরোনো) ÷ পুরোনো × 100</td></tr>
+    </table>
+    </div>
+
+    <div class="example">
+      <strong>Example:</strong> 17 জন Operator ৮ ঘণ্টায় 504 Bag বানালো।<br>
+      Man-hour = 17 × 8 = 136<br>
+      Productivity = 504 ÷ 136 ≈ <strong>3.7 Bag/Man-hour</strong><br><br>
+      উন্নতির পর একই লোকে 560 Bag হলে: 560 ÷ 136 ≈ 4.1 Bag/Man-hour<br>
+      বৃদ্ধি = (560 − 504) ÷ 504 × 100 ≈ <strong>11.1%</strong>
+    </div>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Productivity এর সত্যিকারের উন্নতি হলো কম Input এ বেশি Output, <b>সাথে Quality ঠিক রেখে</b>। Quality নষ্ট করে বেশি Output আসল উন্নতি নয়।</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="topic" id="t9">
+    <h2>9. Quality ও Productivity এর সম্পর্ক</h2>
+
+    <h3>কেন সম্পর্ক</h3>
+    <p>অনেকে ভাবে Quality ভালো করতে গেলে Output কমে। আসলে উল্টো। Defect থাকলে Rework এ সময় যায়, Material নষ্ট হয়, Line এর গতি কমে। তাই <b class="term">প্রথমবারে ঠিক করাই সবচেয়ে বড় Productivity উন্নতি</b>।</p>
+
+    <div class="example">
+      <strong>Example (কাল্পনিক):</strong> এই Part এর ২ নম্বর Topic এর 500 Bag এর হিসাব, Defective = 32 Bag।<br>
+      প্রতিটা Rework এ গড়ে 5 মিনিট লাগে।<br>
+      Rework সময় = 32 × 5 = <strong>160 মিনিট</strong><br>
+      এই সময়ে নতুন Bag বানানো গেলে: 160 ÷ 11.34 ≈ <strong>14 Bag</strong><br>
+      অর্থাৎ Rework এর কারণে প্রায় ১৪টা Bag এর শ্রম নষ্ট, সাথে কিছু Material ও Reject ও আছে।
+    </div>
+
+    <h3>Cost of Quality (সরল ধারণা)</h3>
+    <div class="scroll">
+    <table>
+      <tr><th>ধরন</th><th>অর্থ</th><th>Bag Example</th></tr>
+      <tr><td>Prevention</td><td>ত্রুটি আটকাতে খরচ</td><td>Training, Jig, Standard Work</td></tr>
+      <tr><td>Appraisal</td><td>পরীক্ষার খরচ</td><td>Inspector, Testing</td></tr>
+      <tr><td>Internal Failure</td><td>Factory র ভেতরে ধরা ত্রুটির খরচ</td><td>Rework, Reject</td></tr>
+      <tr><td>External Failure</td><td>Buyer এর হাতে পৌঁছানোর পরের খরচ</td><td>Return, Claim, সুনাম ক্ষতি</td></tr>
+    </table>
+    </div>
+
+    <div class="note"><strong>💡 Tip:</strong> Prevention এ যত বেশি খরচ করবে, বাকি তিনটার খরচ তত কমবে। আর External Failure সবচেয়ে ব্যয়বহুল।</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="topic" id="t10">
+    <h2>10. Productivity বাড়ানোর উপায়</h2>
+
+    <div class="scroll">
+    <table>
+      <tr><th>ক্ষেত্র</th><th>কী করা যায়</th><th>কোন Part এ পড়েছো</th></tr>
+      <tr><td>Method</td><td>অপ্রয়োজনীয় নড়াচড়া বাদ, Jig ও Folder</td><td>Part 2</td></tr>
+      <tr><td>Standard Time</td><td>সঠিক SMV দিয়ে ন্যায্য Target</td><td>Part 3</td></tr>
+      <tr><td>Line Balance</td><td>Bottleneck কমানো, কাজ সমান ভাগ</td><td>Part 5</td></tr>
+      <tr><td>Planning</td><td>Material ও Operator আগে প্রস্তুত, Ramp-up ধরা</td><td>Part 6</td></tr>
+      <tr><td>Lean</td><td>অপচয় ও অপেক্ষা কমানো, 5S</td><td>Part 7</td></tr>
+      <tr><td>Quality</td><td>Defect কমিয়ে Rework বাদ</td><td>এই Part</td></tr>
+      <tr><td>Machine</td><td>নিয়মিত Maintenance, Breakdown কমানো</td><td>-</td></tr>
+      <tr><td>মানুষ</td><td>Training, বহুদক্ষতা, ন্যায্য Incentive ও সম্মান</td><td>Part 9</td></tr>
+    </table>
+    </div>
+
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> শুধু Operator কে দ্রুত কাজ করতে বলে Productivity বাড়ানো টেকসই নয়। এতে Quality কমে, Defect ও দুর্ঘটনা বাড়ে। আগে Method, Balance ও Material ঠিক করো।</div>
+  </section>
+
+  <!-- 11 Calculators -->
+  <section class="topic" id="t11">
+    <h2>11. নিজে হিসাব করুন (৩টি Calculator)</h2>
+
+    <h3>Calculator ১: DHU, Defect % ও RFT</h3>
+    <div class="calc">
+      <div class="row">
+        <div>
+          <label for="insp">পরীক্ষিত Piece</label>
+          <input id="insp" type="number" inputmode="decimal" value="500">
+        </div>
+        <div>
+          <label for="defp">Defective Piece</label>
+          <input id="defp" type="number" inputmode="decimal" value="32">
+        </div>
+      </div>
+      <label for="defs">মোট Defect এর সংখ্যা</label>
+      <input id="defs" type="number" inputmode="decimal" value="40">
+      <button type="button" id="go1">হিসাব করো</button>
+      <p class="err" id="err1"></p>
+      <div class="out" id="out1">
+        <div class="scroll"><table id="t1res"></table></div>
+      </div>
+    </div>
+
+    <h3>Calculator ২: Pareto বিশ্লেষণ</h3>
+    <p>প্রতি লাইনে <b>Defect এর নাম, সংখ্যা</b> লেখো। Calculator বড় থেকে ছোট সাজিয়ে ক্রমযোজিত % দেখাবে।</p>
+    <div class="calc">
+      <label for="pdata">Defect তালিকা</label>
+      <textarea id="pdata" rows="7">Skipped Stitch, 45
+Edge Paint অসমান, 30
+Zipper Misalign, 20
+Leather Scar, 15
+Handle Misalign, 12
+Loose Thread, 8
+অন্যান্য, 5</textarea>
+      <button type="button" id="go2">বিশ্লেষণ করো</button>
+      <p class="err" id="err2"></p>
+      <div class="out" id="out2">
+        <div class="scroll"><table id="t2res"></table></div>
+        <div class="note" id="t2sum"></div>
+      </div>
+    </div>
+
+    <h3>Calculator ৩: AQL Sample Size সহায়ক</h3>
+    <p>General Inspection Level II, Single Sampling, Normal Inspection ধরে হিসাব।</p>
+    <div class="calc">
+      <label for="lot">Lot এর পরিমাণ (Pcs)</label>
+      <input id="lot" type="number" inputmode="decimal" value="5000">
+      <button type="button" id="go3">দেখো</button>
+      <p class="err" id="err3"></p>
+      <div class="out" id="out3">
+        <div class="note" id="t3sum"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 12 -->
+  <section class="topic" id="t12">
+    <h2>12. সাধারণ ভুল</h2>
+    <div class="note warn"><strong>⚠️ ভুল ১:</strong> DHU ও Defect % কে এক ভাবা।<br><b>সঠিক:</b> DHU মোট Defect গোনে, Defect % গোনে Defective Piece। একটা Piece এ একাধিক Defect থাকতে পারে।</div>
+    <div class="note warn"><strong>⚠️ ভুল ২:</strong> শুধু Final Inspection এর উপর ভরসা করা।<br><b>সঠিক:</b> In-line এ ভুল ধরো, নইলে হাজারটা Bag বানানোর পর সমস্যা বের হবে।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৩:</strong> Defect এর আসল কারণ না খুঁজে শুধু Rework করা।<br><b>সঠিক:</b> 5 Why ও Fishbone দিয়ে Root Cause ঠিক করো।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৪:</strong> Operator কে দোষ দেওয়া।<br><b>সঠিক:</b> বেশিরভাগ ত্রুটি Process, Material বা Method এর সমস্যা। Poka-Yoke ও Training দাও।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৫:</strong> Defect লুকিয়ে বা কম দেখিয়ে সংখ্যা সুন্দর করা।<br><b>সঠিক:</b> সৎ তথ্য ছাড়া কোনো উন্নতি সম্ভব নয়। ভুল ধরা পড়াকে সমস্যা নয়, উন্নতির সুযোগ ভাবো।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৬:</strong> AQL এর Table না মিলিয়ে Buyer এর শর্ত আন্দাজ করা।<br><b>সঠিক:</b> Buyer এর Quality Manual ও AQL চার্ট দেখে নাও।</div>
+  </section>
+
+  <!-- 13 Quiz -->
+  <section class="topic" id="t13">
+    <h2>13. Practice Quiz</h2>
+    <p>প্রতিটা প্রশ্নের একটা উত্তর বেছে নাও। সঙ্গে সঙ্গে সঠিক উত্তর ও কারণ দেখতে পাবে।</p>
+    <div id="quiz"></div>
+    <div class="score" id="score"></div>
+    <p style="margin-top:14px"><b>Home Task:</b> নিজের Line এর এক সপ্তাহের Defect এর Check Sheet রাখো। সপ্তাহ শেষে Calculator ২ এ বসিয়ে Pareto বের করো এবং সবচেয়ে বড় Defect এর জন্য 5 Why করো।</p>
+  </section>
+
+  <div class="pager">
+    <a class="prev" href="part-7.html">← Part 7: Lean Manufacturing</a>
+    <a class="next" href="part-9.html">Part 9: Costing ও Incentive →</a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">IE শিখি · Part 8: Quality ও Productivity</div>
+</footer>
+
+<script>
+  // ---- Pareto bars (example) ----
+  (function(){
+    const data = [['Skipped Stitch',45],['Edge Paint',30],['Zipper',20],['Leather Scar',15],['Handle',12],['Loose Thread',8],['অন্যান্য',5]];
+    const total = data.reduce((a,d) => a + d[1], 0);
+    const max = data[0][1];
+    const box = document.getElementById('pareto');
+    let cum = 0, prev = 0;
+    data.forEach(d => {
+      prev = cum / total * 100;
+      cum += d[1];
+      const row = document.createElement('div'); row.className = 'bar';
+      const l = document.createElement('span'); l.textContent = d[0];
+      const track = document.createElement('div'); track.className = 'track';
+      const fill = document.createElement('div');
+      fill.className = 'fill' + (prev < 80 ? ' hot' : '');
+      fill.style.width = (d[1] / max * 100) + '%';
+      track.appendChild(fill);
+      const v = document.createElement('span'); v.className = 'val';
+      v.textContent = d[1] + ' (' + (cum / total * 100).toFixed(0) + '%)';
+      row.appendChild(l); row.appendChild(track); row.appendChild(v);
+      box.appendChild(row);
+    });
+    const cap = document.createElement('div'); cap.className = 'cap';
+    cap.textContent = 'লাল Bar = ক্রমযোজিত ৮০% পর্যন্ত গুরুত্বপূর্ণ Defect। বন্ধনীতে ক্রমযোজিত %।';
+    box.appendChild(cap);
+  })();
+
+  function mkTable(tbl, head, rows, numFrom, cls){
+    tbl.innerHTML = '';
+    const h = document.createElement('tr');
+    head.forEach((t,i) => { const th = document.createElement('th'); th.textContent = t; if (i >= numFrom) th.className = 'num'; h.appendChild(th); });
+    tbl.appendChild(h);
+    rows.forEach((r, ri) => {
+      const tr = document.createElement('tr');
+      if (cls && cls[ri]) tr.className = cls[ri];
+      r.forEach((t,i) => { const td = document.createElement('td'); td.textContent = t; if (i >= numFrom) td.className = 'num'; tr.appendChild(td); });
+      tbl.appendChild(tr);
+    });
+  }
+
+  // ---- Calculator 1 ----
+  document.getElementById('go1').addEventListener('click', function(){
+    const err = document.getElementById('err1'), out = document.getElementById('out1');
+    err.style.display = 'none'; out.style.display = 'none';
+    const insp = parseFloat(document.getElementById('insp').value);
+    const defp = parseFloat(document.getElementById('defp').value);
+    const defs = parseFloat(document.getElementById('defs').value);
+    if (isNaN(insp) || insp <= 0 || isNaN(defp) || defp < 0 || isNaN(defs) || defs < 0) {
+      err.textContent = 'সব ঘরে সঠিক সংখ্যা লিখুন (পরীক্ষিত Piece ০ এর চেয়ে বেশি)।'; err.style.display = 'block'; return;
+    }
+    if (defp > insp) { err.textContent = 'Defective Piece পরীক্ষিত Piece এর চেয়ে বেশি হতে পারে না।'; err.style.display = 'block'; return; }
+    if (defs < defp) { err.textContent = 'মোট Defect কখনো Defective Piece এর চেয়ে কম হতে পারে না।'; err.style.display = 'block'; return; }
+    mkTable(document.getElementById('t1res'), ['সূচক','ফল'], [
+      ['DHU', (defs / insp * 100).toFixed(2) + '%'],
+      ['Defect %', (defp / insp * 100).toFixed(2) + '%'],
+      ['RFT', ((insp - defp) / insp * 100).toFixed(2) + '%']
+    ], 1);
+    out.style.display = 'block';
+  });
+
+  // ---- Calculator 2 (Pareto) ----
+  document.getElementById('go2').addEventListener('click', function(){
+    const err = document.getElementById('err2'), out = document.getElementById('out2');
+    err.style.display = 'none'; out.style.display = 'none';
+    const items = [];
+    for (const raw of document.getElementById('pdata').value.split('\n')) {
+      const line = raw.trim(); if (!line) continue;
+      const idx = line.lastIndexOf(',');
+      if (idx < 0) { err.textContent = 'প্রতি লাইনে "নাম, সংখ্যা" লিখুন। সমস্যা: ' + line; err.style.display = 'block'; return; }
+      const name = line.slice(0, idx).trim(), n = parseFloat(line.slice(idx + 1));
+      if (!name || isNaN(n) || n < 0) { err.textContent = 'এই লাইনে নাম বা সংখ্যা ঠিক নেই: ' + line; err.style.display = 'block'; return; }
+      items.push({name, n});
+    }
+    if (!items.length) { err.textContent = 'অন্তত একটা Defect লিখুন।'; err.style.display = 'block'; return; }
+    const total = items.reduce((a,b) => a + b.n, 0);
+    if (total <= 0) { err.textContent = 'মোট সংখ্যা ০ এর চেয়ে বেশি হতে হবে।'; err.style.display = 'block'; return; }
+    items.sort((a,b) => b.n - a.n);
+    let cum = 0, vital = 0;
+    const rows = [], cls = [];
+    items.forEach(it => {
+      const before = cum / total * 100;
+      cum += it.n;
+      const isVital = before < 80;
+      if (isVital) vital++;
+      rows.push([it.name, String(it.n), (it.n / total * 100).toFixed(1) + '%', (cum / total * 100).toFixed(1) + '%']);
+      cls.push(isVital ? 'big' : '');
+    });
+    rows.push(['মোট', String(total), '100%', '']);
+    cls.push('total');
+    mkTable(document.getElementById('t2res'), ['Defect','সংখ্যা','অংশ','ক্রমযোজিত'], rows, 1, cls);
+    const names = items.slice(0, vital).map(i => i.name).join(', ');
+    document.getElementById('t2sum').textContent = 'প্রথম ' + vital + 'টা Defect (' + names + ') মিলে ক্রমযোজিত ৮০% এ পৌঁছায়। আগে এগুলোর Root Cause খুঁজে ঠিক করো।';
+    out.style.display = 'block';
+  });
+
+  // ---- Calculator 3 (AQL helper) ----
+  document.getElementById('go3').addEventListener('click', function(){
+    const err = document.getElementById('err3'), out = document.getElementById('out3');
+    err.style.display = 'none'; out.style.display = 'none';
+    const lot = parseFloat(document.getElementById('lot').value);
+    if (isNaN(lot) || lot < 2) { err.textContent = 'Lot এর পরিমাণ ২ বা তার বেশি লিখুন।'; err.style.display = 'block'; return; }
+    const tiers = [[2,8,'A',2],[9,15,'B',3],[16,25,'C',5],[26,50,'D',8],[51,90,'E',13],[91,150,'F',20],[151,280,'G',32],[281,500,'H',50],[501,1200,'J',80],[1201,3200,'K',125],[3201,10000,'L',200],[10001,35000,'M',315],[35001,150000,'N',500],[150001,500000,'P',800],[500001,Infinity,'Q',1250]];
+    const acre = {H:[3,4,5,6], J:[5,6,7,8], K:[7,8,10,11], L:[10,11,14,15], M:[14,15,21,22]};
+    const t = tiers.find(x => lot >= x[0] && lot <= x[1]);
+    let msg = 'Lot ' + lot + ' → Code Letter ' + t[2] + ', Sample = ' + Math.min(t[3], lot) + ' Pcs।';
+    if (t[3] >= lot) msg += ' (Sample Lot এর সমান বা বেশি, তাই সাধারণত পুরো Lot দেখতে হয়।)';
+    if (acre[t[2]]) {
+      const a = acre[t[2]];
+      msg += ' Major (AQL 2.5): Accept ≤ ' + a[0] + ', Reject ≥ ' + a[1] + '। Minor (AQL 4.0): Accept ≤ ' + a[2] + ', Reject ≥ ' + a[3] + '। Critical: Accept 0।';
+    } else {
+      msg += ' এই Code Letter এর Accept/Reject সংখ্যা এখানে দেওয়া নেই, আসল AQL Table দেখে নাও।';
+    }
+    msg += ' Buyer এর শর্ত ও আসল Table মিলিয়ে নিশ্চিত হও।';
+    document.getElementById('t3sum').textContent = msg;
+    out.style.display = 'block';
+  });
+
+  // ---- Quiz ----
+  const quiz = [
+    {q:"200 Piece পরীক্ষায় মোট 20টা Defect পাওয়া গেলে DHU কত?",
+     o:["1%","10%","20%"],
+     a:1, w:"DHU = 20 ÷ 200 × 100 = 10%। অর্থাৎ প্রতি ১০০ Piece এ গড়ে ১০টা Defect।"},
+    {q:"400 Piece পরীক্ষা হলো, 20টা Piece এ ত্রুটি ছিল। RFT কত?",
+     o:["95%","5%","80%"],
+     a:0, w:"RFT = (400 − 20) ÷ 400 × 100 = 380 ÷ 400 × 100 = 95%।"},
+    {q:"AQL এর পূর্ণরূপ ও মূল ধারণা কী?",
+     o:["Average Quality Level, সব Piece পরীক্ষা","Acceptable Quality Limit, নমুনা পরীক্ষা করে Lot পাস/ফেল সিদ্ধান্ত","Annual Quality Log, বছরের হিসাব"],
+     a:1, w:"AQL মানে Acceptable Quality Limit। পুরো Lot থেকে নির্দিষ্ট সংখ্যক নমুনা দেখে Lot গ্রহণযোগ্য কি না ঠিক করা হয়।"},
+    {q:"Pareto নীতি অনুযায়ী Defect কমাতে প্রথমে কী করা উচিত?",
+     o:["সবগুলো Defect একসাথে ধরা","সবচেয়ে বড় কয়েকটা Defect আগে ঠিক করা","সবচেয়ে ছোট Defect আগে ঠিক করা"],
+     a:1, w:"অল্প কয়েকটা বড় কারণ থেকেই বেশিরভাগ Defect আসে, তাই সেগুলো আগে ঠিক করলে দ্রুত বড় ফল মেলে।"},
+    {q:"Defect বেড়ে গেলে Productivity এর উপর সাধারণত কী প্রভাব পড়ে?",
+     o:["কোনো প্রভাব পড়ে না","Rework এ সময় যায়, তাই Productivity কমে","Productivity বাড়ে"],
+     a:1, w:"Defect মানে Rework, Reject ও নষ্ট Material। এতে একই Resource এ কম ভালো Output আসে, তাই Productivity কমে।"}
+  ];
+
+  const qbox = document.getElementById('quiz');
+  const scoreEl = document.getElementById('score');
+  let answered = 0, correct = 0;
+  quiz.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'q';
+    d.innerHTML = `<p class="qt">${i+1}. ${item.q}</p>`;
+    const why = document.createElement('p');
+    why.className = 'why';
+    const btns = item.o.map((txt, j) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = txt;
+      b.addEventListener('click', () => {
+        if (d.dataset.done) return;
+        d.dataset.done = '1';
+        answered++;
+        if (j === item.a) { b.classList.add('right'); correct++; why.textContent = '✅ সঠিক! ' + item.w; }
+        else { b.classList.add('wrong'); btns[item.a].classList.add('right'); why.textContent = '⚠️ ভুল। ' + item.w; }
+        why.style.display = 'block';
+        if (answered === quiz.length) {
+          scoreEl.textContent = `তোমার স্কোর: ${correct} / ${quiz.length}` + (correct === quiz.length ? ' 🎉 দারুণ!' : ' — আবার পড়ে চেষ্টা করো।');
+        }
+      });
+      d.appendChild(b);
+      return b;
+    });
+    d.appendChild(why);
+    qbox.appendChild(d);
+  });
+</script>
+</body>
+</html>
+
+<style>
+#scrollUpBtn,#scrollDownBtn{position:fixed;right:18px;width:46px;height:46px;border-radius:50%;background:#7A1F2B;color:#FFF;border:none;font-size:22px;cursor:pointer;box-shadow:0 3px 10px rgba(0,0,0,0.25);display:none;z-index:999;align-items:center;justify-content:center;transition:opacity 0.3s}
+#scrollUpBtn{bottom:80px}
+#scrollDownBtn{bottom:20px}
+#scrollUpBtn:hover,#scrollDownBtn:hover{background:#5E1721}
+#scrollUpBtn.show,#scrollDownBtn.show{display:flex}
+@media(max-width:480px){#scrollUpBtn,#scrollDownBtn{width:42px;height:42px;font-size:20px;right:14px}}
+</style>
+<button id="scrollUpBtn" aria-label="উপরে যাও" title="উপরে যাও">↑</button>
+<button id="scrollDownBtn" aria-label="নিচে যাও" title="নিচে যাও">↓</button>
+<script>
+(function(){
+var upBtn=document.getElementById("scrollUpBtn");
+var downBtn=document.getElementById("scrollDownBtn");
+function updateButtons(){
+var s=window.scrollY;
+var t=document.documentElement.scrollHeight;
+var w=window.innerHeight;
+if(s>300){upBtn.classList.add("show")}else{upBtn.classList.remove("show")}
+if(s+w<t-400){downBtn.classList.add("show")}else{downBtn.classList.remove("show")}
+}
+upBtn.addEventListener("click",function(){window.scrollTo({top:0,behavior:"smooth"})});
+downBtn.addEventListener("click",function(){window.scrollTo({top:document.documentElement.scrollHeight,behavior:"smooth"})});
+window.addEventListener("scroll",updateButtons);
+window.addEventListener("resize",updateButtons);
+updateButtons();
+})();
+</script>
+
