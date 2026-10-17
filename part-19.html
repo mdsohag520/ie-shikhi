@@ -317,112 +317,118 @@
   </section>
 
   <!-- 8 -->
+
+  <!-- 8 -->
   <section class="topic" id="t8">
     <h2>8. Utilization — Basic (Efficiency ১০০%)</h2>
-    <h3>কী</h3>
-    <p><b class="term">Utilization</b> মানে Capacity এর কতটা ব্যবহার হচ্ছে। <b class="term">তোমার Factory র নিয়মে Utilization এ Efficiency = ১০০% ধরা হয়</b> — অর্থাৎ আমরা দেখি আদর্শ অবস্থায় Capacity এর কতটা ব্যবহার হচ্ছে।</p>
-    <h3>Formula</h3>
-    <div class="formula">
-      Utilization (%) = Actual Output ÷ Capacity(১০০%) × 100
-      <small>Capacity এখানে ১০০% Efficiency তে হিসাব করা</small>
-    </div>
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Utilization</b> মানে Capacity এর কতটা ব্যবহার হচ্ছে। তোমার Factory র নিয়মে Utilization এ <b class="term">Efficiency = ১০০% ধরা হয়</b> — অর্থাৎ আমরা দেখি আদর্শ অবস্থায় Capacity এর কতটা ব্যবহার হচ্ছে।</p>
+    
     <h3>কেন Efficiency ১০০% ধরা হয়</h3>
     <ul class="plain">
       <li>Utilization মাপে <b>কতটা কাজ পেয়েছি এবং কতটা করেছি</b>।</li>
       <li>Efficiency মাপে <b>কতটা ভালো করেছি</b>।</li>
       <li>দুটো মিশিয়ে ফেললে বোঝা যাবে না — সমস্যা Capacity তে না Efficiency তে।</li>
-      <li>তাই Utilization এ Efficiency = ১০০% ধরে Capacity ব্যবহার দেখে।</li>
     </ul>
-    <div class="note ok"><strong>✅ মনে রাখো:</strong> Utilization = "কতটা ব্যবহার করেছি", Efficiency = "কতটা ভালো ব্যবহার করেছি"। দুটো আলাদা প্রশ্ন।</div>
+
+    <h3>২টি আলাদা হিসাব</h3>
+    <div class="note">
+      <b>১. Capacity Utilization</b> = Actual Output ÷ Capacity(১০০%) × ১০০<br>
+      <i>(মানে Capacity এর কতটা ব্যবহার হয়েছে)</i><br><br>
+      <b>২. Capacity Coverage</b> = Capacity(১০০%) ÷ Target × ১০০<br>
+      <i>(মানে Target পূরণ করতে কতটা Capacity আছে)</i>
+    </div>
+
+    <h3>Step-by-Step Example: Capacity Coverage</h3>
+    <div class="example">
+      <b>প্রশ্ন:</b> Line C5, 10 hours, Target 300 pcs, Machine Process Time 140 sec/pc। Capacity Coverage কত?<br><br>
+      <b>ধাপ ১: Available Time বের করো (সেকেন্ডে)</b><br>
+      Available Time = 10 × 60 × 60 = 36,000 sec<br><br>
+      <b>ধাপ ২: Machine Capacity বের করো</b><br>
+      Capacity = 36,000 ÷ 140 = <b>257.14 pcs</b><br><br>
+      <b>ধাপ ৩: Capacity Coverage</b><br>
+      Coverage = 257.14 ÷ 300 × 100 = <b>85.71%</b><br><br>
+      <b>উত্তর:</b> Target এর ৮৫.৭১% Capacity আছে। বাকি ১৪.২৯% ঘাটতি (Bottleneck)।
+    </div>
+    
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> Capacity Coverage কখনো ১০০% এর বেশি হতে পারে না (অসম্ভব)। যদি বেশি আসে, বুঝবে Target > Capacity — মানে Machine দিয়ে Target পূরণ সম্ভব না।</div>
   </section>
 
   <!-- 9 -->
   <section class="topic" id="t9">
     <h2>9. Man Utilization</h2>
-    <h3>কী</h3>
-    <p><b class="term">Man Utilization</b> মানে TM দের কতটা সময় আসলে কাজে লেগেছে। এক TM বা Multi TM — দুটোতেই কাজ করে।</p>
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Man Utilization</b> মানে TM (Total Manpower) দের কতটা সময় আসলে কাজে লেগেছে। এক TM বা Multi TM — দুটোতেই কাজ করে।</p>
+    
     <h3>Formula</h3>
     <div class="formula">
-      Man Utilization (%) = (Actual Man-Minutes Used ÷ Available Man-Minutes) × 100
+      Man Utilization (%) = (Earned Minutes ÷ Available Man-Minutes) × 100<br>
+      <small>Earned Minutes = Output × SMV</small><br>
+      <small>Available Man-Minutes = TM × WH</small>
     </div>
-    <div class="formula">
-      অথবা, = (Earned Minutes ÷ Available Man-Minutes) × 100
-      <small>Earned Minutes = Output × SMV</small>
-    </div>
-    <h3>Example: এক TM</h3>
+
+    <h3>Step-by-Step Example: Simple</h3>
     <div class="example">
-      TM = 17 জন<br>
-      Available = 17 × 480 = 8,160 মিনিট<br>
-      Output = 500 Bag, SMV = 11.34<br>
-      Earned Minutes = 500 × 11.34 = 5,670<br><br>
-      Man Utilization = 5,670 ÷ 8,160 × 100 = <strong>69.5%</strong>
+      <b>প্রশ্ন:</b> ১৭ জন TM, 480 মিনিট, SMV 11.34, Actual Output 500 Bag। Man Utilization কত?<br><br>
+      <b>ধাপ ১: Earned Minutes বের করো</b><br>
+      Earned = 500 × 11.34 = <b>5,670 মিনিট</b><br><br>
+      <b>ধাপ ২: Available Minutes বের করো</b><br>
+      Available = 17 × 480 = <b>8,160 মিনিট</b><br><br>
+      <b>ধাপ ৩: Man Utilization</b><br>
+      Utilization = 5,670 ÷ 8,160 × 100 = <b>69.5%</b><br><br>
+      <b>উত্তর:</b> Man Utilization = 69.5%। বাকি ৩০.৫% সময় Idle বা Waste এ গেছে।
     </div>
-    <h3>Example: Multi TM (৩ TM এক Operation)</h3>
-    <div class="example">
-      3 TM, WH = 480, SMV = 2.5, Output = 350 Piece<br>
-      Available = 3 × 480 = 1,440 মিনিট<br>
-      Earned = 350 × 2.5 = 875 মিনিট<br>
-      Man Utilization = 875 ÷ 1,440 × 100 = <strong>60.8%</strong>
-    </div>
-    <div class="note warn"><strong>⚠️ না হলে কী হবে:</strong> Man Utilization না জানলে TM দের Idle Time টের পাবে না। বেতন বাড়বে, Productivity কমবে।</div>
   </section>
 
   <!-- 10 -->
   <section class="topic" id="t10">
     <h2>10. Machine Utilization</h2>
-    <h3>কী</h3>
+    <h3>কী (Definition)</h3>
     <p><b class="term">Machine Utilization</b> মানে Machine এর কতটা সময় আসলে চলেছে — কতটা বন্ধ ছিল (Breakdown, Setup, Idle)।</p>
+
     <h3>Formula</h3>
     <div class="formula">
       Machine Utilization (%) = (Planned Time − Downtime) ÷ Planned Time × 100
       <small>Downtime = Breakdown + Setup + No Load + Idle</small>
     </div>
-    <h3>Example: Single Process Machine</h3>
+
+    <h3>Step-by-Step Example: Single Process Machine</h3>
     <div class="example">
-      Planned = 480 মিনিট<br>
-      Breakdown = 30 মিনিট<br>
-      Setup = 40 মিনিট<br>
-      Idle = 20 মিনিট<br>
-      মোট Downtime = 90<br><br>
-      Machine Utilization = (480 − 90) ÷ 480 × 100 = <strong>81.25%</strong>
+      <b>প্রশ্ন:</b> Planned = 480 মিনিট, Breakdown = 30, Setup = 40, Idle = 20। Utilization কত?<br><br>
+      <b>ধাপ ১: মোট Downtime বের করো</b><br>
+      Downtime = 30 + 40 + 20 = <b>90 মিনিট</b><br><br>
+      <b>ধাপ ২: Machine Utilization</b><br>
+      Utilization = (480 − 90) ÷ 480 × 100 = <b>81.25%</b><br><br>
+      <b>উত্তর:</b> Machine ৮১.২৫% সময় চলেছে, ১৮.৭৫% বন্ধ ছিল।
     </div>
-    <h3>Example: Multi Process Machine</h3>
-    <div class="example">
-      যদি Machine ৩টা Process এ কাজ করে, তাহলে প্রতিটা Process এর জন্য Utilization আলাদা হবে।<br><br>
-      Process A তে বরাদ্দ 200, Downtime 20 → Utilization = (200−20) ÷ 200 × 100 = <strong>90%</strong><br>
-      Process B তে বরাদ্দ 150, Downtime 15 → Utilization = (150−15) ÷ 150 × 100 = <strong>90%</strong><br>
-      Process C তে বরাদ্দ 130, Downtime 30 → Utilization = (130−30) ÷ 130 × 100 = <strong>76.9%</strong><br><br>
-      <b>Lowest Machine Utilization = 76.9% (Process C)</b>
-    </div>
-    <div class="note ok"><strong>✅ মনে রাখো:</strong> Machine Utilization ৮৫%+ ভালো। ৭০% এর নিচে হলে Machine বেশি আছে বা Load কম।</div>
   </section>
 
   <!-- 11 -->
   <section class="topic" id="t11">
     <h2>11. Capacity Utilization</h2>
-    <h3>কী</h3>
-    <p><b class="term">Capacity Utilization</b> মানে পুরো Line বা Factory র Capacity এর কতটা ব্যবহার হচ্ছে।</p>
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Capacity Utilization</b> মানে পুরো Line বা Factory র Capacity এর কতটা ব্যবহার হচ্ছে। এখানে Actual Output কে Capacity(১০০%) দিয়ে ভাগ করা হয়।</p>
+
     <h3>Formula</h3>
     <div class="formula">
-      Capacity Utilization (%) = Actual Output ÷ Design Capacity × 100
+      Capacity Utilization (%) = Actual Output ÷ Capacity(১০০%) × 100
     </div>
-    <div class="formula">
-      অথবা, = Actual Man-Minutes Used ÷ Available Man-Minutes × 100
-    </div>
-    <h3>Example</h3>
+
+    <h3>Step-by-Step Example</h3>
     <div class="example">
-      Line এর Design Capacity (১০০%) = ৭২০ Bag/দিন<br>
-      Actual Output = ৫০৪ Bag/দিন<br><br>
-      Capacity Utilization = 504 ÷ 720 × 100 = <strong>70%</strong>
+      <b>প্রশ্ন:</b> Design Capacity (১০০%) = 720 Bag/দিন, Actual Output = 504 Bag/দিন। Capacity Utilization কত?<br><br>
+      <b>ধাপ ১: Capacity Utilization</b><br>
+      Utilization = 504 ÷ 720 × 100 = <b>70%</b><br><br>
+      <b>উত্তর:</b> Capacity এর ৭০% ব্যবহার হয়েছে, ৩০% খালি আছে।
     </div>
-    <div class="note ok"><strong>✅ মনে রাখো:</strong> Capacity Utilization = Design Capacity ব্যবহারের হার।</div>
   </section>
 
   <!-- 12 -->
   <section class="topic" id="t12">
     <h2>12. Lowest Capacity Utilization</h2>
-    <h3>কী</h3>
-    <p><b class="term">Lowest Capacity Utilization</b> মানে সব Process বা Machine এর মধ্যে <b class="term">সবচেয়ে কম Utilization</b> — যেটা সবচেয়ে দুর্বল। এটাই Improvement এর মূল Target।</p>
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Lowest Capacity Utilization</b> মানে সব Process বা Machine এর মধ্যে <b>সবচেয়ে কম Utilization</b> — যেটা সবচেয়ে দুর্বল। এটাই Improvement এর মূল Target।</p>
+    
     <h3>কীভাবে বের করে</h3>
     <ol class="plain">
       <li>প্রতিটা Process এর Actual Output ও Design Capacity বের করো।</li>
@@ -430,19 +436,20 @@
       <li>সবচেয়ে কম Utilization — সেটাই Lowest Capacity Utilization।</li>
       <li>এই Process বা Machine কেই আগে ঠিক করতে হবে।</li>
     </ol>
-    <div class="example">
-      <strong>Example:</strong><br>
-      Process A Capacity 400, Actual 320 → Utilization 80%<br>
-      Process B Capacity 380, Actual 300 → Utilization 78.9%<br>
-      Process C Capacity 320, Actual <b>210</b> → Utilization <b>65.6%</b> ← Lowest<br>
-      Process D Capacity 350, Actual 290 → Utilization 82.9%<br><br>
-      <b>Lowest Capacity Utilization = 65.6% (Process C)</b><br>
-      মানে Process C তে Bottleneck — এখানেই Improvement দরকার।
-    </div>
-    <div class="note ok"><strong>✅ মনে রাখো:</strong> Lowest Capacity Utilization থেকে বুঝবে কোথায় Bottleneck, আর কোথায় আসল Improvement দরকার।</div>
-  </section>
 
-  <!-- 13 -->
+    <h3>Step-by-Step Example</h3>
+    <div class="example">
+      <b>প্রশ্ন:</b> ৪টা Process এর Capacity ও Actual Output দেওয়া আছে। Lowest Capacity Utilization কোনটা?<br><br>
+      <b>ধাপ ১: প্রতিটার Utilization বের করো</b><br>
+      Process A: Capacity 400, Actual 320 → 320 ÷ 400 × 100 = <b>80%</b><br>
+      Process B: Capacity 380, Actual 300 → 300 ÷ 380 × 100 = <b>78.9%</b><br>
+      Process C: Capacity 320, Actual 210 → 210 ÷ 320 × 100 = <b>65.6%</b><br>
+      Process D: Capacity 350, Actual 290 → 290 ÷ 350 × 100 = <b>82.9%</b><br><br>
+      <b>ধাপ ২: Lowest চিহ্নিত করো</b><br>
+      Lowest = <b>65.6% (Process C)</b><br><br>
+      <b>উত্তর:</b> Lowest Capacity Utilization = 65.6% (Process C)। এটাই Bottleneck, এখানেই Improvement দরকার।
+    </div>
+  </section>
   <section class="topic" id="t13">
     <h2>13. TM Capacity (3600 ÷ Cycle Time)</h2>
     <h3>কী</h3>
