@@ -343,11 +343,14 @@
   <section class="topic" id="t12">
     <h2>12. নিজে হিসাব করুন (Calculator)</h2>
 
-    <h3>Calculator ১: Required Machine Capacity</h3>
+    <h3>Calculator ১: Machine Capacity & Required Machine (WH সহ)</h3>
     <div class="calc">
       <div class="row">
-        <div><label for="c1target">Target Output (Bag/দিন)</label><input id="c1target" type="number" value="500"></div>
-        <div><label for="c1cap">১টা Machine এর Capacity</label><input id="c1cap" type="number" value="250"></div>
+        <div><label for="c1target">Target (Pcs)</label><input id="c1target" type="number" value="200"></div>
+        <div><label for="c1wh">Working Hours (WH)</label><input id="c1wh" type="number" value="8"></div>
+      </div>
+      <div class="row">
+        <div><label for="c1cap">1 Machine Capacity (Pcs/Hour)</label><input id="c1cap" type="number" value="25"></div>
       </div>
       <button id="b1" type="button">হিসাব করো</button>
       <p class="err" id="e1"></p>
@@ -408,14 +411,29 @@
   function reset(e, o){ document.getElementById(e).style.display = 'none'; document.getElementById(o).style.display = 'none'; }
 
   // Calc 1
+    // Calc 1 (Ventura Style - WH integrated)
   document.getElementById('b1').addEventListener('click', () => {
     reset('e1','o1');
-    const t = v('c1target'), c = v('c1cap');
-    if (isNaN(t) || t <= 0 || isNaN(c) || c <= 0) { fail('e1','o1','সঠিক সংখ্যা দিন।'); return; }
-    const req = Math.ceil(t / c - 1e-9);
-    document.getElementById('s1').innerHTML = '<b>Required Machine = ' + req + ' টি</b><br>' +
-      'Formula: ' + t + ' ÷ ' + c + ' = ' + nf(t/c, 2) + ' → পূর্ণ সংখ্যায় ' + req + '<br>' +
-      'হিসাবের থেকে বেশি মেশিন লাগলে সবসময় Round Up করবে।';
+    const target = v('c1target'), wh = v('c1wh'), capPerHour = v('c1cap');
+    
+    if ([target, wh, capPerHour].some(n => isNaN(n) || n <= 0)) { 
+        fail('e1','o1','সব ঘরে 0 এর চেয়ে বড় সংখ্যা দিন।'); return; 
+    }
+    
+    // ১টি মেশিন WH ঘন্টায় কত করতে পারে
+    const capPerMachineWH = capPerHour * wh; 
+    
+    // কয়টি মেশিন লাগবে
+    const reqMachine = Math.ceil(target / capPerMachineWH - 1e-9); 
+    
+    // Utilization
+    const utilization = (target / (capPerMachineWH * reqMachine)) * 100;
+
+    document.getElementById('s1').innerHTML = '<b>1 Machine-এর ' + wh + ' ঘণ্টার Capacity = ' + nf(capPerMachineWH, 0) + ' Pcs</b><br>' +
+      'হিসাব: ' + capPerHour + ' × ' + wh + ' = ' + nf(capPerMachineWH, 0) + '<br><br>' +
+      '<b>Target ' + target + ' পূরণে Required Machine = ' + reqMachine + ' টি</b><br>' +
+      'হিসাব: ' + target + ' ÷ ' + nf(capPerMachineWH, 0) + ' = ' + nf(target/capPerMachineWH, 2) + ' → ' + reqMachine + ' টি<br><br>' +
+      '<b>Capacity Utilization = ' + nf(utilization, 1) + '%</b> (' + target + ' ÷ ' + nf(capPerMachineWH * reqMachine, 0) + ')';
     document.getElementById('o1').style.display = 'block';
   });
 
