@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Part 20: Factory Layout A to Z — IE শিখি</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anek+Bangla:wght@500;700;800&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F3F5F7;--ink:#14213D;--ink-soft:#4A5670;--oxblood:#7A1F2B;--thread:#E9B824;
+    --line:#D5DAE2;--white:#FFFFFF;--green:#2E7D5B;
+    --head:'Anek Bangla','Hind Siliguri','Noto Sans Bengali',sans-serif;
+    --body:'Hind Siliguri','Noto Sans Bengali',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth;scroll-padding-top:80px}
+  body{font-family:var(--body);background:var(--paper);color:var(--ink);font-size:17px;line-height:1.75}
+  a{color:inherit}
+  :focus-visible{outline:3px solid var(--oxblood);outline-offset:3px;border-radius:4px}
+  .wrap{max-width:720px;margin:0 auto;padding:0 18px}
+
+  header.top{position:sticky;top:0;z-index:10;background:var(--ink);color:var(--white)}
+  header.top .wrap{display:flex;align-items:center;justify-content:space-between;padding-top:12px;padding-bottom:12px}
+  .logo{font-family:var(--head);font-weight:800;font-size:20px;text-decoration:none}
+  .logo span{color:var(--thread)}
+  .back{font-size:14px;color:#C9D3EA;text-decoration:none}
+  .back:hover{text-decoration:underline}
+
+  .title{padding:30px 0 10px}
+  .title .crumb{font-size:14px;color:var(--ink-soft)}
+  .title h1{font-family:var(--head);font-weight:800;font-size:clamp(28px,7vw,40px);line-height:1.3;margin:4px 0 8px}
+  .title p{color:var(--ink-soft)}
+
+  nav.toc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 18px;margin:16px 0 8px}
+  nav.toc strong{font-family:var(--head);display:block;margin-bottom:4px}
+  nav.toc ol{padding-left:22px;font-size:16px}
+  nav.toc a{text-decoration:none;color:var(--oxblood)}
+  nav.toc a:hover{text-decoration:underline}
+
+  section.topic{padding:26px 0 8px;border-top:1px solid var(--line);margin-top:20px;scroll-margin-top:80px}
+  section.topic h2{font-family:var(--head);font-size:25px;line-height:1.4;margin-bottom:10px}
+  section.topic h3{font-family:var(--head);font-size:18px;margin:18px 0 4px;color:var(--oxblood)}
+  p{margin-bottom:10px}
+  ul.plain,ol.plain{padding-left:22px;margin-bottom:10px}
+  ul.plain li,ol.plain li{margin-bottom:4px}
+  b.term{font-weight:600}
+
+  .note{border-left:5px solid var(--thread);background:var(--white);padding:10px 14px;border-radius:0 8px 8px 0;margin:14px 0;font-size:16px}
+  .note.warn{border-left-color:var(--oxblood)}
+  .note.ok{border-left-color:var(--green)}
+  .example{background:var(--ink);color:var(--white);border-radius:10px;padding:14px 18px;margin:14px 0}
+  .example strong{color:var(--thread);font-family:var(--head)}
+  .formula{background:var(--white);border:2px solid var(--ink);border-radius:10px;padding:12px 16px;margin:12px 0;font-family:var(--head);font-size:17px;line-height:1.9;overflow-x:auto}
+  .formula small{display:block;font-family:var(--body);font-size:14px;color:var(--ink-soft);margin-top:6px}
+
+  table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px;background:var(--white)}
+  th,td{border:1px solid var(--line);padding:8px 10px;text-align:left;vertical-align:top}
+  th{background:#E6EAF0;font-family:var(--head)}
+  tr.total td{background:#F6E9B8;font-weight:600}
+  .scroll{overflow-x:auto}
+
+  .kv{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:12px 0}
+  .kv .k{font-family:var(--head);font-weight:700;color:var(--oxblood);font-size:15px}
+  
+  .calc{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:16px;margin:14px 0}
+  .calc label{display:block;font-weight:600;font-size:15px;margin:10px 0 4px}
+  .calc input,.calc textarea{width:100%;font:inherit;font-size:16px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;background:var(--paper);color:var(--ink)}
+  .calc .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .calc button{margin-top:14px;font:inherit;font-weight:600;background:var(--oxblood);color:var(--white);border:0;border-radius:10px;padding:11px 22px;cursor:pointer}
+  .calc button:hover{background:#5E1721}
+  .calc .out{margin-top:14px;display:none}
+  .calc .err{color:var(--oxblood);font-weight:600;margin-top:10px;display:none}
+
+  .q{background:var(--white);border:1px solid var(--line);border-radius:10px;padding:14px 16px;margin:12px 0}
+  .q p.qt{font-weight:600;margin-bottom:8px}
+  .q button{display:block;width:100%;text-align:left;font:inherit;font-size:16px;background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:9px 12px;margin-bottom:6px;cursor:pointer;color:var(--ink)}
+  .q button:hover{border-color:var(--ink)}
+  .q button.right{background:#DDF1E8;border-color:var(--green)}
+  .q button.wrong{background:#F6DADD;border-color:var(--oxblood)}
+  .q .why{display:none;font-size:15px;color:var(--ink-soft);margin-top:6px}
+  .score{font-family:var(--head);font-size:20px;margin-top:10px}
+
+  .pager{display:flex;justify-content:space-between;gap:10px;padding:26px 0 40px;border-top:1px solid var(--line);margin-top:26px;flex-wrap:wrap}
+  .pager a{display:inline-block;text-decoration:none;font-weight:600;padding:11px 18px;border-radius:10px}
+  .pager .prev{border:1px solid var(--ink)}
+  .pager .next{background:var(--oxblood);color:var(--white)}
+  footer{background:var(--ink);color:#B8C3DC;padding:20px 0;font-size:14px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <a class="logo" href="index.html">IE <span>শিখি</span></a>
+    <a class="back" href="index.html#parts">← সব Part</a>
+  </div>
+</header>
+
+<main>
+<div class="wrap">
+
+  <div class="title">
+    <div class="crumb">Part 20 / 20</div>
+    <h1>Factory Layout A to Z</h1>
+    <p>Layout কী, কেন, কীভাবে — Excel-এ Layout আঁকা, Capacity হিসাব, Yamazumi (Balance Graph), Safety ও Advanced Tools সহ। Ventura-র বাস্তব উদাহরণ দিয়ে।</p>
+  </div>
+
+  <nav class="toc" aria-label="এই Part এর সূচি">
+    <strong>এই Part এ যা আছে</strong>
+    <ol>
+      <li><a href="#t1">Layout কী, কেন ও না হলে কী হবে</a></li>
+      <li><a href="#t2">Layout এর ৪টি মূল প্রকার</a></li>
+      <li><a href="#t3">Layout বানানোর আগে যে ৭টি Data লাগে</a></li>
+      <li><a href="#t4">Layout + Capacity (Machine সংখ্যা হিসাব)</a></li>
+      <li><a href="#t5">Layout + Utilization ও Efficiency</a></li>
+      <li><a href="#t6">Ventura-র Real Layout Sheet বিশ্লেষণ</a></li>
+      <li><a href="#t7">Excel-এ Layout আঁকার পদ্ধতি</a></li>
+      <li><a href="#t8">Balance Graph (Yamazumi) তৈরি করা</a></li>
+      <li><a href="#t9">Space Calculation (জায়গা হিসাব)</a></li>
+      <li><a href="#t10">Safety ও Compliance Layout</a></li>
+      <li><a href="#t11">Advanced Layout Tools</a></li>
+      <li><a href="#t12">নিজে হিসাব করুন (Calculator)</a></li>
+      <li><a href="#t13">সাধারণ ভুল</a></li>
+      <li><a href="#t14">Practice Quiz</a></li>
+    </ol>
+  </nav>
+
+  <!-- 1 -->
+  <section class="topic" id="t1">
+    <h2>1. Layout কী, কেন ও না হলে কী হবে</h2>
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Layout</b> হলো Factory তে Machine, Table, Operator, Material ও Storage <b class="term">কোথায় বসবে</b> তার একটি লিখিত ও দৃশ্যমান (Visual) নকশা।</p>
+    
+    <h3>কেন Layout দরকার</h3>
+    <ul class="plain">
+      <li><b>Material Flow:</b> Material যেন কম দূরত্বে, সোজা পথে চলে।</li>
+      <li><b>Waste কমানো:</b> Transport, Motion ও Waiting Waste কমে।</li>
+      <li><b>Capacity ব্যবহার:</b> মেশিন ও মানুষের সর্বোচ্চ ব্যবহার নিশ্চিত হয়।</li>
+      <li><b>Safety:</b> দুর্ঘটনা ও আগুনের ঝুঁকি কমে।</li>
+      <li><b>Supervision:</b> Supervisor এক নজরে পুরো লাইন দেখতে পারে।</li>
+    </ul>
+
+    <h3>না হলে কী হবে (খারাপ Layout এর ৭টি ক্ষতি)</h3>
+    <div class="note warn">
+      <strong>১.</strong> Material বেশি দূর যাবে (Transport Waste)।<br>
+      <strong>২.</strong> Operator বেশি হাঁটবে (Motion Waste)।<br>
+      <strong>৩.</strong> এক স্টেশনে কাজ জমে যাবে (Bottleneck)।<br>
+      <strong>৪.</strong> অন্য স্টেশনের অপারেটর বসে থাকবে (Idle Time)।<br>
+      <strong>৫.</strong> WIP (অর্ধসমাপ্ত পণ্য) জমবে।<br>
+      <strong>৬.</strong> দুর্ঘটনার ঝুঁকি বাড়বে (Safety)।<br>
+      <strong>৭.</strong> সব মিলিয়ে Efficiency ও Productivity কমবে।
+    </div>
+
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Layout হলো Factory-র মেরুদণ্ড। Layout ঠিক না হলে, Efficiency বা Capacity কোনো ফর্মুলাই কাজে আসবে না।</div>
+  </section>
+
+  <!-- 2 -->
+  <section class="topic" id="t2">
+    <h2>2. Layout এর ৪টি মূল প্রকার</h2>
+    <div class="scroll">
+    <table>
+      <tr><th>প্রকার</th><th>কী</th><th>Bag Factory Example</th></tr>
+      <tr><td><b>Process Layout</b></td><td>একই ধরনের মেশিন একসাথে থাকে (Functional)</td><td>সব Sewing Machine এক জায়গায়, সব Skiving Machine এক জায়গায়।</td></tr>
+      <tr><td><b>Product Layout</b></td><td>পণ্যের সিকোয়েন্স অনুযায়ী মেশিন সাজানো (Line Layout)</td><td>Tote Bag Line: Cutting → Skiving → Stitching → Packing</td></tr>
+      <tr><td><b>Fixed Layout</b></td><td>পণ্য এক জায়গায় থাকে, মানুষ/মেশিন যায়</td><td>Ship Building, Airplane (Bag Factory তে সাধারণত হয় না)।</td></tr>
+      <tr><td><b>Cellular Layout</b></td><td>ছোট ছোট দল (Cell) পুরো পণ্য বানায়</td><td>একটা ছোট টিম (৪-৫ জন) পুরো Wallet বানায়।</td></tr>
+    </table>
+    </div>
+
+    <h3>Advanced Layout Types</h3>
+    <ul class="plain">
+      <li><b class="term">U-Shape Layout:</b> মেশিন U আকৃতিতে সাজানো। শুরু ও শেষ কাছাকাছি থাকে। (তোমার Ventura ছবিতে এটাই আছে)।</li>
+      <li><b class="term">S-Shape Layout:</b> লম্বা লাইনে S আকৃতিতে সাজানো।</li>
+    </ul>
+    <div class="note"><strong>💡 Tip:</strong> Bag Factory তে সবচেয়ে বেশি ব্যবহার হয় <b>Product Layout</b> (Line) এবং <b>U-Shape Layout</b>। কারণ এতে Flow সহজ হয়।</div>
+  </section>
+
+  <!-- 3 -->
+  <section class="topic" id="t3">
+    <h2>3. Layout বানানোর আগে যে ৭টি Data লাগে</h2>
+    <p>Layout আঁকার আগে Excel-এ বা টেমপ্লেটে নিচের ডেটাগুলো সংগ্রহ করতে হবে।</p>
+    <div class="scroll">
+    <table>
+      <tr><th>Data</th><th>কেন লাগে</th><th>কোথা থেকে পাবে</th></tr>
+      <tr><td>1. Takt Time</td><td>কত সময়ে ১টা Bag বেরোবে</td><td>Available Time ÷ Demand</td></tr>
+      <tr><td>2. SMV</td><td>মোট কাজের সময়</td><td>TMIS বা Time Study</td></tr>
+      <tr><td>3. Operation Breakdown (OB)</td><td>কী কী ধাপ আছে</td><td>TMIS</td></tr>
+      <tr><td>4. Machine List</td><td>কী কী মেশিন আছে ও কয়টা</td><td>TMIS / Floor</td></tr>
+      <tr><td>5. Manpower</td><td>কতজন অপারেটর লাগবে</td><td>Capacity হিসাব (নিচে)</td></tr>
+      <tr><td>6. Space</td><td>কতটুকু জায়গা আছে</td><td>Civil/Admin</td></tr>
+      <tr><td>7. Material Flow</td><td>Material কোথা থেকে কোথায় যাবে</td><td>Spaghetti Diagram</td></tr>
+    </table>
+    </div>
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> এই ৭টা ডেটা ছাড়া Layout আঁকা মানে চোখ বন্ধ করে নকশা আঁকা। পরে সমস্যা হলে পুরো লাইন ভাঙতে হবে।</div>
+  </section>
+
+  <!-- 4 -->
+  <section class="topic" id="t4">
+    <h2>4. Layout + Capacity (Machine সংখ্যা হিসাব)</h2>
+    <h3>কেন Capacity + Layout একসাথে দেখতে হয়</h3>
+    <p>ধরো তোমার Target ৫০০ Bag/দিন। যদি ১টা মেশিন ২৫০ Bag করতে পারে, তাহলে তোমার <b>২টা মেশিন</b> লাগবে। এই ২টা মেশিন Layout-এ কোথায় বসবে সেটাই Layout-এর কাজ।</p>
+
+    <h3>Formula</h3>
+    <div class="formula">
+      Required Machine = Target Output ÷ Machine Capacity
+      <small>প্রাপ্ত দশমিক সংখ্যাকে সবসময় ঊর্ধ্বমুখী (Round Up) করতে হবে</small>
+    </div>
+
+    <h3>Step-by-Step Example</h3>
+    <div class="example">
+      <b>প্রশ্ন:</b> Target ৫০০ Bag/দিন। ১টা Flatbed মেশিনের Capacity ২৫০ Bag/দিন। কয়টা মেশিন লাগবে?<br><br>
+      <b>ধাপ ১: Required Machine বের করো</b><br>
+      Required = 500 ÷ 250 = 2.0<br>
+      <b>উত্তর:</b> ২টা Flatbed মেশিন লাগবে।<br><br>
+      যদি Target ৫১০ হতো? Required = 510 ÷ 250 = 2.04 → <b>৩টা মেশিন</b> লাগবে। (কমপক্ষে ৩টা ছাড়া হবে না)।
+    </div>
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Capacity হিসাব করে মেশিন সংখ্যা বের করো, তারপর সেই সংখ্যা Layout-এ বসাও।</div>
+  </section>
+
+  <!-- 5 -->
+  <section class="topic" id="t5">
+    <h2>5. Layout + Utilization ও Efficiency</h2>
+    <h3>Layout কিভাবে Efficiency কে প্রভাবিত করে?</h3>
+    <div class="scroll">
+    <table>
+      <tr><th>Layout সমস্যা</th><th>প্রভাব</th><th>সমাধান</th></tr>
+      <tr><td>দূরত্ব বেশি</td><td>Transport Time বেশি, Efficiency কম</td><td>মেশিন কাছাকাছি আনো</td></tr>
+      <tr><td>Bottleneck মাঝখানে</td><td>সামনে/পেছনে WIP জমে</td><td>Bottleneck মেশিন আগে বা Parallel বসাও</td></tr>
+      <tr><td>Space ছোট</td><td>Operator চলাচলে বাধা, Motion Waste</td><td>Aisle (হাঁটার পথ) ঠিক করো</td></tr>
+    </table>
+    </div>
+    <div class="note"><strong>💡 Tip:</strong> Layout ভালো হলে Line এর Efficiency ৫-১০% বেড়ে যায় কোনো নতুন মেশিন কেনা ছাড়াই।</div>
+  </section>
+
+  <!-- 6 -->
+  <section class="topic" id="t6">
+    <h2>6. Ventura-র Real Layout Sheet বিশ্লেষণ</h2>
+    <p>তোমার দেওয়া Ventura Layout Sheet-এ যা যা আছে:</p>
+    <div class="scroll">
+    <table>
+      <tr><th>অংশ</th><th>কী থাকে</th><th>কেন দরকার</th></tr>
+      <tr><td>Header</td><td>Customer, Style, Order Qty, Takt Time, Target</td><td>Layout দেখেই যেন বোঝা যায় কোন অর্ডারের</td></tr>
+      <tr><td>Layout Diagram</td><td>U-Shape, মেশিন বক্স, সবুজ তীর (Flow)</td><td>Material Flow ও মেশিনের পজিশন</td></tr>
+      <tr><td>Machine List (ডান পাশে)</td><td>মেশিনের নাম, ছবি, কোয়ান্টিটি</td><td>মেশিন ম্যানেজমেন্ট</td></tr>
+      <tr><td>Man Allocation (নিচে)</td><td>১-২৭ নং স্টেশনে কতজন বসবে</td><td>Manpower প্ল্যানিং</td></tr>
+    </table>
+    </div>
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> এই ধরনের প্রফেশনাল Layout Sheet-ই Buyer কে দেখানো হয় এবং Floor-এ টাঙিয়ে রাখা হয়।</div>
+  </section>
+
+  <!-- 7 -->
+  <section class="topic" id="t7">
+    <h2>7. Excel-এ Layout আঁকার পদ্ধতি</h2>
+    <h3>কীভাবে আঁকবে (Step-by-Step)</h3>
+    <ol class="plain">
+      <li>Excel খোলো। Gridlines অন করো।</li>
+      <li>সেলের প্রস্থ-উচ্চতা ছোট করে চারকোনা (Square) বানাও।</li>
+      <li>Insert → Shapes → Rectangle দিয়ে মেশিন বা টেবিলের বক্স আঁকো।</li>
+      <li>প্রতিটা বক্সে মেশিনের নাম ও নাম্বার লেখো (যেমন: TB-217)।</li>
+      <li>Insert → Shapes → Arrow দিয়ে Material Flow (কোন দিক থেকে কোন দিকে যাবে) দেখাও।</li>
+      <li>রঙ ব্যবহার করো: ইনপুট সবুজ, মেশিন নীল, আউটপুট লাল।</li>
+      <li>প্রিন্ট লেআউট সেট করে PDF বানাও।</li>
+    </ol>
+    <div class="note"><strong>💡 Tip:</strong> বড় Layout হলে Excel এর বদলে <b>AutoCAD</b> বা <b>Visio</b> ব্যবহার করা ভালো। কিন্তু Excel-এও খুব সুন্দর Layout আঁকা সম্ভব।</div>
+  </section>
+
+  <!-- 8 -->
+  <section class="topic" id="t8">
+    <h2>8. Balance Graph (Yamazumi) তৈরি করা</h2>
+    <h3>কী (Definition)</h3>
+    <p><b class="term">Balance Graph</b> বা <b class="term">Yamazumi Chart</b> হলো একটা Stacked Bar Chart, যেখানে প্রতিটা Operator বা Station এর কাজের পরিমাণ (SMV) দেখানো হয়, এবং Takt Time লাইন আঁকা হয়।</p>
+
+    <h3>তোমার Factory-র নিয়মে কীভাবে বানাবে</h3>
+    <ol class="plain">
+      <li>TMIS থেকে সব Operation এর SMV ডাউনলোড করো।</li>
+      <li>Excel-এ Data সাজাও (Operation Name, SMV, Operator বা Station)।</li>
+      <li>Stacked Bar Chart (বা Column Chart) বানাও।</li>
+      <li>Takt Time লাইন আঁকো (Reference Line)।</li>
+      <li>যে স্টেশন Takt Line এর উপরে, সেটা Bottleneck।</li>
+      <li>SMV ভাগ করে বা মিলিয়ে সবাইকে Takt Line এর নিচে আনো।</li>
+    </ol>
+    <div class="example">
+      <b>Example:</b> Takt = 1.0 মিনিট। Op 4 = 0.90 মিনিট (ঠিক আছে)। Op 6 = 1.20 মিনিট (Bottleneck)। অপারেশন ভাগ করে Op 6 কে 0.60 মিনিটে নিয়ে আসলে Balance হবে।
+    </div>
+    <div class="note warn"><strong>⚠️ না হলে কী হবে:</strong> Balance Graph না থাকলে বোঝা যাবে না কে বেশি কাজ করছে, কে কম। Line-এ Idle Time বেড়ে যাবে।</div>
+  </section>
+
+  <!-- 9 -->
+  <section class="topic" id="t9">
+    <h2>9. Space Calculation (জায়গা হিসাব)</h2>
+    <h3>কীভাবে Space বের করবে</h3>
+    <div class="formula">
+      Total Space = (Machine Area + Operator Area + Material Area + Aisle) × Safety Buffer
+      <small>সাধারণত Safety Buffer = ২০-৩০%</small>
+    </div>
+    <h3>Example (কমপক্ষে স্পেস)</h3>
+    <div class="example">
+      একটা Sewing মেশিন = 1.2m × 0.6m = 0.72 sqm<br>
+      অপারেটর এরিয়া = 0.5 sqm<br>
+      Material Tray = 0.3 sqm<br>
+      Aisle (পেছনে) = 0.5 sqm<br>
+      মোট প্রতি স্টেশন = 2.02 sqm<br><br>
+      ২০টি স্টেশনে = 2.02 × 20 = 40.4 sqm<br>
+      Safety Buffer ২৫% = 40.4 × 1.25 = <b>50.5 sqm</b>
+    </div>
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> Aisle (হাঁটার পথ) বাদ দিলে Layout দেখতে সুন্দর লাগবে, কিন্তু বাস্তবে দুর্ঘটনা ঘটবে ও মাল আনা-নেওয়া কষ্ট হবে।</div>
+  </section>
+
+  <!-- 10 -->
+  <section class="topic" id="t10">
+    <h2>10. Safety ও Compliance Layout</h2>
+    <h3>Layout-এ যে Safety বিষয়গুলো থাকতেই হবে</h3>
+    <ul class="plain">
+      <li><b class="term">Fire Exit:</b> পথ সবসময় ফাঁকা থাকবে, কোনো মালপত্র রাখা যাবে না।</li>
+      <li><b class="term">Aisle (হাঁটার পথ):</b> কমপক্ষে ১ মিটার চওড়া।</li>
+      <li><b class="term">Chemical/Glue Zone:</b> আঠা, Solvent আলাদা জায়গায় (ভেন্টিলেশন সহ)।</li>
+      <li><b class="term">Skiving Dust Zone:</b> ধুলো উড়ে যেন অন্য জায়গায় না যায়, আলাদা জায়গায় রাখতে হবে।</li>
+      <li><b class="term">Machine Guard:</b> সব মেশিনে গার্ড থাকবে, Layout-এ সেগুলো দেখাতে হবে।</li>
+    </ul>
+    <div class="note warn"><strong>⚠️ না হলে কী হবে:</strong> Buyer Audit-এ ফেল করবে, দুর্ঘটনা ঘটলে লাইসেন্স বাতিলের ঝুঁকি থাকে।</div>
+  </section>
+
+  <!-- 11 -->
+  <section class="topic" id="t11">
+    <h2>11. Advanced Layout Tools</h2>
+    <div class="scroll">
+    <table>
+      <tr><th>Tool</th><th>কী করে</th></tr>
+      <tr><td><b>Spaghetti Diagram</b></td><td>বর্তমান Material-এর চলার পথ আঁকে (জট পাকানো দাগ)।</td></tr>
+      <tr><td><b>String Diagram</b></td><td>Spaghetti-র মতোই, তবে দূরত্ব মাপার জন্য।</td></tr>
+      <tr><td><b>From-To Chart</b></td><td>কোন স্টেশন থেকে কোন স্টেশনে কত পিস যায়, তার টেবিল।</td></tr>
+      <tr><td><b>SLP (Systematic Layout Planning)</b></td><td>আন্তর্জাতিক পদ্ধতি — Relationship Chart (A, E, I, O, U, X) দিয়ে Layout প্ল্যান।</td></tr>
+      <tr><td><b>AutoCAD / Visio</b></td><td>প্রফেশনাল Layout ডিজাইন করার সফটওয়্যার।</td></tr>
+      <tr><td><b>FlexSim / Arena</b></td><td>Simulation — Layout বানানোর আগে কম্পিউটারে পরীক্ষা করা যায়।</td></tr>
+    </table>
+    </div>
+  </section>
+
+  <!-- 12 Calculator -->
+  <section class="topic" id="t12">
+    <h2>12. নিজে হিসাব করুন (Calculator)</h2>
+
+    <h3>Calculator ১: Required Machine Capacity</h3>
+    <div class="calc">
+      <div class="row">
+        <div><label for="c1target">Target Output (Bag/দিন)</label><input id="c1target" type="number" value="500"></div>
+        <div><label for="c1cap">১টা Machine এর Capacity</label><input id="c1cap" type="number" value="250"></div>
+      </div>
+      <button id="b1" type="button">হিসাব করো</button>
+      <p class="err" id="e1"></p>
+      <div class="out" id="o1"><div class="note" id="s1"></div></div>
+    </div>
+
+    <h3>Calculator ২: Space বের করা</h3>
+    <div class="calc">
+      <div class="row">
+        <div><label for="c2mach">মোট মেশিন সংখ্যা</label><input id="c2mach" type="number" value="20"></div>
+        <div><label for="c2area">প্রতি স্টেশনের এরিয়া (sqm)</label><input id="c2area" type="number" step="0.1" value="2.0"></div>
+      </div>
+      <div class="row">
+        <div><label for="c2aisle">Aisle (হাঁটার পথ) (%)</label><input id="c2aisle" type="number" value="20"></div>
+        <div><label for="c2buf">Safety Buffer (%)</label><input id="c2buf" type="number" value="25"></div>
+      </div>
+      <button id="b2" type="button">হিসাব করো</button>
+      <p class="err" id="e2"></p>
+      <div class="out" id="o2"><div class="note" id="s2"></div></div>
+    </div>
+  </section>
+
+  <!-- 13 -->
+  <section class="topic" id="t13">
+    <h2>13. সাধারণ ভুল</h2>
+    <div class="note warn"><strong>⚠️ ভুল ১:</strong> Capacity না জেনে Layout আঁকা।<br><b>সঠিক:</b> আগে Required Machine বের করো, তারপর Layout-এ বসাও।</div>
+    <div class="note warn"><strong>⚠️ ভুল ২:</strong> Aisle (হাঁটার পথ) না রাখা।<br><b>সঠিক:</b> অন্তত ১ মিটার চওড়া পথ রাখো।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৩:</strong> Bottleneck মেশিনকে মাঝখানে রাখা।<br><b>সঠিক:</b> Bottleneck মেশিনকে আগে বা Parallel-এ রাখো।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৪:</strong> Balance Graph না দেখে Layout আঁকা।<br><b>সঠিক:</b> Yamazumi দেখে বুঝো কোথায় কাজ জমবে।</div>
+    <div class="note warn"><strong>⚠️ ভুল ৫:</strong> Spaghetti Diagram না এঁকে Layout বানানো।<br><b>সঠিক:</b> আগে Material Flow দেখো, তারপর Layout।</div>
+  </section>
+
+  <!-- 14 Quiz -->
+  <section class="topic" id="t14">
+    <h2>14. Practice Quiz</h2>
+    <p>প্রতিটা প্রশ্নের একটা উত্তর বেছে নাও।</p>
+    <div id="quiz"></div>
+    <div class="score" id="score"></div>
+  </section>
+
+  <div class="pager">
+    <a class="prev" href="part-19.html">← Part 19: Capacity ও Utilization</a>
+    <a class="next" href="index.html#parts">সব Part এ ফিরে যাও →</a>
+  </div>
+
+</div>
+</main>
+
+<footer>
+  <div class="wrap">IE শিখি · Part 20: Factory Layout A to Z</div>
+</footer>
+
+<script>
+  const nf = (n, d) => Number(n).toLocaleString('en-US', {minimumFractionDigits: d === undefined ? 2 : d, maximumFractionDigits: d === undefined ? 2 : d});
+  const v = id => parseFloat(document.getElementById(id).value);
+
+  function fail(e, o, m){ const x = document.getElementById(e); x.textContent = m; x.style.display = 'block'; document.getElementById(o).style.display = 'none'; }
+  function reset(e, o){ document.getElementById(e).style.display = 'none'; document.getElementById(o).style.display = 'none'; }
+
+  // Calc 1
+  document.getElementById('b1').addEventListener('click', () => {
+    reset('e1','o1');
+    const t = v('c1target'), c = v('c1cap');
+    if (isNaN(t) || t <= 0 || isNaN(c) || c <= 0) { fail('e1','o1','সঠিক সংখ্যা দিন।'); return; }
+    const req = Math.ceil(t / c - 1e-9);
+    document.getElementById('s1').innerHTML = '<b>Required Machine = ' + req + ' টি</b><br>' +
+      'Formula: ' + t + ' ÷ ' + c + ' = ' + nf(t/c, 2) + ' → পূর্ণ সংখ্যায় ' + req + '<br>' +
+      'হিসাবের থেকে বেশি মেশিন লাগলে সবসময় Round Up করবে।';
+    document.getElementById('o1').style.display = 'block';
+  });
+
+  // Calc 2
+  document.getElementById('b2').addEventListener('click', () => {
+    reset('e2','o2');
+    const m = v('c2mach'), a = v('c2area'), ai = v('c2aisle'), bf = v('c2buf');
+    if ([m,a,ai,bf].some(n => isNaN(n) || n < 0)) { fail('e2','o2','সঠিক সংখ্যা দিন।'); return; }
+    const base = m * a;
+    const withAisle = base * (1 + ai/100);
+    const total = withAisle * (1 + bf/100);
+    document.getElementById('s2').innerHTML = '<b>মোট প্রয়োজনীয় স্পেস = ' + nf(total, 1) + ' sqm</b><br>' +
+      'Base Area: ' + nf(base, 1) + ' sqm<br>' +
+      'Aisle সহ: ' + nf(withAisle, 1) + ' sqm<br>' +
+      'Safety Buffer সহ: ' + nf(total, 1) + ' sqm';
+    document.getElementById('o2').style.display = 'block';
+  });
+
+  // Quiz
+  const quiz = [
+    {q:"Layout মানে কী?",
+     o:["শুধু মেশিন বসানো","মেশিন, মানুষ, Material ও Space এর লিখিত নকশা","শুধু ম্যানেজমেন্টের অফিস"],
+     a:1, w:"Layout হলো পুরো ফ্যাক্টরির একটি নকশা, যেখানে সবকিছু কোথায় বসবে তা ঠিক করা হয়।"},
+    {q:"Capacity না জেনে Layout বানালে কী হবে?",
+     o:["কিছু হবে না","মেশিন বেশি/কম পড়বে, Bottleneck তৈরি হবে","Layout সুন্দর হবে"],
+     a:1, w:"Capacity না জানলে কয়টা মেশিন লাগবে বোঝা যাবে না, ফলে লাইনে Bottleneck বা Idle Time তৈরি হবে।"},
+    {q:"Layout এ U-Shape এর সুবিধা কী?",
+     o:["জায়গা বেশি লাগে","শুরু ও শেষ কাছাকাছি থাকে, Flow সহজ হয়","মেশিন কম লাগে"],
+     a:1, w:"U-Shape এ ইনপুট ও আউটপুট কাছাকাছি থাকে, তাই অপারেটর কম হাঁটে ও ফ্লো সহজ হয়।"},
+    {q:"Balance Graph (Yamazumi) কী কাজে লাগে?",
+     o:["মেশিনের দাম বের করতে","লাইন ব্যালেন্স ও Bottleneck বোঝাতে","শুধু গ্রাফ আঁকতে"],
+     a:1, w:"Yamazumi দিয়ে বোঝা যায় কোন স্টেশনে কাজ বেশি বা কম, এবং Takt Time-এর সাথে মিলছে কি না।"},
+    {q:"Layout এ Aisle (হাঁটার পথ) কেন রাখতে হয়?",
+     o:["সৌন্দর্য বাড়াতে","মানুষ ও মালামাল চলাচল ও নিরাপত্তার জন্য","মেশিন বেশি ধরতে"],
+     a:1, w:"Aisle ছাড়া মানুষ ও মালামাল চলাচলে বাধা পায়, দুর্ঘটনা ঘটে। তাই অন্তত ১ মিটার চওড়া পথ রাখতে হয়।"},
+    {q:"SLP (Systematic Layout Planning) কী?",
+     o:["একটা মেশিনের নাম","আন্তর্জাতিকভাবে ব্যবহৃত সায়েন্টিফিক Layout Planning পদ্ধতি","একটা সফটওয়্যার"],
+     a:1, w:"SLP (Systematic Layout Planning) হলো Richard Muther এর তৈরি একটি পদ্ধতি, যা Relationship Chart দিয়ে Layout বানায়।"}
+  ];
+
+  const box = document.getElementById('quiz');
+  const scoreEl = document.getElementById('score');
+  let answered = 0, correct = 0;
+
+  quiz.forEach((item, i) => {
+    const d = document.createElement('div');
+    d.className = 'q';
+    d.innerHTML = '<p class="qt">' + (i+1) + '. ' + item.q + '</p>';
+    const why = document.createElement('p');
+    why.className = 'why';
+    const btns = item.o.map((txt, j) => {
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = txt;
+      b.addEventListener('click', () => {
+        if (d.dataset.done) return;
+        d.dataset.done = '1';
+        answered++;
+        if (j === item.a) { b.classList.add('right'); correct++; why.textContent = '✅ সঠিক! ' + item.w; }
+        else { b.classList.add('wrong'); btns[item.a].classList.add('right'); why.textContent = '⚠️ ভুল। ' + item.w; }
+        why.style.display = 'block';
+        if (answered === quiz.length) {
+          scoreEl.textContent = 'স্কোর: ' + correct + ' / ' + quiz.length + (correct === quiz.length ? ' 🎉 দারুণ!' : ' — আবার পড়ে চেষ্টা করো।');
+        }
+      });
+      d.appendChild(b);
+      return b;
+    });
+    d.appendChild(why);
+    box.appendChild(d);
+  });
+</script>
+</body>
+</html>
