@@ -11,3 +11,4 @@
 *.sh
 *.before_*
 *_replace
+*.util_bak
