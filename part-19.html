@@ -197,12 +197,12 @@
     <p><b class="term">Man Capacity</b> মানে নির্দিষ্ট সংখ্যক Operator (TM = Total Manpower) দিয়ে নির্দিষ্ট সময়ে সর্বোচ্চ কত Output দেওয়া যায়।</p>
     <h3>Formula</h3>
     <div class="formula">
-      Man Capacity = (TM × WH × Efficiency) ÷ SMV
-      <small>TM = Total Manpower, WH = Working Hours (মিনিটে), Efficiency = ১০০% ধরা হয় Utilization এ</small>
+      Man Capacity = (TM × WH_minutes × Efficiency) ÷ SMV
+      <small>TM = Total Manpower, WH_minutes = প্রতি TM-এর কার্যকর Working Minutes, SMV = মিনিট/পিস। ১০০% Efficiency হলে Theoretical Capacity পাওয়া যায়।</small>
     </div>
     <div class="formula">
-      অথবা, Man Capacity = (TM × WH) ÷ B.H
-      <small>B.H = SMV এর Hour Format = SMV ÷ 60</small>
+      অথবা, Man Capacity = (TM × WH_hours × Efficiency) ÷ B.H
+      <small>B.H = SMV ÷ 60 = ঘণ্টা/পিস। এখানে WH_hours অবশ্যই ঘণ্টায় দিতে হবে; মিনিটের WH ব্যবহার করলে আগে ৬০ দিয়ে ভাগ করতে হবে।</small>
     </div>
     <h3>Example (কাল্পনিক)</h3>
     <div class="example">
@@ -224,8 +224,8 @@
     <p>যখন <b class="term">একাধিক TM একই Operation</b> এ কাজ করে, তখন মোট Capacity বের করতে হয়।</p>
     <h3>Formula</h3>
     <div class="formula">
-      Multi TM Capacity = (মোট TM × WH × Efficiency) ÷ SMV
-      <small>মোট TM = একসাথে কাজ করা সব Operator এর সংখ্যা</small>
+      Multi TM Capacity = (মোট TM × WH_minutes × Efficiency) ÷ SMV
+      <small>WH_minutes = প্রতি TM-এর কার্যকর মিনিট; SMV = মিনিট/পিস। একই Operation-এ সব TM একই ধরনের কাজ করলে তাদের সময় যোগ করা যায়।</small>
     </div>
     <h3>Example (কাল্পনিক): ৩ TM একই Operation</h3>
     <div class="example">
@@ -351,14 +351,14 @@
       <b>উত্তর:</b> Target এর ৮৫.৭১% Capacity আছে। বাকি ১৪.২৯% ঘাটতি (Bottleneck)।
     </div>
     
-    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> Capacity Coverage কখনো ১০০% এর বেশি হতে পারে না (অসম্ভব)। যদি বেশি আসে, বুঝবে Target > Capacity — মানে Machine দিয়ে Target পূরণ সম্ভব না।</div>
+    <div class="note warn"><strong>⚠️ সতর্কতা:</strong> Capacity Coverage ১০০% এর বেশি হতে পারে। ১০০%-এর বেশি হলে Capacity Target-এর চেয়ে বেশি; ১০০% হলে সমান; ১০০%-এর কম হলে Capacity ঘাটতি আছে। এই উদাহরণে ৮৫.৭১% মানে Target পূরণে ঘাটতি।</div>
   </section>
 
   <!-- 9 -->
   <section class="topic" id="t9">
     <h2>9. Man Utilization</h2>
     <h3>কী (Definition)</h3>
-    <p><b class="term">Man Utilization</b> মানে TM (Total Manpower) দের কতটা সময় আসলে কাজে লেগেছে। এক TM বা Multi TM — দুটোতেই কাজ করে।</p>
+    <p><b class="term">Man Utilization (এই Factory Formula)</b> হলো Output থেকে পাওয়া Earned Minutes-এর সঙ্গে Available Man-Minutes-এর অনুপাত। এটি Labor Efficiency-এর একই গাণিতিক হিসাব; Operator-এর বাস্তব Busy Time সরাসরি মাপে না। এক TM বা Multi TM—দুটোতেই ব্যবহার করা যায়।</p>
     
     <h3>Formula</h3>
     <div class="formula">
@@ -376,7 +376,7 @@
       Available = 17 × 480 = <b>8,160 মিনিট</b><br><br>
       <b>ধাপ ৩: Man Utilization</b><br>
       Utilization = 5,670 ÷ 8,160 × 100 = <b>69.5%</b><br><br>
-      <b>উত্তর:</b> Man Utilization = 69.5%। বাকি ৩০.৫% সময় Idle বা Waste এ গেছে।
+      <b>উত্তর:</b> Earned-minute Ratio = 69.5%। বাকি ৩০.৫% হলো Standard Earned Minutes ও Available Man-Minutes-এর পার্থক্য; এটিকে পুরোপুরি Idle Time বা Waste বলা যাবে না। এর কারণ জানতে Downtime, Waiting, Slow Cycle, Rework ও অন্যান্য Loss আলাদা করে মাপতে হবে।
     </div>
   </section>
 
@@ -488,35 +488,31 @@
       Available = 17 × 480 = 8,160<br>
       Efficiency = 5,670 ÷ 8,160 × 100 = <strong>69.5%</strong>
     </div>
-    <div class="note warn"><strong>⚠️ না হলে কী হবে:</strong> Efficiency ৬০% মানে প্রতি ১০০ মিনিটের মধ্যে ৪০ মিনিট অপচয়। Cost বাড়ে, Delivery দেরি হয়।</div>
+    <div class="note warn"><strong>⚠️ মনে রাখো:</strong> Efficiency ৬০% মানে প্রতি ১০০ Available Man-Minutes-এর বিপরীতে ৬০ Standard Earned Minutes অর্জিত হয়েছে। বাকি ৪০ মিনিটকে সরাসরি অপচয় বলা যাবে না; Loss-এর কারণ আলাদা Study করে বের করতে হবে।</div>
   </section>
 
   <!-- 15 -->
   <section class="topic" id="t15">
     <h2>15. TM Efficiency</h2>
     <h3>কী</h3>
-    <p><b class="term">TM Efficiency</b> মানে Machine বা TM এর Efficiency — Ventura Formula #10।</p>
+    <p><b class="term">TM Efficiency</b> — এই Factory Formula #10-এ Good Output-এর Earned Time ও Actual Man-Hours-এর অনুপাত বোঝানো হয়েছে। এটি Labor Efficiency-ভিত্তিক হিসাব; Machine-এর technical efficiency নয়।</p>
     <h3>Formula</h3>
     <div class="formula">
-      TM Efficiency = (Total Unit × B.H × 100) ÷ Total Minute Worked
-      <small>B.H = SMV in Hour = SMV ÷ 60। Total Unit = উৎপাদিত Piece। Total Minute Worked = Actual Working Minutes।</small>
+      TM Efficiency (%) = (Good Output × B.H in Hours) ÷ Actual Man-Hours × 100
+      <small>B.H = SMV ÷ 60 = ঘণ্টা/পিস। Actual Man-Hours = সব TM-এর প্রকৃত কাজের ঘণ্টার যোগফল। Minute ব্যবহার করলে: (Good Output × SMV in Minutes) ÷ Actual Man-Minutes × 100।</small>
     </div>
     <h3>Example</h3>
     <div class="example">
       Total Unit = 400 Piece<br>
       B.H = 0.189 (11.34 ÷ 60)<br>
-      Total Minute Worked = 400 মিনিট<br><br>
-      TM Efficiency = (400 × 0.189 × 100) ÷ 400<br>
-      = 75.6 ÷ 400 × 100 = <strong>18.9%</strong>?<br><br>
-      ⚠️ এটা কম দেখাচ্ছে কারণ Minute এ হিসাব।<br><br>
-      <b>সঠিক:</b> আসলে Total Minute Worked = WH (৪৮০) ধরা হয়।<br>
-      TM Efficiency = (400 × 0.189 × 100) ÷ 480 = 75.6 ÷ 4.80 = <strong>15.75%</strong>?<br><br>
-      ⚠️ এটাও কম। আসল হিসাব:<br>
-      Total Unit × B.H = Earned Hours = 400 × 0.189 = 75.6 ঘণ্টা<br>
-      Total Minute Worked = 480 × TM = 8,160 ÷ 60 = 136 ঘণ্টা<br>
-      TM Efficiency = 75.6 ÷ 136 × 100 = <strong>55.6%</strong>
+      ১৭ জন TM প্রত্যেকে ৮ ঘণ্টা কাজ করেছে ধরে:<br>
+      Actual Man-Hours = 17 × 8 = <b>136 ঘণ্টা</b><br>
+      Earned Hours = 400 × 0.189 = <b>75.6 ঘণ্টা</b><br><br>
+      TM Efficiency = 75.6 ÷ 136 × 100<br>
+      = <strong>55.6%</strong><br><br>
+      <small>নোট: ৪০০ পিস Good Output, BH = ০.১৮৯ ঘণ্টা/পিস এবং ১৭ জনের প্রত্যেকের ৮ ঘণ্টা Actual Working Time—এই শর্তে ফলাফলটি সঠিক। Break বা অনুপস্থিতির সময় Actual Working Hours থেকে বাদ দিতে হবে, যদি Factory reporting rule তাই বলে।</small>
     </div>
-    <div class="note ok"><strong>✅ মনে রাখো:</strong> B.H ঘণ্টায়, তাই Total Minute Worked কেও ঘণ্টায় নিতে হবে (÷ 60)।</div>
+    <div class="note ok"><strong>✅ মনে রাখো:</strong> B.H ঘণ্টায় ব্যবহার করলে Actual Man-Hours-ও ঘণ্টায় নিতে হবে। Minute Formula ব্যবহার করলে SMV ও Actual Man-Minutes—দুটিই মিনিটে হবে।</div>
   </section>
 
   <!-- 16 -->
@@ -581,24 +577,25 @@
     <div class="kv">
       <div class="k">3. Idle / Loss Time</div>
       <div class="formula">
-        Idle / Loss Time = (Non-Balancing Efficiency ÷ 100) × (Number of TM × WH × 60)
-        <small>Non-Balancing Efficiency = 100 − Balancing Efficiency</small>
+        Idle / Loss Time = (Non-Balancing Efficiency ÷ 100) × (Number of TM × WH_minutes)
+        <small>WH_minutes = প্রতিদিনের Working Time মিনিটে। ফলাফল হবে TM-Minutes। Non-Balancing Efficiency = 100 − Balancing Efficiency</small>
       </div>
     </div>
 
     <div class="kv">
       <div class="k">4. First Hour Output</div>
       <div class="formula">
-        First Hour Output = Achieved Quantity ÷ Hourly Target × 100%
-        <small>প্রথম ঘণ্টায় Target এর কত % হয়েছে</small>
+        First-Hour Output = প্রথম ঘণ্টায় বাস্তবে উৎপাদিত Good Pieces (pcs)<br>
+        First-Hour Achievement (%) = First-Hour Good Output ÷ First-Hour Target × 100<br>
+        <small>Output হলো পিসের সংখ্যা; Achievement হলো Target-এর তুলনায় শতকরা অর্জন।</small>
       </div>
     </div>
 
     <div class="kv">
       <div class="k">5. Target</div>
       <div class="formula">
-        Target = (Number of TM × WH) ÷ B.H
-        <small>B.H = SMV ÷ 60 (SMV in Hour)</small>
+        Target (pcs) = (Number of TM × WH_hours × Planned Efficiency) ÷ B.H<br>
+        <small>B.H = SMV ÷ 60 = ঘণ্টা/পিস। WH_hours ঘণ্টায় দিতে হবে। Planned Efficiency ১০০% হলে 1.0 ব্যবহার করবে; যেমন ৭০% হলে 0.70।</small>
       </div>
     </div>
 
@@ -629,16 +626,16 @@
     <div class="kv">
       <div class="k">9. Line WIP</div>
       <div class="formula">
-        Line WIP = Input − Output
-        <small>Line এ জমে থাকা কাজ</small>
+        Closing Line WIP = Opening WIP + Total Input − Total Output − Scrap/Reject − Transfer Out + Transfer In<br>
+        <small>সব পরিমাণ একই সময়সীমা ও একই counting unit-এর হতে হবে। Opening WIP শূন্য এবং অন্য কোনো transfer/scrap না থাকলে সহজ সূত্র Input − Output ব্যবহার করা যায়।</small>
       </div>
     </div>
 
     <div class="kv">
       <div class="k">10. TM Efficiency</div>
       <div class="formula">
-        TM Efficiency = (Total Unit × B.H × 100) ÷ Total Minute Worked
-        <small>B.H = SMV ÷ 60, Total Minute Worked = Actual Minutes (Hour এ নিতে হবে)</small>
+        TM Efficiency (%) = (Good Output × B.H in Hours) ÷ Actual Man-Hours × 100<br>
+        <small>অথবা Minute Formula: (Good Output × SMV in Minutes) ÷ Actual Man-Minutes × 100। Numerator ও denominator-এর একক একই হতে হবে।</small>
       </div>
     </div>
 
@@ -900,7 +897,7 @@ Handle, 130, 0.75</textarea>
     if ([o,c].some(n => isNaN(n) || n <= 0)) { fail('e6','o6','সঠিক সংখ্যা দিন।'); return; }
     const u = o / c * 100;
     document.getElementById('s6').innerHTML = '<b>Capacity Utilization = ' + nf(u,2) + '%</b><br>' +
-      u + ' ÷ ' + c + ' × 100 = ' + nf(u,2) + '%<br>' +
+      o + ' ÷ ' + c + ' × 100 = ' + nf(u,2) + '%<br>' +
       (u < 70 ? '⚠️ ৭০% এর নিচে, Capacity বেশি আছে বা Order কম।' : u < 90 ? '✅ ভালো অবস্থা।' : '⚠️ ৯০%+ — Worker চাপে পড়তে পারে।');
     document.getElementById('o6').style.display = 'block';
   });
@@ -922,15 +919,15 @@ Handle, 130, 0.75</textarea>
     {q:"Lowest Capacity Utilization মানে কী?",
      o:["সবচেয়ে বেশি Capacity","সবচেয়ে কম Utilization — Improvement এর Target","Average Utilization"],
      a:1, w:"Lowest Capacity Utilization = সবচেয়ে দুর্বল Process। এটাই Improvement এর মূল Target।"},
-    {q:"B.H (Basic Hour) = ?",
+    {q:"B.H (Bag Hour) = ?",
      o:["SMV × 60","SMV ÷ 60","SMV এর সমান"],
-     a:1, w:"B.H = SMV ÷ 60। যেমন SMV 11.34 হলে B.H = 0.189 ঘণ্টা।"},
+     a:1, w:"B.H (Bag Hour) = SMV ÷ 60 = ঘণ্টা/পিস। যেমন SMV 11.34 মিনিট হলে BH = 0.189 ঘণ্টা/পিস।"},
     {q:"Man Utilization ও Efficiency এর মূল পার্থক্য কী?",
      o:["Utilization এ Efficiency ১০০%, Efficiency এ Actual ধরা হয়","দুটো একই","Efficiency এ Efficiency ১০০% ধরা হয়"],
      a:0, w:"Utilization = Capacity(100%) এর কতটা ব্যবহার। Efficiency = Standard এর কতটা অর্জন (Actual)।"},
     {q:"WH মানে কী?",
      o:["Working Hours","Weekly Hours","Work House"],
-     a:0, w:"WH = Working Hours। মিনিটে হিসাব করা হয় (যেমন 480 মিনিট/দিন)।"}
+     a:0, w:"WH = Working Hours। এই Part-এর Formula ও Calculator-এ WH মিনিটে ব্যবহার করা হয় (যেমন 480 মিনিট/দিন)।"}
   ];
 
   const box = document.getElementById('quiz');
@@ -965,5 +962,6 @@ Handle, 130, 0.75</textarea>
     box.appendChild(d);
   });
 </script>
+  <script src="language.js"></script>
 </body>
 </html>
