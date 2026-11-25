@@ -115,6 +115,7 @@ const quiz=[
 const box=document.getElementById('quiz'),scoreEl=document.getElementById('score');let answered=0,correct=0;
 quiz.forEach((item,i)=>{const d=document.createElement('div');d.className='q';const q=document.createElement('p');q.className='qt';q.textContent=(i+1)+'. '+item.q;d.appendChild(q);const why=document.createElement('p');why.className='why';const btns=item.o.map((txt,j)=>{const b=document.createElement('button');b.type='button';b.textContent=txt;b.addEventListener('click',()=>{if(d.dataset.done)return;d.dataset.done='1';answered++;if(j===item.a){b.classList.add('right');correct++;why.textContent='✅ সঠিক! '+item.w}else{b.classList.add('wrong');btns[item.a].classList.add('right');why.textContent='⚠️ ভুল। '+item.w}why.style.display='block';if(answered===quiz.length)scoreEl.textContent='তোমার স্কোর: '+correct+' / '+quiz.length+(correct===quiz.length?' 🎉 দারুণ!':' — আবার পড়ে চেষ্টা করো।')});d.appendChild(b);return b});d.appendChild(why);box.appendChild(d)});
 </script>
+  <script src="language.js"></script>
 </body>
 </html>
 <style>
